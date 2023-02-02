@@ -1,4 +1,4 @@
-package ApiTest.ApiTest.Controller;
+package ApiTest.ApiTest;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,4 +1,4 @@
-package ApiTest.ApiTest.Controller;
+package ApiTest.ApiTest;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
