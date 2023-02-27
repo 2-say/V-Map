@@ -39,7 +39,7 @@ class UIPractice extends StatelessWidget {
 
               child: Row(
                 children: [
-                  Icon(Icons.star),
+                  Icon(Icons.star, size: 50),
                   Text(
                       "현재 V-MAP이 회의 내용을 노션에 기록 중 입니다.",
                       style: TextStyle(fontSize: 40),
@@ -74,7 +74,7 @@ class UIPractice extends StatelessWidget {
                     style: TextStyle(fontSize: 20),
                   ),
                   Text(
-                    "AI-MAP 구현 가능성 평가"
+                    "AI-MAP 구현 가능성 평가",
                   ),
                   Icon(Icons.error),
 
