@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front/pageFetures/pageFeaturesMain.dart';
+import 'package:front/pageFetures/pageFeaturesInvite.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,6 +16,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const PageFeatureMain());
+        home: const PageFeatureInvite());
   }
 }
