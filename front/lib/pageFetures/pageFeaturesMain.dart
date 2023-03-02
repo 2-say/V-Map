@@ -43,7 +43,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
         //자식들을 담을 column
         child: Column(
             //세로 정렬 : start( 시작점 부터 )
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             //가로 정렬 : start ( 시작점 부터 )
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
