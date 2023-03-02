@@ -55,7 +55,7 @@ public class PostTranscribeSample {
         outputStream.writeBytes("	},\n");
         outputStream.writeBytes("\"use_multi_channel\": false,\n");
         outputStream.writeBytes("\"use_itn\": true,\n");
-        outputStream.writeBytes("\"use_disfluency_filter\": false,\n");
+        outputStream.writeBytes("\"use_disfluency_filter\": true,\n");
         outputStream.writeBytes("\"use_profanity_filter\": false,\n");
         outputStream.writeBytes("\"paragraph_splitter\": {\n");
         outputStream.writeBytes("	\"min\": 30,\n");
