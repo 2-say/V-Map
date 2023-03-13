@@ -1,4 +1,4 @@
-package ParkLab.VMap.controller;
+package ParkLab.VMap.controller.stt;
 
 import java.io.IOException;
 import java.io.InputStream;
