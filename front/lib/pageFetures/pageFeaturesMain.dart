@@ -22,6 +22,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
   late int participants;
   late int currentTime;
   late List<String> agendaList;
+  late List<dynamic> talk;
 
   @override
   void initState() {
@@ -41,6 +42,12 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
       '랩실 의자 교체 작업',
       '연구 보고서 작성 회의일자 정하기',
       '진행 과정 보고'
+    ];
+    talk = [
+      ['0:02', '이상현', '안녕하세요'],
+      ['0:03', '이세희', '반갑습니다.'],
+      ['0:07', '조원희', '모두 오랜만입니다.'],
+      ['0:12', '임재경', '그러게요, 정말 오랜만에 뵙는 것 같아요.']
     ];
     //이 함수가 실행 되어야 위젯 변수들의 초기화가 완료됨.
     super.initState();
@@ -87,10 +94,14 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                   const SizedBox(width: 8),
                   Row(
                     children: List<Widget>.generate(participants, (index) {
-                      return const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 4.0),
+                      return  Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: CircleAvatar(
-                            backgroundColor: Colors.blue, radius: 16),
+                          backgroundColor: Colors.blue, radius: 16,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
+                            child: Text('${talk[index][1][0]}',style: const TextStyle(fontFamily: 'apl',fontSize: 12),),
+                          )),
                       );
                     }),
                   )
@@ -166,7 +177,8 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                             style: TextStyle(
                                 fontFamily: 'apeb', color: Colors.grey)),
                         Expanded(
-                          child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               IconButton(
                                 onPressed: () {},
@@ -182,13 +194,15 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                               ),
                               IconButton(
                                 onPressed: () {},
-                                icon: const Icon(Icons.edit,color: Colors.blueAccent),
+                                icon: const Icon(Icons.edit,
+                                    color: Colors.blueAccent),
                                 constraints: const BoxConstraints(),
                                 padding: EdgeInsets.zero,
                               ),
                               IconButton(
                                 onPressed: () {},
-                                icon: const Icon(Icons.error,color: Colors.redAccent),
+                                icon: const Icon(Icons.error,
+                                    color: Colors.redAccent),
                                 constraints: const BoxConstraints(),
                                 padding: EdgeInsets.zero,
                               ),
@@ -205,7 +219,43 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                 ),
                 Expanded(
                     child: Container(
-                  child: SingleChildScrollView(),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: List.generate(talk.length, (index) {
+                        return ListTile(
+                          title: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 32,
+                                  child: Text(
+                                    '${talk[index][0]}',
+                                    style: const TextStyle(
+                                        fontFamily: 'apm', fontSize: 14),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  '${talk[index][1]}',
+                                  style: const TextStyle(
+                                      fontFamily: 'apeb', fontSize: 20),
+                                ),
+                                const Expanded(child: SizedBox()),
+                                Text(
+                                  '${talk[index][2]}',
+                                  style: const TextStyle(
+                                      fontFamily: 'apm', fontSize: 16),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
                 )),
                 Container(
                   width: double.infinity,
