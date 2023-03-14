@@ -5,6 +5,9 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class NotionApi {
     private final RestTemplate restTemplate = new RestTemplate();
@@ -15,23 +18,19 @@ public class NotionApi {
 
     // Database ID를 설정합니다.
     private final String databaseId = "998ba0454f464716b72cdc88001e3f3c";
-
-    /**
-     * 블록 안에 내용을 작성합니다.
-     *
-     * @param title 블록의 제목
-     * @param content 블록의 내용
-     */
-    public void createBlock(String title, String content) throws Exception {
+    public void createBlock(List<String> contents) throws Exception {
         // 요청 URL을 설정합니다.
         String url = "https://api.notion.com/v1/pages/";
         String type = "heading_2";
-
+        BlockWrite blockWrite1 = new BlockWrite();
+        String result = "";
 
         // 요청 데이터 (JSON)를 설정합니다.
-        String json= "{\n" +
+        result = getContentBlock(blockWrite1, result, contents);
+
+        String json = "{\n" +
                 "  \"parent\": {\n" +
-                "    \"database_id\": \"998ba045-4f46-4716-b72c-dc88001e3f3c\"\n" +
+                "    \"database_id\": \""+databaseId+ "\"\n" +
                 "  },\n" +
                 "  \"properties\": {\n" +
                 "    \"색상\": {\n" +
@@ -60,20 +59,7 @@ public class NotionApi {
                 "    }\n" +
                 "  },\n" +
                 "  \"children\": [\n" +
-                "    {\n" +
-                "      \"object\": \"block\",\n" +
-                "      \"type\": \""  + type + "\",\n" +
-                "      \"" + type + "\": {\n" +
-                "        \"rich_text\": [\n" +
-                "          {\n" +
-                "            \"type\": \"text\",\n" +
-                "            \"text\": {\n" +
-                "              \"content\": \"" + content + "\"\n" +
-                "            }\n" +
-                "          }\n" +
-                "        ]\n" +
-                "      }\n" +
-                "    }\n" +
+                result+
                 "  ]\n" +
                 "}";
 
@@ -96,5 +82,17 @@ public class NotionApi {
         } else {
             System.out.println("블록 작성 실패!");
         }
+    }
+
+    private String getContentBlock(BlockWrite blockWrite1, String result, List<String> contents) {
+        for(var content : contents) {
+           if(contents.indexOf(content) != contents.size() - 1) //마지막 아닌 조건
+           {
+               result += blockWrite1.childBlock(content) + ",\n" ;
+           }
+           else
+               result += blockWrite1.childBlock(content);
+        }
+        return result;
     }
 }
