@@ -132,6 +132,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                     child: Scrollbar(
                       controller: agendaListViewScroller,
                       thumbVisibility: true,
+                      //스크롤 위젯
                       child: SingleChildScrollView(
                           controller: agendaListViewScroller,
                           child: Column(
