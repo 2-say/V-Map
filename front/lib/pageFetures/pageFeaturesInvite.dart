@@ -22,11 +22,19 @@ class PageFeatureInvite extends StatelessWidget {
                 minimumSize: Size(200, 75)
             )),
           Expanded(child: Container()),
-          TextButton(onPressed: () {}, child: Text('Sign out', style: TextStyle(fontSize: 20)),
-            style: TextButton.styleFrom(
-              primary: Colors.white,
-              backgroundColor: Colors.green,
-              minimumSize: Size(300, 75),
+          Container(
+            width: 300, height: 75,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [Colors.white, Colors.green]
+                )
+            ),
+            child: TextButton(onPressed: () {}, child: Text('Sign In/Sign Up', style: TextStyle(fontSize: 20)),
+              style: TextButton.styleFrom(
+                primary: Colors.white,
+                minimumSize: Size(300, 75),),
             ),
           )],
       ),

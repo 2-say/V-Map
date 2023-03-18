@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:front/dataSets/dataSetColors.dart';
-
 import '../dataSets/dataSetTextStyles.dart';
 
 class PageFeatureMain extends StatefulWidget {
