@@ -51,9 +51,11 @@ public class PostTranscribeSample {
         outputStream.writeBytes("Content-Type: application/json\r\n");
         outputStream.writeBytes("\r\n");
         outputStream.writeBytes("{\n  \"diarization\": {\n");
-        outputStream.writeBytes("	\"use_verification\": false\n");
+        outputStream.writeBytes("	\"use_verification\": true,\n");
+        outputStream.writeBytes("	\"user_id\": \"chXY02KkT4K5eyumwPukYw\",\n");
+        outputStream.writeBytes("	\"partner_id\": \"h01037466071@nate.com\"\n");
         outputStream.writeBytes("	},\n");
-        outputStream.writeBytes("\"use_multi_channel\": false,\n");
+        outputStream.writeBytes("\"use_multi_channel\": true,\n");
         outputStream.writeBytes("\"use_itn\": true,\n");
         outputStream.writeBytes("\"use_disfluency_filter\": true,\n");
         outputStream.writeBytes("\"use_profanity_filter\": false,\n");
