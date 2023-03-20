@@ -101,23 +101,27 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
                     color: Colors.white,
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 30),
                       Text('Login', style: TextStyle(
                         fontSize: 30, fontWeight: FontWeight.w900,),
-                        textAlign: TextAlign.left,
                       ),
                       SizedBox(height: 50),
 
-                      Text('USERNAME'),
-                      TextField(decoration: InputDecoration(border: OutlineInputBorder(),)),
+                      Text('USERNAME', style: TextStyle(
+                        fontWeight: FontWeight.w500),
+                      ),
+                     TextField(decoration: InputDecoration(border: OutlineInputBorder(),)),
                       SizedBox(height: 30),
-                      Text('PASSWORD'),
+                      Text('PASSWORD', style: TextStyle(
+                        fontWeight: FontWeight.w500),
+                      ),
                       TextField(decoration: InputDecoration(border: OutlineInputBorder(),)),
 
                       SizedBox(height: 30),
                       Container(
-                        width: 300, height: 75,
+                        width: 450, height: 75,
                         decoration: BoxDecoration(
                             gradient: LinearGradient(
                                 begin: Alignment.centerLeft,

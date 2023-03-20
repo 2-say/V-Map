@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/PageFrame/PageFrameLogin.dart';
+import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/pageFetures/pageFeaturesInvite.dart';
 import 'package:front/pageFetures/pageFeaturesMain.dart';
 
@@ -19,6 +20,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const PageFrameLogin());
+        home: const PageFrameRanding());
   }
 }
