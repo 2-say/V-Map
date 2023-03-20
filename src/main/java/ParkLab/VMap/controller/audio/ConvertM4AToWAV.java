@@ -8,10 +8,10 @@ public class ConvertM4AToWAV {
     public static void main(String[] args) {
         try {
             // m4a 파일 경로
-            String sourceFilePath = "/Users/isehui/develop/V-map_backend_clone/sample1.m4a";
+            String sourceFilePath = "./audio/sample1.m4a";
 
             // 변환될 wav 파일 경로
-            String targetFilePath = "/Users/isehui/develop/V-map_backend_clone/test111.wav";
+            String targetFilePath = "./audio/test111.wav";
             Process process = Runtime.getRuntime().exec("/bin/bash -c 'eval $(/opt/homebrew/bin/brew shellenv)'");
             String line1;
             BufferedReader input1 = new BufferedReader(new InputStreamReader(process.getInputStream()));
