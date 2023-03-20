@@ -13,22 +13,15 @@ import java.util.Arrays;
 public class MultiChannelAudioMerger {
     public static void main(String[] args) {
         try {
-            // Input files
-<<<<<<< HEAD
-            File inputFile1 = new File("sample1.wav");
-            File inputFile2 = new File("sample2.wav");
-            ArrayList<File> inputFiles = new ArrayList<>(Arrays.asList(inputFile1, inputFile2));
 
-            // Output file
-            File outputFile = new File("output.wav");
-=======
+
             File inputFile1 = new File("./audio/sample1.wav");
             File inputFile2 = new File("./audio/sample2.wav");
             ArrayList<File> inputFiles = new ArrayList<>(Arrays.asList(inputFile1, inputFile2));
 
             // Output file
             File outputFile = new File("./audio/output.wav");
->>>>>>> 9d17eaa5f7a7c69ec4d8439a9f766ad13f8dee6e
+
 
             // Audio format
             AudioFormat audioFormat = AudioSystem.getAudioInputStream(inputFile1).getFormat();
