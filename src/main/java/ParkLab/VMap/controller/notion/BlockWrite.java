@@ -1,12 +1,14 @@
 package ParkLab.VMap.controller.notion;
 public class BlockWrite {
     private String content;
+    private String type = "heading_2";
 
     String childBlock(String content) {
+
         String json = "{\n"
                 + "    \"object\": \"block\",\n"
-                + "    \"type\": \"heading_2\",\n"
-                + "    \"heading_2\": {\n"
+                + "    \"type\": \""+ type + "\",\n"
+                + "    \""+type+"\": {\n"
                 + "        \"rich_text\": [\n"
                 + "            {\n"
                 + "                \"type\": \"text\",\n"

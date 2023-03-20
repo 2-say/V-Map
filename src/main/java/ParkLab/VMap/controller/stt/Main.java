@@ -9,14 +9,14 @@ public class Main {
         AuthSample authSample = new AuthSample();
         String auth = authSample.getAuth();
 
-        File file = new File("sample.wav");
+        File file = new File("output.wav");
         PostTranscribeSample postTranscribeSample = new PostTranscribeSample(auth, file);
         String id = postTranscribeSample.getId();
 
         GetTranscribeSample getTranscribeSample = new GetTranscribeSample(auth, id);
         String result = getTranscribeSample.getResult();
 
-        //System.out.println(result);
+        System.out.println(result);
         
 
         Pattern pattern = Pattern.compile("\"msg\":\"(.*?)\"}");
