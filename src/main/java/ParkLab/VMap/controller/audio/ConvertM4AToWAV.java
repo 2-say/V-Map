@@ -1,10 +1,16 @@
 package ParkLab.VMap.controller.audio;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+
+@RestController
 public class ConvertM4AToWAV {
+
+    @GetMapping("/m4atowav")
     public static void main(String[] args) {
         try {
             // m4a 파일 경로
@@ -12,6 +18,7 @@ public class ConvertM4AToWAV {
 
             // 변환될 wav 파일 경로
             String targetFilePath = "./audio/test111.wav";
+
             Process process = Runtime.getRuntime().exec("/bin/bash -c 'eval $(/opt/homebrew/bin/brew shellenv)'");
             String line1;
             BufferedReader input1 = new BufferedReader(new InputStreamReader(process.getInputStream()));
