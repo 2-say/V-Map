@@ -13,8 +13,7 @@ import java.util.Arrays;
 public class MultiChannelAudioMerger {
     public static void main(String[] args) {
         try {
-
-
+            //왜 안돼? 
             File inputFile1 = new File("./audio/sample1.wav");
             File inputFile2 = new File("./audio/sample2.wav");
             ArrayList<File> inputFiles = new ArrayList<>(Arrays.asList(inputFile1, inputFile2));
