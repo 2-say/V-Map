@@ -1,4 +1,6 @@
-package ParkLab.VMap.controller.stt;
+package ParkLab.VMap.model.stt;
+
+import org.springframework.context.annotation.Bean;
 
 import java.io.IOException;
 import java.io.InputStream;

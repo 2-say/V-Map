@@ -1,4 +1,4 @@
-package ParkLab.VMap.controller.stt;
+package ParkLab.VMap.model.stt;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
