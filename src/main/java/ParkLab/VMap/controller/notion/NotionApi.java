@@ -7,6 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+
 @Service
 public class NotionApi {
     private final RestTemplate restTemplate = new RestTemplate();
@@ -94,4 +95,5 @@ public class NotionApi {
         }
         return result;
     }
+
 }
