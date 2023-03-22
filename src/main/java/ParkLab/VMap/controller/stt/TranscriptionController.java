@@ -1,8 +1,8 @@
 package ParkLab.VMap.controller.stt;
 
-import ParkLab.VMap.model.stt.AuthSample;
-import ParkLab.VMap.model.stt.GetTranscribeSample;
-import ParkLab.VMap.model.stt.PostTranscribeSample;
+import ParkLab.VMap.model.Service.notion.stt.AuthSample;
+import ParkLab.VMap.model.Service.notion.stt.GetTranscribeSample;
+import ParkLab.VMap.model.Service.notion.stt.PostTranscribeSample;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

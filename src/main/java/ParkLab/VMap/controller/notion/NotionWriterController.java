@@ -1,6 +1,6 @@
 package ParkLab.VMap.controller.notion;
 
-import ParkLab.VMap.model.notion.NotionApi;
+import ParkLab.VMap.model.Service.notion.NotionApi;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 

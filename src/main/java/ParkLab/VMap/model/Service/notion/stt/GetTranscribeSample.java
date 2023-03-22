@@ -1,4 +1,4 @@
-package ParkLab.VMap.model.stt;
+package ParkLab.VMap.model.Service.notion.stt;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
