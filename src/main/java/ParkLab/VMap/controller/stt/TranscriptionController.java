@@ -4,8 +4,6 @@ import ParkLab.VMap.model.stt.AuthSample;
 import ParkLab.VMap.model.stt.GetTranscribeSample;
 import ParkLab.VMap.model.stt.PostTranscribeSample;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -70,7 +68,7 @@ public class TranscriptionController {
                                            @RequestBody String text) throws IOException {
 
         // 회원 정보를 통해 파일 이름 생성
-        String fileName = "transcription_" + userId + "_" + new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date()) + ".txt";
+        String fileName = "transcription_" + userId + "_" + new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss").format(new Date()) + ".txt";
         String filePath = "./transcriptions/" + fileName;
 
         try {

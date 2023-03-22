@@ -1,11 +1,10 @@
-package ParkLab.VMap.controller.notion;
+package ParkLab.VMap.model.notion;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
