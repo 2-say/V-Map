@@ -1,4 +1,4 @@
-package ParkLab.VMap.model.notion;
+package ParkLab.VMap.model.Service.notion;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
