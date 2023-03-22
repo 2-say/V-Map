@@ -1,4 +1,4 @@
-package ParkLab.VMap.controller.notion;
+package ParkLab.VMap.model.notion;
 public class BlockWrite {
     private String content;
 
