@@ -1,4 +1,4 @@
-package ParkLab.VMap.model.Service.notion.stt;
+package ParkLab.VMap.model.Service.stt;
 
 import java.io.DataOutputStream;
 import java.io.File;

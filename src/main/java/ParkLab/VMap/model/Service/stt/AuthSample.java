@@ -1,6 +1,4 @@
-package ParkLab.VMap.model.Service.notion.stt;
-
-import org.springframework.context.annotation.Bean;
+package ParkLab.VMap.model.Service.stt;
 
 import java.io.IOException;
 import java.io.InputStream;
