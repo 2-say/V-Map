@@ -1,24 +1,17 @@
 package ParkLab.VMap.controller.stt;
 
-import java.io.File;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import ParkLab.VMap.model.stt.SttRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ConcurrentModel;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-
 import ParkLab.VMap.model.stt.AuthSample;
 import ParkLab.VMap.model.stt.GetTranscribeSample;
 import ParkLab.VMap.model.stt.PostTranscribeSample;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 @Configuration
@@ -29,7 +22,6 @@ public class TranscriptionController {
         return "index";
     }
 
-    @Bean
     @GetMapping("/transcribe")
     public String transcribe(Model model) throws Exception {
         AuthSample authSample = new AuthSample();
@@ -56,7 +48,7 @@ public class TranscriptionController {
         ObjectMapper objectMapper = new ObjectMapper();
         String transcriptionJson = objectMapper.writeValueAsString(transcription);
 
-        model.addAttribute("transcription", transcriptionJson);
+        model.addAttribute("transcribe", transcriptionJson);
 
         return "transcribe";
     }
