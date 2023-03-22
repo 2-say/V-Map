@@ -32,26 +32,26 @@ public class NotionApi {
                 "    \"database_id\": \""+databaseId+ "\"\n" +
                 "  },\n" +
                 "  \"properties\": {\n" +
-                "    \"색상\": {\n" +
+                "    \"회의자\": {\n" +
                 "      \"select\": {\n" +
-                "        \"name\": \"red\"\n" +
+                "        \"name\": \"임재경.이세희\"\n" +
                 "      }\n" +
                 "    },\n" +
-                "    \"이름\": {\n" +
+                "    \"회의\": {\n" +
                 "      \"title\": [\n" +
                 "        {\n" +
                 "          \"text\": {\n" +
-                "            \"content\": \"테스트 내용1 \"\n" +
+                "            \"content\": \"제 4차 프로젝트 회의 \"\n" +
                 "          }\n" +
                 "        }\n" +
                 "      ]\n" +
                 "    },\n" +
-                "    \"맛\": {\n" +
+                "    \"회의 날짜\": {\n" +
                 "      \"type\": \"rich_text\",\n" +
                 "      \"rich_text\": [\n" +
                 "        {\n" +
                 "          \"text\": {\n" +
-                "            \"content\": \"test1\"\n" +
+                "            \"content\": \"3월 23일 (목요일)\"\n" +
                 "          }\n" +
                 "        }\n" +
                 "      ]\n" +
