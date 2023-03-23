@@ -42,7 +42,7 @@ public class NotionApi {
                 "      \"title\": [\n" +
                 "        {\n" +
                 "          \"text\": {\n" +
-                "            \"content\": \"제 3차 프로젝트 회의 - 테스트 \"\n" +
+                "            \"content\": \"제 4차 프로젝트 회의 \"\n" +
                 "          }\n" +
                 "        }\n" +
                 "      ]\n" +
@@ -52,7 +52,7 @@ public class NotionApi {
                 "      \"rich_text\": [\n" +
                 "        {\n" +
                 "          \"text\": {\n" +
-                "            \"content\": \"3월 15일 (수요일)\"\n" +
+                "            \"content\": \"3월 23일 (목요일)\"\n" +
                 "          }\n" +
                 "        }\n" +
                 "      ]\n" +

@@ -1,5 +1,6 @@
 package ParkLab.VMap.controller.stt;
 
+import ParkLab.VMap.controller.notion.NotionWriterController;
 import ParkLab.VMap.model.Service.stt.AuthSample;
 import ParkLab.VMap.model.Service.stt.GetTranscribeSample;
 import ParkLab.VMap.model.Service.stt.PostTranscribeSample;
@@ -24,6 +25,8 @@ import java.util.regex.Pattern;
 @Controller
 public class TranscriptionController {
 
+
+    NotionWriterController notionWriterController = new NotionWriterController();
     @GetMapping("/index.html")
     public String index() {
         return "index";
@@ -59,8 +62,16 @@ public class TranscriptionController {
         String transcriptionJson = objectMapper.writeValueAsString(transcription);
 
         model.addAttribute("transcription", transcriptionJson);
+        notionWriterController.post(transcription);
 
-        return "transcribe";
+        if (transcription.equals("Not found")) {
+            return "redirect:/transcribe.html";
+        } else {
+            // return the normal response if result is not "Not found"
+            return "transcribe";
+        }
+
+
     }
 
     @PostMapping("/saveText")
