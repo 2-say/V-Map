@@ -66,6 +66,22 @@ class _PageFrameRandingState extends State<PageFrameRanding> {
 
       ),
 
+      body: Container(
+        color: Colors.white,
+        width: double.infinity, height: 1000,
+
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Do Not Recode Alone', style: TextStyle(
+                fontSize: 80, fontWeight: FontWeight.bold,),
+              ),
+            ],
+        )
+
+
+
+      )
 
 
     );

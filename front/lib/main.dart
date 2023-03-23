@@ -5,6 +5,7 @@ import 'package:front/pageFetures/pageFeaturesInvite.dart';
 import 'package:front/pageFetures/pageFeaturesMain.dart';
 
 
+
 void main() {
   runApp(const MyApp());
 }
@@ -18,8 +19,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'V-Map',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.grey,
         ),
+
         home: const PageFrameRanding());
   }
 }
