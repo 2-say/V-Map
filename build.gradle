@@ -13,13 +13,14 @@ repositories {
 }
 
 dependencies {
+	//thymeleaf 추가
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	implementation 'us.zoom:zoomus:2.1.0'
 }
 
 tasks.named('test') {

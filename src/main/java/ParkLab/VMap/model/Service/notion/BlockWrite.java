@@ -1,4 +1,4 @@
-package ParkLab.VMap.controller.notion;
+package ParkLab.VMap.model.Service.notion;
 public class BlockWrite {
     private String content;
     private String type = "heading_2";
