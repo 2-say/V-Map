@@ -1,5 +1,7 @@
 package ParkLab.VMap.model.Service.stt;
 
+import org.springframework.stereotype.Service;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
