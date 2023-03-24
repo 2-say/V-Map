@@ -24,8 +24,6 @@ import java.util.regex.Pattern;
 
 @Controller
 public class TranscriptionController {
-
-
     NotionWriterController notionWriterController = new NotionWriterController();
     @GetMapping("/index.html")
     public String index() {
@@ -49,6 +47,7 @@ public class TranscriptionController {
 
         Pattern pattern = Pattern.compile("\"msg\":\"(.*?)\"}");
         Matcher matcher = pattern.matcher(result);
+
         String transcription = "";
         while (matcher.find()) {
             System.out.println("Match: " + matcher.group(1));
@@ -62,7 +61,6 @@ public class TranscriptionController {
         String transcriptionJson = objectMapper.writeValueAsString(transcription);
 
         model.addAttribute("transcription", transcriptionJson);
-        notionWriterController.post(transcription);
 
         if (transcription.equals("Not found")) {
             return "redirect:/transcribe.html";
@@ -94,5 +92,31 @@ public class TranscriptionController {
             e.printStackTrace();
             return new ResponseEntity<>("Error saving text for user " + userId, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+//테스트용으로 만든 메서드 삭제해도 되는 메서드 !
+    public String transcribe() throws Exception {
+        AuthSample authSample = new AuthSample();
+        String auth = authSample.getAuth();
+
+        File file = new File("./audio/output.wav");
+
+        PostTranscribeSample postTranscribeSample = new PostTranscribeSample(auth, file);
+        String id = postTranscribeSample.getId();
+
+        GetTranscribeSample getTranscribeSample = new GetTranscribeSample(auth, id);
+        String result = getTranscribeSample.getResult();
+
+        System.out.println(result);
+
+        Pattern pattern = Pattern.compile("\"msg\":\"(.*?)\"}");
+        Matcher matcher = pattern.matcher(result);
+        String transcription = "";
+        while (matcher.find()) {
+            System.out.println("Match: " + matcher.group(1));
+            transcription += matcher.group(1);
+        }
+        return transcription;
     }
 }

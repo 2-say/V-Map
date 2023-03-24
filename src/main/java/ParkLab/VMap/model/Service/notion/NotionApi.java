@@ -1,32 +1,27 @@
 package ParkLab.VMap.model.Service.notion;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
 
+/**
+ * 노션 HTTP 전송 클래스
+ */
 
 @Service
 public class NotionApi {
     private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     // Notion API Key를 설정합니다.
     private final String apiKey = "secret_EYZ88tYVWhnppaa5HuPOA8rwpW3xRlrSOWgAvM2faNo";
 
     // Database ID를 설정합니다.
     private final String databaseId = "998ba0454f464716b72cdc88001e3f3c";
-    public void createBlock(List<String> contents) throws Exception {
+
+
+    public void postToNotion(String JsonContentBlock) throws Exception {
         // 요청 URL을 설정합니다.
         String url = "https://api.notion.com/v1/pages/";
-        String type = "heading_2";
-        BlockWrite blockWrite1 = new BlockWrite();
-        String result = "";
-
-        // 요청 데이터 (JSON)를 설정합니다.
-        result = getContentBlock(blockWrite1, result, contents);
 
         String json = "{\n" +
                 "  \"parent\": {\n" +
@@ -35,14 +30,14 @@ public class NotionApi {
                 "  \"properties\": {\n" +
                 "    \"회의자\": {\n" +
                 "      \"select\": {\n" +
-                "        \"name\": \"임재경.이세희\"\n" +
+                "        \"name\": \"임재경.이세희.조원희.이상현\"\n" +
                 "      }\n" +
                 "    },\n" +
                 "    \"회의\": {\n" +
                 "      \"title\": [\n" +
                 "        {\n" +
                 "          \"text\": {\n" +
-                "            \"content\": \"제 4차 프로젝트 회의 \"\n" +
+                "            \"content\": \"제 5차 프로젝트 회의 \"\n" +
                 "          }\n" +
                 "        }\n" +
                 "      ]\n" +
@@ -52,17 +47,16 @@ public class NotionApi {
                 "      \"rich_text\": [\n" +
                 "        {\n" +
                 "          \"text\": {\n" +
-                "            \"content\": \"3월 23일 (목요일)\"\n" +
+                "            \"content\": \"3월 25일 (토요일)\"\n" +
                 "          }\n" +
                 "        }\n" +
                 "      ]\n" +
                 "    }\n" +
                 "  },\n" +
                 "  \"children\": [\n" +
-                result +
+                JsonContentBlock +
                 "  ]\n" +
                 "}";
-
 
         // HTTP 요청 헤더를 설정합니다.
         HttpHeaders headers = new HttpHeaders();
@@ -83,17 +77,4 @@ public class NotionApi {
             System.out.println("블록 작성 실패!");
         }
     }
-
-    private String getContentBlock(BlockWrite blockWrite1, String result, List<String> contents) {
-        for(var content : contents) {
-           if(contents.indexOf(content) != contents.size() - 1) //마지막 아닌 조건
-           {
-               result += blockWrite1.childBlock(content) + ",\n" ;
-           }
-           else
-               result += blockWrite1.childBlock(content);
-        }
-        return result;
-    }
-
 }
