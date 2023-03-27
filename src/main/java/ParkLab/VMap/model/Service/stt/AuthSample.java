@@ -1,5 +1,7 @@
 package ParkLab.VMap.model.Service.stt;
 
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -8,6 +10,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
+@Service
 public class AuthSample {
     public AuthSample() {
     }

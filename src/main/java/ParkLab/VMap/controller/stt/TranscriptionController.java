@@ -4,6 +4,7 @@ import ParkLab.VMap.controller.notion.NotionWriterController;
 import ParkLab.VMap.model.Service.stt.AuthSample;
 import ParkLab.VMap.model.Service.stt.GetTranscribeSample;
 import ParkLab.VMap.model.Service.stt.PostTranscribeSample;
+import ParkLab.VMap.model.Service.stt.TranscribeSample;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.RequestDispatcher;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,6 +27,7 @@ import java.util.regex.Pattern;
 @Controller
 public class TranscriptionController {
     NotionWriterController notionWriterController = new NotionWriterController();
+
     @GetMapping("/index.html")
     public String index() {
         return "index";
@@ -32,27 +35,8 @@ public class TranscriptionController {
 
     @GetMapping("/transcribe.html")
     public String transcribe(Model model) throws Exception {
-        AuthSample authSample = new AuthSample();
-        String auth = authSample.getAuth();
-
-        File file = new File("./audio/output.wav");
-
-        PostTranscribeSample postTranscribeSample = new PostTranscribeSample(auth, file);
-        String id = postTranscribeSample.getId();
-
-        GetTranscribeSample getTranscribeSample = new GetTranscribeSample(auth, id);
-        String result = getTranscribeSample.getResult();
-
-        System.out.println(result);
-
-        Pattern pattern = Pattern.compile("\"msg\":\"(.*?)\"}");
-        Matcher matcher = pattern.matcher(result);
-
-        String transcription = "";
-        while (matcher.find()) {
-            System.out.println("Match: " + matcher.group(1));
-            transcription += matcher.group(1);
-        }
+        TranscribeSample transcribeSample = new TranscribeSample();
+        String transcription = transcribeSample.Transcribe();
 
         String userId = "Jay";
         saveText(userId, transcription);
@@ -62,16 +46,9 @@ public class TranscriptionController {
 
         model.addAttribute("transcription", transcriptionJson);
 
-        if (transcription.equals("Not found")) {
-            return "redirect:/transcribe.html";
-        } else {
-            // return the normal response if result is not "Not found"
-            return "transcribe";
-        }
-
-
+        return "transcribe";
     }
-
+    
     @PostMapping("/saveText")
     public ResponseEntity<String> saveText(@RequestParam("userId") String userId,
                                            @RequestBody String text) throws IOException {
@@ -94,29 +71,4 @@ public class TranscriptionController {
         }
     }
 
-
-//테스트용으로 만든 메서드 삭제해도 되는 메서드 !
-    public String transcribe() throws Exception {
-        AuthSample authSample = new AuthSample();
-        String auth = authSample.getAuth();
-
-        File file = new File("./audio/output.wav");
-
-        PostTranscribeSample postTranscribeSample = new PostTranscribeSample(auth, file);
-        String id = postTranscribeSample.getId();
-
-        GetTranscribeSample getTranscribeSample = new GetTranscribeSample(auth, id);
-        String result = getTranscribeSample.getResult();
-
-        System.out.println(result);
-
-        Pattern pattern = Pattern.compile("\"msg\":\"(.*?)\"}");
-        Matcher matcher = pattern.matcher(result);
-        String transcription = "";
-        while (matcher.find()) {
-            System.out.println("Match: " + matcher.group(1));
-            transcription += matcher.group(1);
-        }
-        return transcription;
-    }
 }

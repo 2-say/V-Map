@@ -1,5 +1,7 @@
 package ParkLab.VMap.model.Service.stt;
 
+import org.springframework.stereotype.Service;
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;

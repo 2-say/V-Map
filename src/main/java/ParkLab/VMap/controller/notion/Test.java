@@ -1,9 +1,9 @@
 package ParkLab.VMap.controller.notion;
 
 
-import ParkLab.VMap.controller.stt.TranscriptionController;
 import ParkLab.VMap.model.Service.notion.BlockData;
 import ParkLab.VMap.model.Service.notion.BlockType;
+import ParkLab.VMap.model.Service.stt.TranscribeSample;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
 public class Test {
     static NotionWriterController notionWriterController = new NotionWriterController();
     static List<BlockData> contents = new ArrayList<>();
-    static TranscriptionController transcriptionController = new TranscriptionController();
+    static TranscribeSample transcribeSample = new TranscribeSample();
 
     public static void main(String[] args) throws Exception {
 
@@ -58,7 +58,7 @@ public class Test {
 
         contents.add(new BlockData("-----------", BlockType.PARAGRAPH));
         contents.add(new BlockData("회의 대본 :", BlockType.HEADING_2));
-        contents.add(new BlockData(transcriptionController.transcribe(), BlockType.CALLOUT));
+        contents.add(new BlockData(transcribeSample.Transcribe(), BlockType.CALLOUT));
 
 
         notionWriterController.post(contents);
