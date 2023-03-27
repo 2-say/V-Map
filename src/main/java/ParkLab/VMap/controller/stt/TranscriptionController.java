@@ -26,8 +26,6 @@ import java.util.regex.Pattern;
 
 @Controller
 public class TranscriptionController {
-
-
     NotionWriterController notionWriterController = new NotionWriterController();
 
     @GetMapping("/index.html")
@@ -47,7 +45,6 @@ public class TranscriptionController {
         String transcriptionJson = objectMapper.writeValueAsString(transcription);
 
         model.addAttribute("transcription", transcriptionJson);
-        notionWriterController.post(transcription);
 
         return "transcribe";
     }
@@ -74,5 +71,4 @@ public class TranscriptionController {
         }
     }
 
-    // This is for Sourcetree test.
 }
