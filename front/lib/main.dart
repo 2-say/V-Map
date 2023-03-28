@@ -30,11 +30,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'V-Map',
+        title: 'V-Map(test)',
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),
 
-        home: const PageFeatureMain());
+        home: const PageFrameRanding());
   }
 }

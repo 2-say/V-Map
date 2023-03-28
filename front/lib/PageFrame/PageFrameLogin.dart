@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/dataSets/dataSetColors.dart';
 import '../dataSets/dataSetTextStyles.dart';
 
@@ -30,7 +31,10 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
           children: <Widget>[
             Text('V-MAP', style: TextStyle(fontSize: 30)),
             SizedBox(width: 80),
-            TextButton(onPressed: () {}, child: Text('about', style: TextStyle(fontSize: 20)),
+            TextButton(onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => PageFrameRanding()));
+            }, child: Text('about', style: TextStyle(fontSize: 20)),
                 style: TextButton.styleFrom(
                     primary: Colors.white,
                     minimumSize: Size(200, 75)
@@ -50,7 +54,10 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
                       colors: [Colors.white, Colors.green]
                   )
               ),
-              child: TextButton(onPressed: () {}, child: Text('Sign In/Sign Up', style: TextStyle(fontSize: 20)),
+              child: TextButton(onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => PageFrameLogin()));
+              }, child: Text('Sign In/Sign Up', style: TextStyle(fontSize: 20)),
                 style: TextButton.styleFrom(
                   primary: Colors.white,
                   minimumSize: Size(300, 75),),

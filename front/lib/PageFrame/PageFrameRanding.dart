@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:front/PageFrame/PageFrameLogin.dart';
 import 'package:front/dataSets/dataSetColors.dart';
+import 'package:front/pageFetures/pageFeaturesMain.dart';
 import '../dataSets/dataSetTextStyles.dart';
 
 class PageFrameRanding extends StatefulWidget {
@@ -40,7 +42,10 @@ class _PageFrameRandingState extends State<PageFrameRanding> {
                       colors: [Colors.white, Colors.green]
                   )
               ),
-              child: TextButton(onPressed: () {}, child: Text('About', style: TextStyle(fontSize: 20)),
+              child: TextButton(onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => PageFrameRanding()));
+              }, child: Text('About', style: TextStyle(fontSize: 20)),
                 style: TextButton.styleFrom(
                   primary: Colors.white,
                   minimumSize: Size(300, 75),),
@@ -52,7 +57,10 @@ class _PageFrameRandingState extends State<PageFrameRanding> {
                     minimumSize: Size(200, 75)
                 )),
             Expanded(child: Container()),
-            TextButton(onPressed: () {}, child: Text('Sign In/Sign Up', style: TextStyle(fontSize: 20)),
+            TextButton(onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => PageFrameLogin()));
+            }, child: Text('Sign In/Sign Up', style: TextStyle(fontSize: 20)),
                 style: TextButton.styleFrom(
                     primary: Colors.white,
                     minimumSize: Size(300, 75)
@@ -76,8 +84,16 @@ class _PageFrameRandingState extends State<PageFrameRanding> {
               Text('Do Not Recode Alone', style: TextStyle(
                 fontSize: 80, fontWeight: FontWeight.bold,),
               ),
+              ElevatedButton(
+                child: Text("Go to Main"),
+                onPressed: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => PageFeatureMain()));
+                },
+              ),
+
             ],
-        )
+        ),
 
 
 
