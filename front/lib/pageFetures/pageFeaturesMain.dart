@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/dataSets/dataSetColors.dart';
 import '../dataSets/dataSetTextStyles.dart';
+import 'package:front/PageFrame/PageFrameRanding.dart';
 
 class PageFeatureMain extends StatefulWidget {
   const PageFeatureMain({Key? key}) : super(key: key);
@@ -83,6 +84,15 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                   const Expanded(child: SizedBox()),
                   Text('$currentTime', style: b1eb),
                   const SizedBox(width: 12),
+                  TextButton(onPressed: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (_) => PageFrameRanding()));
+                  }, child: Text('HOME', style: TextStyle(fontSize: 15)),
+                    style: TextButton.styleFrom(
+                      primary: Colors.green,
+                      minimumSize: Size(100, 50),),
+                  ),
+
                   isRecordOn
                       ? const Text('녹음 중',
                           style: TextStyle(
