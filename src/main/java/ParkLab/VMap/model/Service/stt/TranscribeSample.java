@@ -19,7 +19,7 @@ public class TranscribeSample {
             AuthSample authSample = new AuthSample();
             String auth = authSample.getAuth();
 
-            File file = new File("./audio/output.wav");
+            File file = new File("/home/lab329/Downloads/audio/output.wav");
 
             PostTranscribeSample postTranscribeSample = new PostTranscribeSample(auth, file);
             String id = postTranscribeSample.getId();

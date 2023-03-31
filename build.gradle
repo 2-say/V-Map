@@ -2,15 +2,18 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.8'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'war'
 }
 
 group = 'ParkLab'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
+apply plugin : 'war'
 
 repositories {
 	mavenCentral()
 }
+bootWar.enabled = true
 
 dependencies {
 	//thymeleaf 추가
@@ -25,4 +28,10 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+war {
+	manifest {
+		attributes 'Main-Class': 'ParkLab.VMap.VMapApplication'
+	}
 }
