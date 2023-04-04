@@ -7,9 +7,9 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 @SpringBootApplication
 public class VMapApplication {
 
-//	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-//		return application.sources(VMapApplication.class);
-//	}
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(VMapApplication.class);
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(VMapApplication.class, args);
