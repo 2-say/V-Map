@@ -71,7 +71,7 @@ public class NotionWriterController {
 
         contents.add(new BlockData("-----------", BlockType.PARAGRAPH));
         contents.add(new BlockData("회의 대본 :", BlockType.HEADING_2));
-        contents.add(new BlockData(transcribeSample.Transcribe(), BlockType.CALLOUT));
+//        contents.add(new BlockData(transcribeSample.Transcribe(), BlockType.CALLOUT));
 
         notionWriterController.post(contents);
     }

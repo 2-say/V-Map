@@ -16,8 +16,10 @@ public class NotionAuthController {
         return authorizeUrl + "?response_type=code&client_id=" + clientId + "&redirect_uri=" + callbackURL;
     }
 
+
+    //노션 인증 URL 생성
     @GetMapping("/notionAuth")
-    public static String Test() {
+    public static String Test(){
         String authGrantType = getAuthGrantType(callBackUrl);
         return "redirect:" + authGrantType;
     }
@@ -36,11 +38,26 @@ public class NotionAuthController {
 
         System.out.println(response);
 
+
         // Redirect to another page
-        return "redirect:/success";
+        return "redirect:/postNotion";
     }
 
     @GetMapping("/success")
     public static void test() {
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

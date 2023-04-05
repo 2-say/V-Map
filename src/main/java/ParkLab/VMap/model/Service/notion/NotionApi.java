@@ -13,10 +13,10 @@ import org.springframework.web.client.RestTemplate;
 public class NotionApi {
     private final RestTemplate restTemplate = new RestTemplate();
     // Notion API Key를 설정합니다.
-    private final String apiKey = "secret_EYZ88tYVWhnppaa5HuPOA8rwpW3xRlrSOWgAvM2faNo";
-
+    private final String apiKey = "secret_Tozo3hAhvU84OLjGEwl2nOHR12Oyiusb8PJThyw1yBm";
+    private final FindData findData = new FindData();
     // Database ID를 설정합니다.
-    private final String databaseId = "998ba0454f464716b72cdc88001e3f3c";
+    private final String databaseId = findData.find_database();
 
 
     public void postToNotion(String JsonContentBlock) throws Exception {
@@ -28,12 +28,12 @@ public class NotionApi {
                 "    \"database_id\": \""+databaseId+ "\"\n" +
                 "  },\n" +
                 "  \"properties\": {\n" +
-                "    \"회의자\": {\n" +
+                "    \"유형\": {\n" +
                 "      \"select\": {\n" +
-                "        \"name\": \"임재경.이세희.조원희.이상현\"\n" +
+                "        \"name\": \"짧은 회의\"\n" +
                 "      }\n" +
                 "    },\n" +
-                "    \"회의\": {\n" +
+                "    \"이름\": {\n" +
                 "      \"title\": [\n" +
                 "        {\n" +
                 "          \"text\": {\n" +
@@ -42,15 +42,11 @@ public class NotionApi {
                 "        }\n" +
                 "      ]\n" +
                 "    },\n" +
-                "    \"회의 날짜\": {\n" +
-                "      \"type\": \"rich_text\",\n" +
-                "      \"rich_text\": [\n" +
-                "        {\n" +
-                "          \"text\": {\n" +
-                "            \"content\": \"3월 25일 (토요일)\"\n" +
-                "          }\n" +
-                "        }\n" +
-                "      ]\n" +
+                "    \"이벤트 시간\": {\n" +
+                "      \"type\": \"date\",\n" +
+                "      \"date\": {\n" +
+                "          \"start\": \"2023-04-08\"\n  "+
+                "      }\n" +
                 "    }\n" +
                 "  },\n" +
                 "  \"children\": [\n" +
@@ -63,6 +59,8 @@ public class NotionApi {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Notion-Version", "2021-08-16");
         headers.set("Authorization", "Bearer " + apiKey);
+
+        System.out.println(json);
 
         // HTTP 요청 데이터를 설정합니다.
         HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);
