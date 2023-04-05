@@ -6,6 +6,7 @@ import ParkLab.VMap.model.Service.notion.BlockWrite;
 import ParkLab.VMap.model.Service.notion.NotionApi;
 import ParkLab.VMap.model.Service.stt.TranscribeSample;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -22,13 +23,13 @@ public class NotionWriterController {
     NotionApi notionApi = new NotionApi();
     //List<BlockData> contents = new ArrayList<>();           //위를 묶은 리스트
 
-    public void post(List<BlockData> contents) throws Exception {
+    public void post(List<BlockData> contents, String accessToken, String databaseId) throws Exception {
         String JsonContentBlock = blockWrite.BlockWrite(contents);
-        notionApi.postToNotion(JsonContentBlock);
+        notionApi.postToNotion(JsonContentBlock,accessToken,databaseId);
     }
 
     @GetMapping("/postNotion")
-    public static void Test() throws Exception {
+    public static void Test(@RequestParam("accessToken") String accessToken, @RequestParam("databaseId") String databaseId) throws Exception {
         NotionWriterController notionWriterController = new NotionWriterController();
         List<BlockData> contents = new ArrayList<>();
         TranscribeSample transcribeSample = new TranscribeSample();
@@ -73,6 +74,6 @@ public class NotionWriterController {
         contents.add(new BlockData("회의 대본 :", BlockType.HEADING_2));
 //        contents.add(new BlockData(transcribeSample.Transcribe(), BlockType.CALLOUT));
 
-        notionWriterController.post(contents);
+        notionWriterController.post(contents,accessToken,databaseId);
     }
 }

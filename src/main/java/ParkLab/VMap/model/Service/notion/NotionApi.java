@@ -1,5 +1,6 @@
 package ParkLab.VMap.model.Service.notion;
 
+import ParkLab.VMap.controller.notion.NotionAuthController;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -13,13 +14,14 @@ import org.springframework.web.client.RestTemplate;
 public class NotionApi {
     private final RestTemplate restTemplate = new RestTemplate();
     // Notion API Key를 설정합니다.
-    private final String apiKey = "secret_Tozo3hAhvU84OLjGEwl2nOHR12Oyiusb8PJThyw1yBm";
-    private final FindData findData = new FindData();
+
+    private static NotionAuthController notionAuthController;
+
     // Database ID를 설정합니다.
-    private final String databaseId = findData.find_database();
 
 
-    public void postToNotion(String JsonContentBlock) throws Exception {
+
+    public void postToNotion(String JsonContentBlock,String apiKey, String databaseId) throws Exception {
         // 요청 URL을 설정합니다.
         String url = "https://api.notion.com/v1/pages/";
 
@@ -60,7 +62,7 @@ public class NotionApi {
         headers.set("Notion-Version", "2021-08-16");
         headers.set("Authorization", "Bearer " + apiKey);
 
-        System.out.println(json);
+
 
         // HTTP 요청 데이터를 설정합니다.
         HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);

@@ -1,21 +1,30 @@
 package ParkLab.VMap.controller.notion;
 
 import ParkLab.VMap.model.Service.notion.TokenRequester;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 @Controller
 public class NotionAuthController {
+
     private static final String callBackUrl = "http://localhost:32929/notionApiTest";//The url defined in WSO2
-    private static final String clientId = "1f2cddb1-eabf-4cd8-84c5-e3246fd27664";//clientId
+    private static final String clientId = "d088e98c-ab3c-49ad-b671-1850687ff05b";//clientId
     private static final String authorizeUrl = "https://api.notion.com/v1/oauth/authorize";
-    private static final String clientPw = "secret_jyGm94IqHfPKHuRSai5ubsJjrNpn8H9Eaox0Tzyer4L";//clientPw
+    private static final String clientPw = "secret_WAd029yDKxesEd30bHOQR7GU7WwbswJdPvr72yG9zdh";//clientPw
 
     private static String getAuthGrantType(String callbackURL) {
         return authorizeUrl + "?response_type=code&client_id=" + clientId + "&redirect_uri=" + callbackURL;
     }
-
+    
 
     //노션 인증 URL 생성
     @GetMapping("/notionAuth")
@@ -25,7 +34,7 @@ public class NotionAuthController {
     }
 
     @GetMapping("/notionApiTest")
-    public String handleCallback(@RequestParam("code") String code) {
+    public String handleCallback(@RequestParam("code") String code) throws JsonProcessingException {
         // Do something with the code
         System.out.println("Authorization Code: " + code);
 
@@ -36,17 +45,51 @@ public class NotionAuthController {
 
         String response = requester.requestToken("https://api.notion.com/v1/oauth/token");
 
-        System.out.println(response);
+//        System.out.println(response);
+        Map<String, Object> jsonMap = new ObjectMapper().readValue(response, new TypeReference<Map<String, Object>>() {});
+        String accessToken = (String) jsonMap.get("access_token");
 
+
+        System.out.println("Access Token: " + accessToken);
 
         // Redirect to another page
-        return "redirect:/postNotion";
+        return "redirect:/getData?accessToken=" +accessToken;
     }
 
     @GetMapping("/success")
     public static void test() {
     }
 
+
+    @GetMapping("/getData")
+    public String find_database(@RequestParam("accessToken") String accessToken) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", accessToken);
+        headers.set("Notion-Version", "2021-08-16"); // Add Notion version to headers
+
+        HttpEntity<String> requestEntity = new HttpEntity<>("{}", headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange("https://api.notion.com/v1/search", HttpMethod.POST, requestEntity, String.class);
+        String responseBody = responseEntity.getBody();
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(responseBody);
+            JsonNode resultsNode = rootNode.path("results");
+            for (JsonNode resultNode : resultsNode) {
+                String objectType = resultNode.path("object").asText();
+                if (objectType.equals("database")) {
+                    String databaseId = resultNode.path("id").asText();
+                    System.out.println("Database ID: " + databaseId);
+                    return "redirect:/postNotion?accessToken="+accessToken+"&databaseId="+databaseId;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "null";
+    }
 
 
 
