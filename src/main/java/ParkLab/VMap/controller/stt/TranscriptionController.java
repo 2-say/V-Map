@@ -1,9 +1,6 @@
 package ParkLab.VMap.controller.stt;
 
 import ParkLab.VMap.controller.notion.NotionWriterController;
-import ParkLab.VMap.model.Service.stt.AuthSample;
-import ParkLab.VMap.model.Service.stt.GetTranscribeSample;
-import ParkLab.VMap.model.Service.stt.PostTranscribeSample;
 import ParkLab.VMap.model.Service.stt.TranscribeSample;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
@@ -15,22 +12,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.RequestDispatcher;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Controller
 public class TranscriptionController {
     NotionWriterController notionWriterController = new NotionWriterController();
 
-    @GetMapping("/index.html")
-    public String index() {
-        return "index";
+    @GetMapping("/index")
+    public void index() {
     }
 
     @GetMapping("/transcribe.html")

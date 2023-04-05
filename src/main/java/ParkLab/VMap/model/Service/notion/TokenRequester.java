@@ -1,4 +1,4 @@
-package ParkLab.VMap.controller.notion;
+package ParkLab.VMap.model.Service.notion;
 
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
