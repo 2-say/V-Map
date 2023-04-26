@@ -27,6 +27,8 @@ dependencies {
 	// json 추출
 	implementation 'org.json:json:20210307'
 
+	// RestTemplate PATCH, PUT method 사용 위해 추가
+	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
 
 
 

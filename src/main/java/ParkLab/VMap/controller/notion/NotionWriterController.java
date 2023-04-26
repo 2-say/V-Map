@@ -1,9 +1,6 @@
 package ParkLab.VMap.controller.notion;
 
-import ParkLab.VMap.model.Service.notion.BlockData;
-import ParkLab.VMap.model.Service.notion.BlockType;
-import ParkLab.VMap.model.Service.notion.BlockWrite;
-import ParkLab.VMap.model.Service.notion.NotionApi;
+import ParkLab.VMap.model.Service.notion.*;
 import ParkLab.VMap.model.Service.stt.TranscribeSample;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,10 +18,9 @@ import java.util.List;
 public class NotionWriterController {
     BlockWrite blockWrite = new BlockWrite();
     NotionApi notionApi = new NotionApi();
-    String id;
-    //List<BlockData> contents = new ArrayList<>();           //위를 묶은 리스트
 
     public void post(List<BlockData> contents, String accessToken, String databaseId) throws Exception {
+
         String JsonContentBlock = blockWrite.BlockWrite(contents);
         notionApi.postToNotion(JsonContentBlock,accessToken,databaseId);
     }
@@ -34,11 +30,13 @@ public class NotionWriterController {
         NotionWriterController notionWriterController = new NotionWriterController();
         List<BlockData> contents = new ArrayList<>();
         TranscribeSample transcribeSample = new TranscribeSample();
+        System.out.println("accessToken = " + accessToken);
+        MyDataSingleton.getInstance().setToken(accessToken);
 
         contents.add(new BlockData("회의 참석자", BlockType.HEADING_1));
         contents.add(new BlockData("이세희,임재경,이상현,조원희", BlockType.PARAGRAPH));
 
-        contents.add(new BlockData("\\n 회의 제목 :", BlockType.HEADING_2));
+        contents.add(new BlockData("\\n  :", BlockType.HEADING_2));
         contents.add(new BlockData("회사의 이번 분기 실적과 다음 분기 계획에 대한 논의", BlockType.CALLOUT));
 
 
@@ -76,14 +74,5 @@ public class NotionWriterController {
 //        contents.add(new BlockData(transcribeSample.Transcribe(), BlockType.CALLOUT));
 
         notionWriterController.post(contents,accessToken,databaseId);
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-
-        return notionApi.getId();
     }
 }

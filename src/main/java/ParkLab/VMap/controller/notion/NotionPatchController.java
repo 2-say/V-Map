@@ -1,8 +1,9 @@
 package ParkLab.VMap.controller.notion;
 
 import ParkLab.VMap.controller.meeting.MeetingDataController;
-import org.json.JSONObject;
+import ParkLab.VMap.model.Service.notion.MyDataSingleton;
 import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -11,16 +12,16 @@ import org.springframework.web.client.RestTemplate;
 public class NotionPatchController {
     private final MeetingDataController meetingDataController = new MeetingDataController();
     private final RestTemplate restTemplate = new RestTemplate();
-    NotionWriterController notionWriterController;
-
-    private String id;
 
     @GetMapping("/patchNotion")
-    public void patchToNotion(String JsonContentBlock, String apiKey, String databaseId) throws Exception {
+    public void patchToNotion() throws Exception {
+        String apiKey = MyDataSingleton.getInstance().getToken();
         // 요청 URL을 설정합니다.
 //        String title = meetingDataController.getMeetingData().getTitle();
         String title = "쎾쓰";
-       id = notionWriterController.getId();
+        String id = MyDataSingleton.getInstance().getData();
+
+        // String id = "11baaf2417b843fca5210e767e6d9b09";
         String url = "https://api.notion.com/v1/blocks/"+id+"/children/";
 
         String json = "{\n" +
@@ -55,10 +56,14 @@ public class NotionPatchController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Notion-Version", "2021-08-16");
         headers.set("Authorization", "Bearer " + apiKey);
+        System.out.println("apiKey = " + apiKey);
 
 
         // HTTP 요청 데이터를 설정합니다.
         HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);
+
+        // Http PATCH method 사용 위해 RequestFactory를 세팅한다.
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
         // HTTP POST 요청을 보냅니다.
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.PATCH, requestEntity, String.class);
@@ -70,22 +75,5 @@ public class NotionPatchController {
         } else {
             System.out.println("블록 작성 실패!");
         }
-
-        extractedNotionDatabaseId(responseEntity);
-    }
-
-    private String extractedNotionDatabaseId(ResponseEntity<String> responseEntity) {
-        // ResponseEntity에서 JSON 추출
-        JSONObject json = new JSONObject(responseEntity.getBody());
-
-        // "id"값 추출
-        String id = json.getString("id");
-
-        // 결과 출력
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }

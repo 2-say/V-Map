@@ -19,7 +19,7 @@ public class NotionApi {
 
     public void postToNotion(String JsonContentBlock,String apiKey, String databaseId) throws Exception {
         // 요청 URL을 설정합니다.
-//        String title = meetingDataController.getMeetingData().getTitle();
+        String title = meetingDataController.getMeetingData().getTitle();
         String title = "쎾쓰";
         String url = "https://api.notion.com/v1/pages/";
 
@@ -79,19 +79,14 @@ public class NotionApi {
         extractedNotionDatabaseId(responseEntity);
     }
 
-    private String extractedNotionDatabaseId(ResponseEntity<String> responseEntity) {
+    private void extractedNotionDatabaseId(ResponseEntity<String> responseEntity) {
         // ResponseEntity에서 JSON 추출
         JSONObject json = new JSONObject(responseEntity.getBody());
 
         // "id"값 추출
         String id = json.getString("id");
 
-        // 결과 출력
-        return id;
-    }
-
-    public String getId() {
-        return extractedNotionDatabaseId(responseEntity);
+        MyDataSingleton.getInstance().setData(id);
     }
 }
 
