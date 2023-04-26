@@ -12,46 +12,42 @@ import org.springframework.web.client.RestTemplate;
  */
 
 @Service
-public class NotionApi {
-    private MeetingDataController meetingDataController = new MeetingDataController();
+public class NotionPatch {
+    private final MeetingDataController meetingDataController = new MeetingDataController();
     private final RestTemplate restTemplate = new RestTemplate();
-    ResponseEntity<String> responseEntity;
-
-    public void postToNotion(String JsonContentBlock,String apiKey, String databaseId) throws Exception {
+    NotionApi notionApi = new NotionApi();
+    public void postToNotion(String JsonContentBlock, String apiKey, String databaseId) throws Exception {
         // 요청 URL을 설정합니다.
 //        String title = meetingDataController.getMeetingData().getTitle();
         String title = "쎾쓰";
-        String url = "https://api.notion.com/v1/pages/";
+        String id = notionApi.getId();
+        String url = "https://api.notion.com/v1/blocks/"+id+"/children/";
 
         String json = "{\n" +
-                "  \"parent\": {\n" +
-                "    \"database_id\": \""+databaseId+ "\"\n" +
-                "  },\n" +
-                "  \"properties\": {\n" +
-                "    \"유형\": {\n" +
-                "      \"select\": {\n" +
-                "        \"name\": \"짧은 회의\"\n" +
+                "   \"children\": [\n" +
+                "      {\n" +
+                "         \"object\": \"block\",\n" +
+                "         \"type\": \"heading_2\",\n" +
+                "         \"heading_2\": {\n" +
+                "            \"rich_text\": [{ \"type\": \"text\", \"text\": { \"content\": \"텍스트 수정 내용\" } }]\n" +
+                "         }\n" +
+                "      },\n" +
+                "      {\n" +
+                "         \"object\": \"block\",\n" +
+                "         \"type\": \"paragraph\",\n" +
+                "         \"paragraph\": {\n" +
+                "            \"rich_text\": [\n" +
+                "               {\n" +
+                "                  \"type\": \"text\",\n" +
+                "                  \"text\": {\n" +
+                "                     \"content\": \"내용\",\n" +
+                "                     \"link\": { \"url\": \"https://develop247.tistory.com/\" }\n" +
+                "                  }\n" +
+                "               }\n" +
+                "            ]\n" +
+                "         }\n" +
                 "      }\n" +
-                "    },\n" +
-                "    \"이름\": {\n" +
-                "      \"title\": [\n" +
-                "        {\n" +
-                "          \"text\": {\n" +
-                "            \"content\": \""+title+"\"\n" +
-                "          }\n" +
-                "        }\n" +
-                "      ]\n" +
-                "    },\n" +
-                "    \"이벤트 시간\": {\n" +
-                "      \"type\": \"date\",\n" +
-                "      \"date\": {\n" +
-                "          \"start\": \"2023-04-08\"\n  "+
-                "      }\n" +
-                "    }\n" +
-                "  },\n" +
-                "  \"children\": [\n" +
-                JsonContentBlock +
-                "  ]\n" +
+                "   ]\n" +
                 "}";
 
         // HTTP 요청 헤더를 설정합니다.
@@ -61,12 +57,11 @@ public class NotionApi {
         headers.set("Authorization", "Bearer " + apiKey);
 
 
-
         // HTTP 요청 데이터를 설정합니다.
         HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);
 
         // HTTP POST 요청을 보냅니다.
-        responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.PATCH, requestEntity, String.class);
         System.out.println("responseEntity = " + responseEntity);
 
         // HTTP 응답 결과를 확인합니다.
@@ -89,12 +84,4 @@ public class NotionApi {
         // 결과 출력
         return id;
     }
-
-    public String getId() {
-        return extractedNotionDatabaseId(responseEntity);
-    }
 }
-
-
-
-

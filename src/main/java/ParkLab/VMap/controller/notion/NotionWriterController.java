@@ -21,6 +21,7 @@ import java.util.List;
 public class NotionWriterController {
     BlockWrite blockWrite = new BlockWrite();
     NotionApi notionApi = new NotionApi();
+    String id;
     //List<BlockData> contents = new ArrayList<>();           //위를 묶은 리스트
 
     public void post(List<BlockData> contents, String accessToken, String databaseId) throws Exception {
@@ -75,5 +76,14 @@ public class NotionWriterController {
 //        contents.add(new BlockData(transcribeSample.Transcribe(), BlockType.CALLOUT));
 
         notionWriterController.post(contents,accessToken,databaseId);
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+
+        return notionApi.getId();
     }
 }
