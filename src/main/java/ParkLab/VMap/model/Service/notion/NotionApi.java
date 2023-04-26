@@ -1,9 +1,11 @@
 package ParkLab.VMap.model.Service.notion;
 
+import ParkLab.VMap.controller.meeting.MeetingDataController;
 import ParkLab.VMap.controller.notion.NotionAuthController;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.json.JSONObject;
 
 
 /**
@@ -12,7 +14,9 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class NotionApi {
+    private MeetingDataController meetingDataController = new MeetingDataController();
     private final RestTemplate restTemplate = new RestTemplate();
+
     // Notion API Key를 설정합니다.
 
     private static NotionAuthController notionAuthController;
@@ -23,6 +27,8 @@ public class NotionApi {
 
     public void postToNotion(String JsonContentBlock,String apiKey, String databaseId) throws Exception {
         // 요청 URL을 설정합니다.
+//        String title = meetingDataController.getMeetingData().getTitle();
+        String title = "쎾쓰";
         String url = "https://api.notion.com/v1/pages/";
 
         String json = "{\n" +
@@ -39,7 +45,7 @@ public class NotionApi {
                 "      \"title\": [\n" +
                 "        {\n" +
                 "          \"text\": {\n" +
-                "            \"content\": \"제 5차 프로젝트 회의 \"\n" +
+                "            \"content\": \""+title+"\"\n" +
                 "          }\n" +
                 "        }\n" +
                 "      ]\n" +
@@ -69,6 +75,7 @@ public class NotionApi {
 
         // HTTP POST 요청을 보냅니다.
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        System.out.println("responseEntity = " + responseEntity);
 
         // HTTP 응답 결과를 확인합니다.
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
@@ -76,5 +83,18 @@ public class NotionApi {
         } else {
             System.out.println("블록 작성 실패!");
         }
+
+        extractedNotionDatabaseId(responseEntity);
+    }
+
+    private String extractedNotionDatabaseId(ResponseEntity<String> responseEntity) {
+        // ResponseEntity에서 JSON 추출
+        JSONObject json = new JSONObject(responseEntity.getBody());
+
+        // "id"값 추출
+        String id = json.getString("id");
+
+        // 결과 출력
+        return id;
     }
 }
