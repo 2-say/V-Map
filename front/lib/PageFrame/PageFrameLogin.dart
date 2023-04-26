@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
+import 'package:front/pageFetures/pageFeaturesInvite.dart';
 import 'package:front/dataSets/dataSetColors.dart';
 import '../dataSets/dataSetTextStyles.dart';
 
@@ -136,7 +137,10 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
                                 colors: [Colors.lightGreen, Colors.green]
                             )
                         ),
-                        child: TextButton(onPressed: () {}, child: Text('Lets Go!', style: TextStyle(fontSize: 30)),
+                        child: TextButton(onPressed: () {
+                          Navigator.push(
+                              context, MaterialPageRoute(builder: (_) => PageFeatureInvite()));
+                        }, child: Text('Lets Go!', style: TextStyle(fontSize: 30)),
                           style: TextButton.styleFrom(
                             primary: Colors.white,
                             minimumSize: Size(300, 50),),
