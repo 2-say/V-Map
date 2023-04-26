@@ -3,184 +3,206 @@ import 'package:front/pageFetures/pageFeaturesMain.dart';
 import 'package:front/pageFetures/pageFeaturesInvitation.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/PageFrame/PageFrameLogin.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class PageFeatureInvite extends StatelessWidget {
+class PageFeatureInvite extends StatefulWidget {
   const PageFeatureInvite({Key? key}) : super(key: key);
 
+  @override
+  State<PageFeatureInvite> createState() => _PageFeatureInviteState();
+}
+
+class _PageFeatureInviteState extends State<PageFeatureInvite> {
+  final List<String> dummyUsers = ['이세희', '조원희', '임재경', '이상현'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          //titleSpacing을 0으로 주면 좌우 padding을 없앨 수 있어.
+          titleSpacing: 0,
           title: Row(
             children: <Widget>[
-              Text('V-MAP', style: TextStyle(fontSize: 30)),
-              SizedBox(width: 80),
-              TextButton(onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => PageFrameRanding()));
-              }, child: Text('about', style: TextStyle(fontSize: 20)),
+              Text('V-MAP', style: TextStyle(fontSize: 30, fontFamily: 'apeb')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => PageFrameRanding()));
+                  },
+                  child: Text('about', style: TextStyle(fontSize: 20)),
                   style: TextButton.styleFrom(
-                      primary: Colors.white,
-                      minimumSize: Size(200, 75)
-                  )),
-              TextButton(onPressed: () {}, child: Text('Team', style: TextStyle(fontSize: 20)),
+                      primary: Colors.white, minimumSize: Size(200, 75))),
+              TextButton(
+                  onPressed: () {},
+                  child: Text('Team', style: TextStyle(fontSize: 20)),
                   style: TextButton.styleFrom(
-                      primary: Colors.white,
-                      minimumSize: Size(200, 75)
-                  )),
+                      primary: Colors.white, minimumSize: Size(200, 75))),
               Expanded(child: Container()),
               Container(
-                width: 300, height: 75,
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
-                        colors: [Colors.white, Colors.green]
-                    )
-                ),
-                child: TextButton(onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => PageFrameLogin()));
-                }, child: Text('Sign In/Sign Up', style: TextStyle(fontSize: 20)),
+                        colors: [Colors.white, Colors.green])),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => PageFrameLogin()));
+                  },
+                  child:
+                      Text('Sign In/Sign Up', style: TextStyle(fontSize: 20)),
                   style: TextButton.styleFrom(
                     primary: Colors.white,
-                    minimumSize: Size(300, 75),),
+                    minimumSize: Size(300, 75),
+                  ),
                 ),
               )
-
             ],
           ),
-
           leading: IconButton(icon: Icon(Icons.computer), onPressed: () {}),
-
-
         ),
-    body: Container(
-       child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
-          //crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget> [
-
-              Container(
-                  width: double.maxFinite,
-                  child: Text('WelCome OOO!', textAlign: TextAlign.start, style: TextStyle(fontSize: 100, fontWeight: FontWeight.bold))),
-              SizedBox(height: 200),
-              Container(
-                  width: double.maxFinite,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-
-                      Container( //하나의 참여자 동그라미 형태
-                         child: Column( children: [
-                           Container(//동그라미
-                             height: 200, width: 200,
-                             alignment: Alignment.center,
-                             decoration: BoxDecoration( color: Colors.grey, shape: BoxShape.circle),
-                             child: Text('SH', style: TextStyle(fontSize: 70, fontWeight: FontWeight.bold)),
-                           ),
-                           Container(//밑의 이름
-                               child: Container(
-                                 height: 50, width: 200,
-                                 alignment: Alignment.center,
-                                 child: Text('이세희', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-                               )),
-                         ],)
-                       ),
-                    Container( //하나의 참여자 동그라미 형태
-                        child: Column( children: [
-                          Container(//동그라미
-                            height: 200, width: 200,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration( color: Colors.grey, shape: BoxShape.circle),
-                            child: Text('WH', style: TextStyle(fontSize: 70, fontWeight: FontWeight.bold)),
-                          ),
-                          Container(//밑의 이름
-                              child: Container(
-                                height: 50, width: 200,
-                                alignment: Alignment.center,
-                                child: Text('조원희', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-                              )),
-                        ],)
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text('반갑습니다. ${dummyUsers[0]}님!',
+                    style: TextStyle(fontSize: 48, fontFamily: 'apeb')),
+                const SizedBox(height: 8),
+                const Text('준비사항 :D',
+                    style: TextStyle(fontSize: 20, fontFamily: 'apeb')),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      const Text('아직 노션 연동이 준비되지 않았습니다.',
+                          style: TextStyle(
+                              color: Colors.redAccent,
+                              fontFamily: 'apeb',
+                              fontSize: 16)),
+                      TextButton(
+                          onPressed: () async {
+                            final url = Uri.parse(
+                                'http://218.150.182.202:32929/notionAuth');
+                            if (await canLaunchUrl(url)) {
+                              launchUrl(url);
+                            } else {
+                              print('--------error message--------');
+                              print('url이 유효하지 않습니다.');
+                            }
+                          },
+                          child: Text('연동하기',
+                              style: TextStyle(
+                                  fontFamily: 'apeb',
+                                  fontSize: 16,
+                                  color: Colors.grey.shade400)))
+                    ]),
+                const Expanded(child: SizedBox()),
+                Column(children: [
+                  const Text('접속 목록',
+                      style: TextStyle(fontSize: 20, fontFamily: 'apeb')),
+                  const SizedBox(height: 8),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: List<Widget>.generate(
+                          4,
+                          (index) =>
+                              WidgetCircleAvatar(userName: dummyUsers[index]))),
+                ]),
+                const SizedBox(height: 8),
+                Container(
+                    //크기 정의 먼저
+                    width: double.infinity,
+                    height: 124,
+                    // 그 다음 정렬 여부 , padding or margin
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+                    // 그 다음 deco
+                    decoration: BoxDecoration(
+                      //deco는 색 - 나머지 순으로
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(24),
                     ),
-                      Container( //하나의 참여자 동그라미 형태
-                          child: Column( children: [
-                            Container(//동그라미
-                              height: 200, width: 200,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration( color: Colors.grey, shape: BoxShape.circle),
-                              child: Text('JK', style: TextStyle(fontSize: 70, fontWeight: FontWeight.bold)),
-                            ),
-                            Container(//밑의 이름
-                                child: Container(
-                                  height: 50, width: 200,
-                                  alignment: Alignment.center,
-                                  child: Text('임재경', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-                                )),
-                          ],)
-                      ),
-                      Container( //하나의 참여자 동그라미 형태
-                          child: Column( children: [
-                            Container(//동그라미
-                              height: 200, width: 200,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration( color: Colors.grey, shape: BoxShape.circle),
-                              child: Text('SH', style: TextStyle(fontSize: 70, fontWeight: FontWeight.bold)),
-                            ),
-                            Container(//밑의 이름
-                                child: Container(
-                                  height: 50, width: 200,
-                                  alignment: Alignment.center,
-                                  child: Text('이상현', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-                                )),
-                          ],)
-                      ),
+                    // 기초 정의가 끝나면 child 정의
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('초대코드',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(fontSize: 24, fontFamily: 'apeb')),
+                        Text('23rjkewhfjkh2349fwefk',
+                            style: TextStyle(fontSize: 24, fontFamily: 'apm'))
+                      ],
+                    )),
+                Container(
+                    width: double.infinity,
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => PageFeatureInvitation()));
+                        },
+                        child: const Text('이미 개설된 회의방 참가를 원하시나요?',
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.green,
+                            )))),
+                SizedBox(height: 24),
+                Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  height: 75,
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(50),
+                      gradient: const LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [Colors.indigo, Colors.green])),
+                  child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => PageFeatureMain()));
+                      },
+                      child: const Text('Start Meeting!',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold))),
+                )
+              ]),
+        ));
+  }
+}
 
+class WidgetCircleAvatar extends StatelessWidget {
+  WidgetCircleAvatar({
+    Key? key,
+    required this.userName,
+  }) : super(key: key);
+  final String userName;
 
-                  ],)
-              ),
-            SizedBox(height: 100),
-            Container(
-              decoration: BoxDecoration(
-                 color: Colors.grey,borderRadius: BorderRadius.circular(50),
-              ),
-              width: 1000, height: 350,
-              child: Column (
-                children: [
-                  SizedBox(height: 15),
-                  Container(
-                    width: 900,
-                    child: Text('Invite Code',textAlign: TextAlign.start, style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold)),
-                  ),
-                  SizedBox(height: 100),
-                  Text('23rjkewhfjkh2349fwefk', style: TextStyle(fontSize: 50 ))
-                ],)),
-            Container(
-              width: double.maxFinite,
-              child: TextButton( onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => PageFeatureInvitation()));
-              }, child: Text('Has another team member already set up a meeting?', textAlign: TextAlign.end, style: TextStyle(fontSize: 20, color: Colors.green, ))  )
-            ),
-            SizedBox(height: 40),
-            Container(
-              width: 600, height: 75,
-              decoration: BoxDecoration(
-                   color: Colors.grey,borderRadius: BorderRadius.circular(50),
-                  gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [Colors.indigo, Colors.green]
-                  )
-              ),
-              child: TextButton(onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => PageFeatureMain()));
-              }, child: Text('Start Meeting', style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold))),
-            )
-
-          ])
-    ));
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        CircleAvatar(
+          backgroundColor: Colors.blueAccent,
+          child: Text(userName[0],
+              style: const TextStyle(
+                  fontFamily: 'apeb', fontSize: 16, color: Colors.white)),
+        ),
+        Text(
+          userName,
+          style: const TextStyle(fontFamily: 'apm', fontSize: 24),
+        )
+      ],
+    );
   }
 }

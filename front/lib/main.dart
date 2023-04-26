@@ -35,6 +35,6 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.grey,
         ),
 
-        home: const PageFrameRanding());
+        home: const PageFeatureInvite());
   }
 }
