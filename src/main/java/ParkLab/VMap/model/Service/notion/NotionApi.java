@@ -19,7 +19,7 @@ public class NotionApi {
 
     public void postToNotion(String JsonContentBlock,String apiKey, String databaseId) throws Exception {
         // 요청 URL을 설정합니다.
-        String title = meetingDataController.getMeetingData().getTitle();
+//        String title = meetingDataController.getMeetingData().getTitle();
         String title = "쎾쓰";
         String url = "https://api.notion.com/v1/pages/";
 
