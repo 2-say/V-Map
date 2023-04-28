@@ -83,7 +83,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                       TextButton(
                           onPressed: () async {
                             final url = Uri.parse(
-                                'http://218.150.182.202:32929/notionAuth');
+                                'https://218.150.182.202:32929/notionAuth');
                             if (await canLaunchUrl(url)) {
                               launchUrl(url);
                             } else {

@@ -1,13 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:front/testFeatures/debugMessage.dart';
 import 'package:http/http.dart' as http;
+import 'NoCheckCertificateHttpOverrides.dart';
 
 class FeaturesMeeting {
   Future<String> openMeeting(
       String meetingName, List<String> meetingParticipants) async {
     DateTime dt = DateTime.now();
     // post 시 쓸 url 물어보고 여기에 입력해줘 'putInHere'!!!
-    var url = Uri.parse('putInHere');
+    var url = Uri.parse('https://218.150.182.202:32929/start');
     //함수 사용시 쓸 data ( 인스턴스 참조 )
     //생각해보니 json 형태를 안정해놔서 임의로 작성함..
     Map<String, Object> data = {
@@ -34,7 +36,13 @@ class FeaturesMeeting {
   }
 }
 
+
+
+
 void main() {
+
+  HttpOverrides.global = NoCheckCertificateHttpOverrides();//안전하지 않아도 연결하도록
+
   const String dummyMeetingName = 'testMeeting';
   final List<String> dummyParticipants = ['이세희', '임재경', '조원희'];
   FeaturesMeeting()
