@@ -18,8 +18,8 @@ public class NotionPatchController {
         String apiKey = MyDataSingleton.getInstance().getToken();
         // 요청 URL을 설정합니다.
 //        String title = meetingDataController.getMeetingData().getTitle();
-        String title = "쎾쓰";
-        String id = MyDataSingleton.getInstance().getData();
+        String title = "static data for test";
+        String id = MyDataSingleton.getInstance().getPageId();
 
         // String id = "11baaf2417b843fca5210e767e6d9b09";
         String url = "https://api.notion.com/v1/blocks/"+id+"/children/";
@@ -30,7 +30,7 @@ public class NotionPatchController {
                 "         \"object\": \"block\",\n" +
                 "         \"type\": \"heading_2\",\n" +
                 "         \"heading_2\": {\n" +
-                "            \"rich_text\": [{ \"type\": \"text\", \"text\": { \"content\": \"텍스트 수정 내용\" } }]\n" +
+                "            \"rich_text\": [{ \"type\": \"text\", \"text\": { \"content\": \"회의 참석자 : 회의 내용\" } }]\n" +
                 "         }\n" +
                 "      },\n" +
                 "      {\n" +

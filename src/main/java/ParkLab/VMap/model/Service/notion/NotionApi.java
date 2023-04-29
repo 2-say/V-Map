@@ -1,10 +1,13 @@
 package ParkLab.VMap.model.Service.notion;
 
 import ParkLab.VMap.controller.meeting.MeetingDataController;
+import ParkLab.VMap.model.Service.meeting.MeetingDataSingleton;
 import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 
 /**
@@ -19,9 +22,17 @@ public class NotionApi {
 
     public void postToNotion(String JsonContentBlock,String apiKey, String databaseId) throws Exception {
         // 요청 URL을 설정합니다.
-//        String title = meetingDataController.getMeetingData().getTitle();
-        String title = "쎾쓰";
+        String title = MeetingDataSingleton.getInstance().getTitle();
+//        List<String> userName = MeetingDataSingleton.getInstance().getUserName();
+        String startTime = MeetingDataSingleton.getInstance().getStartTime();
+        // String title = "쎾쓰";
+        title = "회의 제목";
+//        userName.add("임재경");
+        startTime = "2023-04-29";
+
         String url = "https://api.notion.com/v1/pages/";
+
+
 
         String json = "{\n" +
                 "  \"parent\": {\n" +
@@ -45,7 +56,7 @@ public class NotionApi {
                 "    \"이벤트 시간\": {\n" +
                 "      \"type\": \"date\",\n" +
                 "      \"date\": {\n" +
-                "          \"start\": \"2023-04-08\"\n  "+
+                "          \"start\": \""+startTime+"\"\n  "+
                 "      }\n" +
                 "    }\n" +
                 "  },\n" +
@@ -83,10 +94,10 @@ public class NotionApi {
         // ResponseEntity에서 JSON 추출
         JSONObject json = new JSONObject(responseEntity.getBody());
 
-        // "id"값 추출
-        String id = json.getString("id");
+        // page id 값 추출
+        String pageId = json.getString("id");
 
-        MyDataSingleton.getInstance().setData(id);
+        MyDataSingleton.getInstance().setPageId(pageId);
     }
 }
 

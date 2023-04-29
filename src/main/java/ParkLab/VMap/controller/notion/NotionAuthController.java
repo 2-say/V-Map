@@ -1,5 +1,6 @@
 package ParkLab.VMap.controller.notion;
 
+import ParkLab.VMap.model.Service.notion.MyDataSingleton;
 import ParkLab.VMap.model.Service.notion.TokenRequester;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -16,7 +17,11 @@ import java.util.Map;
 @Controller
 public class NotionAuthController {
 
-    private static final String callBackUrl = "http://218.150.182.202:32929/notionApiTest";//The url defined in WSO2
+    // for server
+//    private static final String callBackUrl = "http://218.150.182.202:32929/notionApiTest";//The url defined in WSO2
+
+    // for local
+    private static final String callBackUrl = "http://localhost:32929/notionApiTest";//The url defined in WSO2
     private static final String clientId = "d088e98c-ab3c-49ad-b671-1850687ff05b";//clientId
     private static final String authorizeUrl = "https://api.notion.com/v1/oauth/authorize";
     private static final String clientPw = "secret_WAd029yDKxesEd30bHOQR7GU7WwbswJdPvr72yG9zdh";//clientPw
@@ -41,7 +46,7 @@ public class NotionAuthController {
         TokenRequester requester = new TokenRequester(clientId, clientPw);
         requester.addParameter("grant_type", "authorization_code");
         requester.addParameter("code", code);
-        requester.addParameter("redirect_uri", "http://218.150.182.202:32929/notionApiTest");
+        requester.addParameter("redirect_uri", callBackUrl);
 
         String response = requester.requestToken("https://api.notion.com/v1/oauth/token");
 
@@ -51,15 +56,12 @@ public class NotionAuthController {
 
 
         System.out.println("Access Token: " + accessToken);
+        MyDataSingleton.getInstance().setToken(accessToken);
+        System.out.println("MyDataSingleton.getInstance().getToken() = " + MyDataSingleton.getInstance().getToken());
 
         // Redirect to another page
         return "redirect:/getData?accessToken=" +accessToken;
     }
-
-    @GetMapping("/success")
-    public static void test() {
-    }
-
 
     @GetMapping("/getData")
     public String find_database(@RequestParam("accessToken") String accessToken) {
@@ -81,26 +83,14 @@ public class NotionAuthController {
                 if (objectType.equals("database")) {
                     String databaseId = resultNode.path("id").asText();
                     System.out.println("Database ID: " + databaseId);
-                    return "redirect:/postNotion?accessToken="+accessToken+"&databaseId="+databaseId;
+                    MyDataSingleton.getInstance().setDatabaseId(databaseId);
+                    System.out.println("MyDataSingleton.getInstance().getToken() = " + MyDataSingleton.getInstance().getToken());
+                    return "index"; // 노션 권한 승인 후 돌아갈 페이지 수정 필요
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return "null";
+        return null;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

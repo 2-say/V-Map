@@ -5,8 +5,17 @@ public class MyDataSingleton {
     private static final MyDataSingleton INSTANCE = new MyDataSingleton();
 
     // 데이터 변수
-    private String data;
+    private String pageId;
     private String token;
+    private String databaseId;
+
+    public String getDatabaseId() {
+        return databaseId;
+    }
+
+    public void setDatabaseId(String databaseId) {
+        this.databaseId = databaseId;
+    }
 
     public String getToken() {
         return token;
@@ -26,11 +35,11 @@ public class MyDataSingleton {
     }
 
     // 데이터 설정 및 조회 메소드
-    public void setData(String data) {
-        this.data = data;
+    public void setPageId(String pageId) {
+        this.pageId = pageId;
     }
 
-    public String getData() {
-        return data;
+    public String getPageId() {
+        return pageId;
     }
 }
