@@ -21,9 +21,7 @@ public class NotionPatchController {
         String user = MeetingDataSingleton.getInstance().getUser();
         String time = MeetingDataSingleton.getInstance().getTime();
 
-        // String id = "11baaf2417b843fca5210e767e6d9b09";
         String url = "https://api.notion.com/v1/blocks/"+id+"/children/";
-
         String json = "{\n" +
                 "   \"children\": [\n" +
                 "      {\n" +

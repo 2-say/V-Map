@@ -1,13 +1,13 @@
 package ParkLab.VMap.controller.textrank;
 
-import ParkLab.VMap.model.Service.python.CallTextRank;
+import ParkLab.VMap.model.Service.python.CallSummarize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class TextRankController {
-    @GetMapping("/textRank")
-    public static void textRank() {
+public class SummarizeController {
+    @GetMapping("/summarize")
+    public static void summarize() {
         String[] command = new String[3];
 
         /*local test*/
@@ -17,12 +17,12 @@ public class TextRankController {
 
         /*server test*/
         command[0] = "/usr/bin/python3";
-        command[1] = "/home/lab329/VMap/python/textrank.py";
-        command[2] = "/home/lab329/VMap/data/test.txt";
+        command[1] = "/home/lab329/VMap/python/summarize.py";
+        command[2] = "/home/lab329/VMap/data/data2.txt";
 
-        CallTextRank textRank = new CallTextRank(command);
+        CallSummarize callSummarize = new CallSummarize(command);
         try {
-            textRank.execPython();
+            callSummarize.execPython();
         } catch (Exception e) {
             e.printStackTrace();
         }

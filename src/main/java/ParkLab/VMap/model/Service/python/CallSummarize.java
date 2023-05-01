@@ -1,4 +1,4 @@
-package ParkLab.VMap.model.Service.textrank;
+package ParkLab.VMap.model.Service.python;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -7,10 +7,10 @@ import org.apache.commons.exec.PumpStreamHandler;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class CallTextRank {
+public class CallSummarize {
     private String[] command;
 
-    public CallTextRank(String[] command) {
+    public CallSummarize(String[] command) {
         this.command = command;
     }
 

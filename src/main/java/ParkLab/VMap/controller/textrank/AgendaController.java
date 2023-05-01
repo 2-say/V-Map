@@ -1,13 +1,13 @@
 package ParkLab.VMap.controller.textrank;
 
-import ParkLab.VMap.model.Service.python.CallTextRank;
+import ParkLab.VMap.model.Service.python.CallAgenda;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class TextRankController {
-    @GetMapping("/textRank")
-    public static void textRank() {
+public class AgendaController {
+    @GetMapping("/agenda")
+    public static void agenda() {
         String[] command = new String[3];
 
         /*local test*/
@@ -17,12 +17,12 @@ public class TextRankController {
 
         /*server test*/
         command[0] = "/usr/bin/python3";
-        command[1] = "/home/lab329/VMap/python/textrank.py";
-        command[2] = "/home/lab329/VMap/data/test.txt";
+        command[1] = "/home/lab329/VMap/python/agenda.py";
+        command[2] = "/home/lab329/VMap/data/data2.txt";
 
-        CallTextRank textRank = new CallTextRank(command);
+        CallAgenda callAgenda = new CallAgenda(command);
         try {
-            textRank.execPython();
+            callAgenda.execPython();
         } catch (Exception e) {
             e.printStackTrace();
         }
