@@ -5,6 +5,8 @@ import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/PageFrame/PageFrameLogin.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../widgets/widgetCommonAppbar.dart';
+
 class PageFeatureInvite extends StatefulWidget {
   const PageFeatureInvite({Key? key}) : super(key: key);
 
@@ -18,49 +20,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          //titleSpacing을 0으로 주면 좌우 padding을 없앨 수 있어.
-          titleSpacing: 0,
-          title: Row(
-            children: <Widget>[
-              Text('V-MAP', style: TextStyle(fontSize: 30, fontFamily: 'apeb')),
-              TextButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => PageFrameRanding()));
-                  },
-                  child: Text('about', style: TextStyle(fontSize: 20)),
-                  style: TextButton.styleFrom(
-                      primary: Colors.white, minimumSize: Size(200, 75))),
-              TextButton(
-                  onPressed: () {},
-                  child: Text('Team', style: TextStyle(fontSize: 20)),
-                  style: TextButton.styleFrom(
-                      primary: Colors.white, minimumSize: Size(200, 75))),
-              Expanded(child: Container()),
-              Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [Colors.white, Colors.green])),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => PageFrameLogin()));
-                  },
-                  child:
-                      Text('Sign In/Sign Up', style: TextStyle(fontSize: 20)),
-                  style: TextButton.styleFrom(
-                    primary: Colors.white,
-                    minimumSize: Size(300, 75),
-                  ),
-                ),
-              )
-            ],
-          ),
-          leading: IconButton(icon: Icon(Icons.computer), onPressed: () {}),
-        ),
+        appBar: WidgetCommonAppbar(appBar: AppBar(), currentPage: 'meeting',loginState:true),
         body: Padding(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
           child: Column(
