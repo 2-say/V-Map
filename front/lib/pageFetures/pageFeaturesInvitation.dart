@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:front/pageFetures/pageFeaturesMain.dart';
-import 'package:front/pageFetures/pageFeaturesInvite.dart';
+import 'package:front/pageFetures/pageFeatursMains/pageFeaturesMain.dart';
+import 'package:front/pageFetures/pageFeaturesRecord.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/PageFrame/PageFrameLogin.dart';
 
@@ -57,7 +57,7 @@ class PageFeatureInvitation extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => PageFeatureInvite()));
+                                builder: (_) => PageFeatureMain()));
                       },
                       child: Text('you can made meeting!!',
                           textAlign: TextAlign.end,
@@ -79,7 +79,7 @@ class PageFeatureInvitation extends StatelessWidget {
                 child: TextButton(
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => PageFeatureMain()));
+                          MaterialPageRoute(builder: (_) => PageFeatureRecord()));
                     },
                     child: Text('Join',
                         style: TextStyle(

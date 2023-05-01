@@ -19,7 +19,7 @@ class FeaturesMeeting {
             featureName: 'openMeeting',
             dataType: 'json',
             data: data)
-        .message();
+        .messagePost();
     var body = json.encode(data);
     Map<String, String> headers = {
       'Content-Type': 'application/json',

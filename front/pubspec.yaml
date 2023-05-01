@@ -84,3 +84,30 @@ flutter:
     - family: apl
       fonts:
         - asset: fonts/AppleSDGothicNeoL.ttf
+    - family: seqbl
+      fonts:
+          - asset: fonts/SequelSansBlackDisp.ttf
+    - family: seqb
+      fonts:
+        - asset: fonts/Sequel Sans Bold Disp.ttf
+    - family: seqbk
+      fonts:
+        - asset: fonts/Sequel Sans Book Disp.ttf
+    - family: seqh
+      fonts:
+        - asset: fonts/Sequel Sans Heavy Disp.ttf
+    - family: seql
+      fonts:
+        - asset: fonts/Sequel Sans Light Disp.ttf
+    - family: seqm
+      fonts:
+          - asset: fonts/Sequel Sans Medium Disp.ttf
+    - family: seqo
+      fonts:
+          - asset: fonts/Sequel Sans Oblique Disp.ttf
+    - family: seqr
+      fonts:
+          - asset: fonts/Sequel Sans Roman Disp.ttf
+    - family: seqsm
+      fonts:
+          - asset: fonts/Sequel Sans Semi Bold Disp.ttf

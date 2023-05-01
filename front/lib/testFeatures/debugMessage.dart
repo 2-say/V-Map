@@ -11,7 +11,7 @@ class DebugMessage {
     required this.data,
   });
 
-  void message() {
+  void messagePost() {
     print('------------------------------------------------debug message------------------------------------------------');
     isItPostType == true
         ? print('featureType:http/post')

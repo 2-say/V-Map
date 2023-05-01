@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:front/pageFetures/pageFeaturesRecord.dart';
 
 import '../PageFrame/PageFrameRanding.dart';
+import '../PageFrame/PageFrameTeam.dart';
 import '../dataSets/dataSetColors.dart';
+import '../pageFetures/pageFeatursMains/pageFeaturesMain.dart';
 
 class WidgetCommonAppbar extends StatelessWidget
     implements PreferredSizeWidget {
@@ -27,14 +30,16 @@ class WidgetCommonAppbar extends StatelessWidget
       backgroundColor: ccKeyColorGrey,
       leading: Container(
           width: 40,
-          color: currentPage == 'meeting'
-              ? ccKeyColorBackground
-              : Colors.black.withOpacity(0.2),
+          color:
+              currentPage == 'meeting' ? ccKeyColorBackground : ccKeyColorGrey,
           child: IconButton(
               constraints: BoxConstraints(),
               padding: EdgeInsets.zero,
-              icon: Image.asset("assets/vmaplogo.png", width: 32, height: 32),
-              onPressed: () => Navigator.of(context).pop())),
+              icon: Image.asset("assets/vmaplogo.png", width: 24, height: 24),
+              onPressed: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PageFeatureMain())))),
       titleSpacing: 0,
       centerTitle: center,
       title: Row(
@@ -44,24 +49,26 @@ class WidgetCommonAppbar extends StatelessWidget
               pageName: 'about',
               child: TextButton(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const PageFrameRanding()));
+                            builder: (context) => PageFrameRanding()));
                   },
                   child: Text('About', style: h1))),
           WidgetButtonContainer(
               currentPage: currentPage,
               pageName: 'team',
-              child:
-                  TextButton(onPressed: () {}, child: Text('Team', style: h1))),
+              child: TextButton(
+                  onPressed: () => Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => PageFrameTeam())),
+                  child: Text('Team', style: h1))),
           const Expanded(child: SizedBox()),
           WidgetButtonContainer(
               currentPage: currentPage,
-              pageName: loginState == true ? 'my page' : 'sign in',
+              pageName: loginState == true ? 'sign out' : 'sign in',
               child: loginState == true
                   ? TextButton(
-                      onPressed: () {}, child: Text('My page', style: h1))
+                      onPressed: () {}, child: Text('Sign Out', style: h1))
                   : TextButton(
                       onPressed: () {}, child: Text('Sign In/Up', style: h1))),
         ],
@@ -70,7 +77,7 @@ class WidgetCommonAppbar extends StatelessWidget
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(40);
+  Size get preferredSize => const Size.fromHeight(32);
 }
 
 class WidgetButtonContainer extends StatelessWidget {

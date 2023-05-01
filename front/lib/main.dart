@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:front/PageFrame/PageFrameLogin.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/pageFetures/pageFeaturesInvitation.dart';
-import 'package:front/pageFetures/pageFeaturesInvite.dart';
-import 'package:front/pageFetures/pageFeaturesMain.dart';
+import 'package:front/pageFetures/pageFeatursMains/pageFeaturesMain.dart';
+import 'package:front/pageFetures/pageFeaturesRecord.dart';
 
 import 'firebase_options.dart';
-
-
 
 void main() {
   initFirebase();
@@ -31,11 +29,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'V-Map(test)',
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),
-
-        home: const PageFeatureInvite());
+        home: PageFeatureMain());
   }
 }

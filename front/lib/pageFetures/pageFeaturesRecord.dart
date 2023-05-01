@@ -3,14 +3,16 @@ import 'package:front/dataSets/dataSetColors.dart';
 import '../dataSets/dataSetTextStyles.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
 
-class PageFeatureMain extends StatefulWidget {
-  const PageFeatureMain({Key? key}) : super(key: key);
+import '../widgets/widgetCommonAppbar.dart';
+
+class PageFeatureRecord extends StatefulWidget {
+  const PageFeatureRecord({Key? key}) : super(key: key);
 
   @override
-  State<PageFeatureMain> createState() => _PageFeatureMainState();
+  State<PageFeatureRecord> createState() => _PageFeatureRecordState();
 }
 
-class _PageFeatureMainState extends State<PageFeatureMain> {
+class _PageFeatureRecordState extends State<PageFeatureRecord> {
   //dataSet
   final List<String> statusCheckTitle = ['노션 연동', '스테레오 녹음', '마이크 녹음'];
   final ScrollController agendaListViewScroller = ScrollController();
@@ -57,6 +59,8 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
   Widget build(BuildContext context) {
     return Scaffold(
       //전체를 감싸는 컨테이너, 배경색을 담당
+      appBar: WidgetCommonAppbar(
+          appBar: AppBar(), currentPage: 'meeting', loginState: true),
       body: Container(
         color: Colors.white,
         height: double.infinity,
@@ -84,15 +88,19 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                   const Expanded(child: SizedBox()),
                   Text('$currentTime', style: b1eb),
                   const SizedBox(width: 12),
-                  TextButton(onPressed: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (_) => PageFrameRanding()));
-                  }, child: Text('HOME', style: TextStyle(fontSize: 15)),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => PageFrameRanding()));
+                    },
+                    child: Text('HOME', style: TextStyle(fontSize: 15)),
                     style: TextButton.styleFrom(
                       primary: Colors.green,
-                      minimumSize: Size(100, 50),),
+                      minimumSize: Size(100, 50),
+                    ),
                   ),
-
                   isRecordOn
                       ? const Text('녹음 중',
                           style: TextStyle(
@@ -103,14 +111,19 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                   const SizedBox(width: 8),
                   Row(
                     children: List<Widget>.generate(participants, (index) {
-                      return  Padding(
+                      return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: CircleAvatar(
-                          backgroundColor: Colors.blue, radius: 16,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
-                            child: Text('${talk[index][1][0]}',style: const TextStyle(fontFamily: 'apl',fontSize: 12),),
-                          )),
+                            backgroundColor: Colors.blue,
+                            radius: 16,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
+                              child: Text(
+                                '${talk[index][1][0]}',
+                                style: const TextStyle(
+                                    fontFamily: 'apl', fontSize: 12),
+                              ),
+                            )),
                       );
                     }),
                   )

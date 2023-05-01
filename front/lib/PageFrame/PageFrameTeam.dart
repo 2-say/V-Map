@@ -5,8 +5,8 @@ import 'package:front/pageFetures/pageFeaturesRecord.dart';
 import '../dataSets/dataSetTextStyles.dart';
 import '../widgets/widgetCommonAppbar.dart';
 
-class PageFrameRanding extends StatelessWidget {
-  PageFrameRanding({Key? key}) : super(key: key);
+class PageFrameTeam extends StatelessWidget {
+  PageFrameTeam({Key? key}) : super(key: key);
 
   //dataSet
   final scrollController = ScrollController();
@@ -14,29 +14,37 @@ class PageFrameRanding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //dateset-------------------------------------------------------------------
-    String intro1 = 'Do not record alone.';
-    String intro2 =
-        '이제 회의 내용을 작성하기 위해 힘쓸 필요가 없습니다. V-MAP을 이용해 자동으로 기록하고, 확인하세요.';
+    String intro1 = 'Lab329';
+    String intro2 = '한국기술교육대학교 컴퓨터공학부';
+    String intro3 = '4명의 18학번 컴퓨터공학부원이 모여 제작된 프로젝트입니다.';
     TextStyle eh1 =
-        const TextStyle(fontFamily: 'seqbl', fontSize: 48, color: Colors.black);
+        const TextStyle(fontFamily: 'seqbl', fontSize: 48, color: Colors.white);
     TextStyle b1 =
-        const TextStyle(fontFamily: 'apm', fontSize: 16, color: Colors.grey);
+        const TextStyle(fontFamily: 'apm', fontSize: 16, color: Colors.black);
+    TextStyle b2 =
+    const TextStyle(fontFamily: 'apm', fontSize: 13, color: Colors.black);
     //declare ui----------------------------------------------------------------
     return Scaffold(
         appBar: WidgetCommonAppbar(
-            appBar: AppBar(), currentPage: 'about', loginState: true),
+            appBar: AppBar(), currentPage: 'team', loginState: true),
         body: Center(
             child: Column(children: <Widget>[
           Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [ccKeyColorGreen, ccKeyColorCyan],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight)),
               alignment: Alignment.center,
               width: double.infinity,
-              height: 560,
+              height: 280,
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(intro1, style: eh1),
-                    const SizedBox(height: 24),
-                    Text(intro2, style: b1)
+                    Text(intro2, style: b2),
+                    const SizedBox(height: 16),
+                    Text(intro3, style: b1)
                   ])),
         ])));
   }

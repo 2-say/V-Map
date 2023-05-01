@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
-import 'package:front/pageFetures/pageFeaturesInvite.dart';
 import 'package:front/dataSets/dataSetColors.dart';
 import '../dataSets/dataSetTextStyles.dart';
+import '../pageFetures/pageFeatursMains/pageFeaturesMain.dart';
 
 class PageFrameLogin extends StatefulWidget {
   const PageFrameLogin({Key? key}) : super(key: key);
@@ -139,7 +139,7 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
                         ),
                         child: TextButton(onPressed: () {
                           Navigator.push(
-                              context, MaterialPageRoute(builder: (_) => PageFeatureInvite()));
+                              context, MaterialPageRoute(builder: (_) => PageFeatureMain()));
                         }, child: Text('Lets Go!', style: TextStyle(fontSize: 30)),
                           style: TextButton.styleFrom(
                             primary: Colors.white,

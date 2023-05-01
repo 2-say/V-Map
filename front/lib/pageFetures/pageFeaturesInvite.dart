@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front/pageFetures/pageFeaturesMain.dart';
+import 'package:front/pageFetures/pageFeaturesRecord.dart';
 import 'package:front/pageFetures/pageFeaturesInvitation.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/PageFrame/PageFrameLogin.dart';
@@ -7,14 +7,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/widgetCommonAppbar.dart';
 
-class PageFeatureInvite extends StatefulWidget {
-  const PageFeatureInvite({Key? key}) : super(key: key);
+class PageFeatureMain extends StatefulWidget {
+  const PageFeatureMain({Key? key}) : super(key: key);
 
   @override
-  State<PageFeatureInvite> createState() => _PageFeatureInviteState();
+  State<PageFeatureMain> createState() => _PageFeatureMainState();
 }
 
-class _PageFeatureInviteState extends State<PageFeatureInvite> {
+class _PageFeatureMainState extends State<PageFeatureMain> {
   final List<String> dummyUsers = ['이세희', '조원희', '임재경', '이상현'];
 
   @override
@@ -67,12 +67,12 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: List<Widget>.generate(
                           4,
-                          (index) =>
+                              (index) =>
                               WidgetCircleAvatar(userName: dummyUsers[index]))),
                 ]),
                 const SizedBox(height: 8),
                 Container(
-                    //크기 정의 먼저
+                  //크기 정의 먼저
                     width: double.infinity,
                     height: 124,
                     // 그 다음 정렬 여부 , padding or margin
@@ -128,7 +128,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => PageFeatureMain()));
+                                builder: (_) => PageFeatureRecord()));
                       },
                       child: const Text('Start Meeting!',
                           style: TextStyle(
