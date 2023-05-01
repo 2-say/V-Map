@@ -1,13 +1,11 @@
 package ParkLab.VMap.model.Service.notion;
 
 import ParkLab.VMap.controller.meeting.MeetingDataController;
-import ParkLab.VMap.model.Service.meeting.MeetingDataSingleton;
+import ParkLab.VMap.model.data.meeting.MeetingDataSingleton;
 import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
 
 
 /**
@@ -22,7 +20,7 @@ public class NotionApi {
 
     public void postToNotion(String JsonContentBlock,String apiKey, String databaseId) throws Exception {
         // 요청 URL을 설정합니다.
-        String title = MeetingDataSingleton.getInstance().getTitle();
+        String title = MeetingDataSingleton.getInstance().getMeetingName();
 //        List<String> userName = MeetingDataSingleton.getInstance().getUserName();
         String startTime = MeetingDataSingleton.getInstance().getStartTime();
         // String title = "쎾쓰";

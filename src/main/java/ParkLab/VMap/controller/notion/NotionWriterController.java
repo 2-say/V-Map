@@ -1,6 +1,6 @@
 package ParkLab.VMap.controller.notion;
 
-import ParkLab.VMap.model.Service.meeting.MeetingDataSingleton;
+import ParkLab.VMap.model.data.meeting.MeetingDataSingleton;
 import ParkLab.VMap.model.Service.notion.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +31,7 @@ public class NotionWriterController {
         String accessToken = MyDataSingleton.getInstance().getToken();
         String databaseId = MyDataSingleton.getInstance().getDatabaseId();
 
-        String title = MeetingDataSingleton.getInstance().getTitle();
+        String title = MeetingDataSingleton.getInstance().getMeetingName();
 //        List<String> userName = MeetingDataSingleton.getInstance().getUserName();
         String startTime = MeetingDataSingleton.getInstance().getStartTime();
 
