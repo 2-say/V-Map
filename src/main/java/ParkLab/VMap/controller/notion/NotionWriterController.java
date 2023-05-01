@@ -32,16 +32,11 @@ public class NotionWriterController {
         String databaseId = MyDataSingleton.getInstance().getDatabaseId();
 
         String title = MeetingDataSingleton.getInstance().getMeetingName();
-//        List<String> userName = MeetingDataSingleton.getInstance().getUserName();
+        List<String> userName = MeetingDataSingleton.getInstance().getMeetingParticipants();
         String startTime = MeetingDataSingleton.getInstance().getStartTime();
 
-        title = "회의 제목";
-        List<String> userName = new ArrayList<>() {
-            {
-                add("임재경");
-            }
-        };
-        startTime = "2023-04-29";
+        contents.add(new BlockData("\\n  :", BlockType.HEADING_2));
+        contents.add(new BlockData(title, BlockType.CALLOUT));
 
         contents.add(new BlockData("회의 참석자", BlockType.HEADING_1));
         contents.add(new BlockData(userName.toString(), BlockType.PARAGRAPH));
@@ -49,11 +44,8 @@ public class NotionWriterController {
         contents.add(new BlockData("회의 시간", BlockType.HEADING_1));
         contents.add(new BlockData(startTime, BlockType.PARAGRAPH));
 
-        contents.add(new BlockData("\\n  :", BlockType.HEADING_2));
-        contents.add(new BlockData(title, BlockType.CALLOUT));
-
-        contents.add(new BlockData("회의는 회사의 지난 분기 실적과 다음 분기 계획에 대해 이야기되었으며, 새로운 제품 " +
-                "출시와 해외 시장 개척, 인력 확보와 업무 프로세스 개선이 핵심 안건으로 논의되었다.", BlockType.PARAGRAPH));
+//        contents.add(new BlockData("회의는 회사의 지난 분기 실적과 다음 분기 계획에 대해 이야기되었으며, 새로운 제품 " +
+//                "출시와 해외 시장 개척, 인력 확보와 업무 프로세스 개선이 핵심 안건으로 논의되었다.", BlockType.PARAGRAPH));
 //        contents.add(new BlockData("회의 참석자", BlockType.HEADING_1));
 //        contents.add(new BlockData("이세희,임재경,이상현,조원희", BlockType.PARAGRAPH));
 //

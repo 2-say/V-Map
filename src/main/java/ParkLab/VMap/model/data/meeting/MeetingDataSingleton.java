@@ -14,7 +14,6 @@ public class MeetingDataSingleton {
     private String time;
     private String user;
 
-
     // 생성자는 private으로 선언하여 외부에서 객체 생성 방지
     private MeetingDataSingleton() {
     }

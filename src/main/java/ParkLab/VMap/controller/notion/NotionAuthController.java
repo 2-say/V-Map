@@ -18,10 +18,10 @@ import java.util.Map;
 public class NotionAuthController {
 
     // for server
-//    private static final String callBackUrl = "http://218.150.182.202:32929/notionApiTest";//The url defined in WSO2
+    private static final String callBackUrl = "https://218.150.182.202:32929/notionApiTest";//The url defined in WSO2
 
     // for local
-    private static final String callBackUrl = "https://localhost:32929/notionApiTest";//The url defined in WSO2
+//    private static final String callBackUrl = "https://localhost:32929/notionApiTest";//The url defined in WSO2
     private static final String clientId = "d088e98c-ab3c-49ad-b671-1850687ff05b";//clientId
     private static final String authorizeUrl = "https://api.notion.com/v1/oauth/authorize";
     private static final String clientPw = "secret_WAd029yDKxesEd30bHOQR7GU7WwbswJdPvr72yG9zdh";//clientPw
@@ -85,7 +85,7 @@ public class NotionAuthController {
                     System.out.println("Database ID: " + databaseId);
                     MyDataSingleton.getInstance().setDatabaseId(databaseId);
                     System.out.println("MyDataSingleton.getInstance().getToken() = " + MyDataSingleton.getInstance().getToken());
-                    return "index"; // 노션 권한 승인 후 돌아갈 페이지 수정 필요
+                    return "완료"; // 노션 권한 승인 후 돌아갈 페이지 수정 필요
                 }
             }
         } catch (Exception e) {

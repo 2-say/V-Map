@@ -1,7 +1,7 @@
 package ParkLab.VMap.controller.notion;
 
-import ParkLab.VMap.controller.meeting.MeetingDataController;
 import ParkLab.VMap.model.Service.notion.MyDataSingleton;
+import ParkLab.VMap.model.data.meeting.MeetingDataSingleton;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,16 +10,16 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 public class NotionPatchController {
-    private final MeetingDataController meetingDataController = new MeetingDataController();
     private final RestTemplate restTemplate = new RestTemplate();
 
     @GetMapping("/patchNotion")
     public void patchToNotion() throws Exception {
         String apiKey = MyDataSingleton.getInstance().getToken();
-        // 요청 URL을 설정합니다.
-//        String title = meetingDataController.getMeetingData().getTitle();
-        String title = "static data for test";
         String id = MyDataSingleton.getInstance().getPageId();
+
+        String contents = MeetingDataSingleton.getInstance().getContents();
+        String user = MeetingDataSingleton.getInstance().getUser();
+        String time = MeetingDataSingleton.getInstance().getTime();
 
         // String id = "11baaf2417b843fca5210e767e6d9b09";
         String url = "https://api.notion.com/v1/blocks/"+id+"/children/";
@@ -30,7 +30,7 @@ public class NotionPatchController {
                 "         \"object\": \"block\",\n" +
                 "         \"type\": \"heading_2\",\n" +
                 "         \"heading_2\": {\n" +
-                "            \"rich_text\": [{ \"type\": \"text\", \"text\": { \"content\": \"회의 참석자 : 회의 내용\" } }]\n" +
+                "            \"rich_text\": [{ \"type\": \"text\", \"text\": { \"content\": \"["+time+"] "+user+" : "+contents+"\" } }]\n" +
                 "         }\n" +
                 "      },\n" +
                 "      {\n" +
