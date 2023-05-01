@@ -21,18 +21,20 @@ class WidgetCommonAppbar extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     TextStyle h1 =
-        const TextStyle(fontSize: 20, fontFamily: 'apeb', color: Colors.black);
+        const TextStyle(fontSize: 16, fontFamily: 'apl', color: Colors.black);
     return AppBar(
       elevation: 0,
       backgroundColor: ccKeyColorGrey,
       leading: Container(
-        color: currentPage == 'meeting'
-            ? ccKeyColorBackground
-            : Colors.black.withOpacity(0.2),
-        child: IconButton(
-            icon: Image.asset("assets/vmaplogo.png", width: 32, height: 32),
-            onPressed: () => Navigator.of(context).pop()),
-      ),
+          width: 40,
+          color: currentPage == 'meeting'
+              ? ccKeyColorBackground
+              : Colors.black.withOpacity(0.2),
+          child: IconButton(
+              constraints: BoxConstraints(),
+              padding: EdgeInsets.zero,
+              icon: Image.asset("assets/vmaplogo.png", width: 32, height: 32),
+              onPressed: () => Navigator.of(context).pop())),
       titleSpacing: 0,
       centerTitle: center,
       title: Row(
@@ -68,7 +70,7 @@ class WidgetCommonAppbar extends StatelessWidget
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(appBar.preferredSize.height);
+  Size get preferredSize => const Size.fromHeight(40);
 }
 
 class WidgetButtonContainer extends StatelessWidget {
@@ -85,10 +87,9 @@ class WidgetButtonContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-      height: 100,
-      color: currentPage == pageName ? ccKeyColorBackground : ccKeyColorGrey,
-      child: child,
-    );
+        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+        height: 100,
+        color: currentPage == pageName ? ccKeyColorBackground : ccKeyColorGrey,
+        child: child);
   }
 }
