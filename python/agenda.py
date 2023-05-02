@@ -1,7 +1,8 @@
-import openai
 import sys
+import openai
 
-openai.api_key = " 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" # 발급받은 API 키를 입력합니다.
+
+openai.api_key = "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" # 발급받은 API 키를 입력합니다.
 
 def extract_agenda(text):
     model_engine = "text-davinci-002" # 사용할 GPT-3 모델 엔진의 이름을 입력합니다.

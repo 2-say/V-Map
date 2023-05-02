@@ -1,7 +1,8 @@
-import openai
 import sys
+import openai
 
-openai.api_key = " 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"
+
+openai.api_key = "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"
 
 def summarize_meeting_notes(file_path):
     with open(file_path, "r") as f:

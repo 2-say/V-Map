@@ -7,14 +7,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MeetingDataController {
+    private String filePath;
+
     @PostMapping("/start")
     public ResponseEntity<String> startMeeting(@RequestBody String jsonData) throws IOException {
-
         JSONObject jsonObj = new JSONObject(jsonData);
 
         String meetingName = jsonObj.getString("meetingName");
@@ -30,6 +33,8 @@ public class MeetingDataController {
         }
         MeetingDataSingleton.getInstance().setMeetingParticipants(meetingParticipants);
 
+        filePath = "/home/lab329/VMap/data/"+time+meetingName+".txt";
+
         return ResponseEntity.ok("Meeting started successfully");
     }
 
@@ -39,6 +44,7 @@ public class MeetingDataController {
 
         String contents = jsonObj.getString("contents");
         MeetingDataSingleton.getInstance().setContents(contents);
+        saveContents(contents);
 
         String time = jsonObj.getString("time");
         MeetingDataSingleton.getInstance().setTime(time);
@@ -47,5 +53,14 @@ public class MeetingDataController {
         MeetingDataSingleton.getInstance().setUser(user);
 
         return ResponseEntity.ok("Meeting transmitted successfully");
+    }
+
+    private void saveContents(String contents) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            writer.write(contents);
+            writer.newLine(); // 줄바꿈 추가
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

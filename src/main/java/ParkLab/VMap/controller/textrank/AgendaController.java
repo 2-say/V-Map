@@ -1,28 +1,27 @@
 package ParkLab.VMap.controller.textrank;
 
-import ParkLab.VMap.model.Service.python.CallAgenda;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 @RestController
 public class AgendaController {
     @GetMapping("/agenda")
     public static void agenda() {
-        String[] command = new String[3];
+        String apiUrl = "http://127.0.0.1:5000/summarize";
 
-        /*local test*/
-//        command[0] = "C:/Users/xenon/AppData/Local/Programs/Python/Python310/python.exe";
-//        command[1] = "D:/users/GitHub/V-Map/python/textrank.py";
-//        command[2] = "D:/users/GitHub/V-Map/data/test.txt";
-
-        /*server test*/
-        command[0] = "/usr/bin/python3";
-        command[1] = "/home/lab329/VMap/python/agenda.py";
-        command[2] = "/home/lab329/VMap/data/data2.txt";
-
-        CallAgenda callAgenda = new CallAgenda(command);
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(apiUrl))
+                .GET()
+                .build();
         try {
-            callAgenda.execPython();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println("Status code: " + response.statusCode());
+            System.out.println("Response body: " + response.body());
         } catch (Exception e) {
             e.printStackTrace();
         }

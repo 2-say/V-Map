@@ -85,7 +85,7 @@ public class NotionAuthController {
                     System.out.println("Database ID: " + databaseId);
                     MyDataSingleton.getInstance().setDatabaseId(databaseId);
                     System.out.println("MyDataSingleton.getInstance().getToken() = " + MyDataSingleton.getInstance().getToken());
-                    return "완료"; // 노션 권한 승인 후 돌아갈 페이지 수정 필요
+                    return "http://localhost:49508/"; // 노션 권한 승인 후 돌아갈 페이지 수정 필요
                 }
             }
         } catch (Exception e) {
