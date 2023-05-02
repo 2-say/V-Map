@@ -7,14 +7,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/widgetCommonAppbar.dart';
 
-class PageFeatureMain extends StatefulWidget {
-  const PageFeatureMain({Key? key}) : super(key: key);
+class PageFeatureInvite extends StatefulWidget {
+  const PageFeatureInvite({Key? key}) : super(key: key);
 
   @override
-  State<PageFeatureMain> createState() => _PageFeatureMainState();
+  State<PageFeatureInvite> createState() => _PageFeatureInviteState();
 }
 
-class _PageFeatureMainState extends State<PageFeatureMain> {
+class _PageFeatureInviteState extends State<PageFeatureInvite> {
   final List<String> dummyUsers = ['이세희', '조원희', '임재경', '이상현'];
 
   @override

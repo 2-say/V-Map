@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/dataSets/dataSetColors.dart';
+import 'package:front/dataSets/dataSetTextStyles.dart';
 import 'package:front/pageFetures/pageFeaturesRecord.dart';
 import 'package:front/pageFetures/pageFeaturesInvitation.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
@@ -7,6 +8,7 @@ import 'package:front/PageFrame/PageFrameLogin.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../widgets/widgetCommonAppbar.dart';
+import '../pageFeaturesInvite.dart';
 
 class PageFeatureMain extends StatefulWidget {
   const PageFeatureMain({Key? key}) : super(key: key);
@@ -18,36 +20,28 @@ class PageFeatureMain extends StatefulWidget {
 class _PageFeatureMainState extends State<PageFeatureMain> {
   final List<String> dummyUsers = ['이세희', '조원희', '임재경', '이상현'];
 
+  setterGoPageFeatureInvite() {
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => const PageFeatureInvite()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: WidgetCommonAppbar(
             appBar: AppBar(), currentPage: 'meeting', loginState: true),
-        floatingActionButton: Column(mainAxisAlignment: MainAxisAlignment.end,children: <Widget>[
-          FloatingActionButton(
-              onPressed: () {},
-              child: Container(
-                height: 60,
-                width: 60,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                        colors: [ccKeyColorGreen, ccKeyColorCyan])),
-                child: const Icon(Icons.golf_course, color: Colors.white),
-              )),
-          const SizedBox(height: 8),
-          FloatingActionButton(
-              onPressed: () {},
-              child: Container(
-                height: 60,
-                width: 60,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                        colors: [ccKeyColorGreen, ccKeyColorCyan])),
-                child: const Icon(Icons.edit, color: Colors.white),
-              ))
-        ],),
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            WidgetFloatingButton(
+                buttonTitle: '회의 참가', buttonIcon: Icons.compare_arrows),
+            const SizedBox(height: 8),
+            WidgetFloatingButton(
+                buttonTitle: '회의 개설',
+                buttonIcon: Icons.edit,
+                setter: setterGoPageFeatureInvite)
+          ],
+        ),
         body: Row(
           children: <Widget>[
             const WidgetMenuBar(),
@@ -59,6 +53,43 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
             )
           ],
         ));
+  }
+}
+
+//플로팅 버튼
+class WidgetFloatingButton extends StatelessWidget {
+  WidgetFloatingButton(
+      {Key? key,
+      required this.buttonTitle,
+      required this.buttonIcon,
+      this.setter})
+      : super(key: key);
+  String buttonTitle;
+  IconData buttonIcon;
+  final setter;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(buttonTitle, style: b1b),
+        const SizedBox(width: 8),
+        FloatingActionButton(
+            onPressed: () {
+              setter!();
+            },
+            child: Container(
+              height: 60,
+              width: 60,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                      colors: [ccKeyColorGreen, ccKeyColorCyan])),
+              child: Icon(buttonIcon, color: Colors.white),
+            )),
+      ],
+    );
   }
 }
 
@@ -135,7 +166,7 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
                   height: 0.5),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('녹음', style: h2),
+                child: Text('회의', style: h2),
               ),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -145,7 +176,7 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
                   onPressed: () {},
                   child: Row(
                     children: [
-                      Text('녹음본', style: h3),
+                      Text('회의록', style: h3),
                       const Expanded(child: SizedBox())
                     ],
                   )),
@@ -157,7 +188,7 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
                   onPressed: () {},
                   child: Row(
                     children: [
-                      Text('공유된 녹음본', style: h3),
+                      Text('공유된 회의록', style: h3),
                       const Expanded(child: SizedBox())
                     ],
                   )),
