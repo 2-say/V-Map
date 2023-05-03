@@ -47,8 +47,17 @@ void createZoomMeeting() async {
     final responseData = json.decode(response.body);
     final startUrl = responseData['start_url'];
     final joinUrl = responseData['join_url'];
+    final start_time = responseData['start_time'];
+    final topic = responseData['topic'];
+    final created_at = responseData['created_at'];
+    final password = responseData['password'];
+
     print('Start URL: $startUrl');
     print('Join URL: $joinUrl');
+    print('Start Time: $start_time');
+    print('Topic: $topic');
+    print('Created At: $created_at');
+    print('Password: $password');
   } else {
     print('Failed to create Zoom meeting. Status code: ${response.statusCode}');
   }
