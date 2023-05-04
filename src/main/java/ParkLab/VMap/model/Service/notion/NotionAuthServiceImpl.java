@@ -11,7 +11,7 @@
     import java.util.HashMap;
     import java.util.Map;
 
-    public class NotionAuthServiceImp {
+    public class NotionAuthServiceImpl {
         // for server
         private static final String callBackUrl = "https://218.150.182.202:32929/notionApiTest";//The url defined in WSO2
 

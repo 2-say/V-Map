@@ -1,11 +1,17 @@
 package ParkLab.VMap.model.Service.notion;
 
 import ParkLab.VMap.controller.meeting.MeetingDataController;
-import ParkLab.VMap.model.data.meeting.MeetingDataSingleton;
+import ParkLab.VMap.model.Service.DecodeJson.DecordJsonService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -18,19 +24,16 @@ public class NotionApi {
     private final RestTemplate restTemplate = new RestTemplate();
     ResponseEntity<String> responseEntity;
 
-    public void postToNotion(String JsonContentBlock,String apiKey, String databaseId) throws Exception {
+    public String postToNotion(String JsonContentBlock, String requestBody) throws Exception {
         // 요청 URL을 설정합니다.
-        String title = MeetingDataSingleton.getInstance().getMeetingName();
-//        List<String> userName = MeetingDataSingleton.getInstance().getUserName();
-        String startTime = MeetingDataSingleton.getInstance().getStartTime();
-        // String title = "쎾쓰";
-        title = "회의 제목";
-//        userName.add("임재경");
-        startTime = "2023-04-29";
-
         String url = "https://api.notion.com/v1/pages/";
 
-
+        DecordJsonService decodeJsonService = new DecordJsonService(requestBody);
+        String meetingName = decodeJsonService.getMeetingName();
+        List<String> meetingParticipants = decodeJsonService.getMeetingParticipants();
+        String startTime = decodeJsonService.getStartTime();
+        String accessToken = decodeJsonService.getAccessToken();
+        String databaseId = decodeJsonService.getDatabaseId();
 
         String json = "{\n" +
                 "  \"parent\": {\n" +
@@ -39,14 +42,14 @@ public class NotionApi {
                 "  \"properties\": {\n" +
                 "    \"유형\": {\n" +
                 "      \"select\": {\n" +
-                "        \"name\": \"짧은 회의\"\n" +
+                "        \"name\": \""+meetingParticipants+"\"\n" +
                 "      }\n" +
                 "    },\n" +
                 "    \"이름\": {\n" +
                 "      \"title\": [\n" +
                 "        {\n" +
                 "          \"text\": {\n" +
-                "            \"content\": \""+title+"\"\n" +
+                "            \"content\": \""+meetingName+"\"\n" +
                 "          }\n" +
                 "        }\n" +
                 "      ]\n" +
@@ -67,7 +70,7 @@ public class NotionApi {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Notion-Version", "2021-08-16");
-        headers.set("Authorization", "Bearer " + apiKey);
+        headers.set("Authorization", "Bearer " + accessToken);
 
 
 
@@ -85,17 +88,18 @@ public class NotionApi {
             System.out.println("블록 작성 실패!");
         }
 
-        extractedNotionDatabaseId(responseEntity);
-    }
+        JSONObject jsonForPageId = new JSONObject(responseEntity.getBody());
+        String pageId = jsonForPageId.getString("id");
 
-    private void extractedNotionDatabaseId(ResponseEntity<String> responseEntity) {
-        // ResponseEntity에서 JSON 추출
-        JSONObject json = new JSONObject(responseEntity.getBody());
-
-        // page id 값 추출
-        String pageId = json.getString("id");
-
-        MyDataSingleton.getInstance().setPageId(pageId);
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, String> responseMap = new HashMap<>();
+            responseMap.put("pageId", pageId);
+            return objectMapper.writeValueAsString(responseMap);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "failed";
     }
 }
 

@@ -9,11 +9,11 @@ import java.util.List;
 //나중 요청을 위해서 만든 입구(컨트롤러)
 //Test.class 처럼 데이터를 넘겨주면 post 작동 가능
 
-public class NotionWriterServiceImp {
+public class NotionWriterServiceImpl {
     private BlockWrite blockWrite = new BlockWrite();
     private NotionApi notionApi = new NotionApi();
 
-    public void postNotion(String requestBody) throws Exception {
+    public String postNotion(String requestBody) throws Exception {
         DecordJsonService decodeJsonService = new DecordJsonService(requestBody);
 
         List<BlockData> contents = new ArrayList<>();
@@ -74,6 +74,6 @@ public class NotionWriterServiceImp {
 //        contents.add(new BlockData("-----------", BlockType.PARAGRAPH));
 //        contents.add(new BlockData("회의 대본 :", BlockType.HEADING_2));
         String JsonContentBlock = blockWrite.BlockWrite(contents);
-        notionApi.postToNotion(JsonContentBlock,accessToken,databaseId);
+        return notionApi.postToNotion(JsonContentBlock, requestBody);
     }
 }
