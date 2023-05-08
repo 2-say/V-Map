@@ -1,6 +1,5 @@
 package ParkLab.VMap.controller.stt;
 
-import ParkLab.VMap.controller.notion.NotionWriterController;
 import ParkLab.VMap.model.Service.stt.TranscribeSample;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,6 @@ import java.util.Date;
 
 @Controller
 public class TranscriptionController {
-    NotionWriterController notionWriterController = new NotionWriterController();
 
     @GetMapping("/index")
     public void index() {

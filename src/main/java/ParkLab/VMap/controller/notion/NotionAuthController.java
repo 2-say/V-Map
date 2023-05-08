@@ -1,3 +1,9 @@
+/**
+ * Version : 1.0
+ * 최종 수정 날짜 : 2023-05-08
+ * 커밋한 sweet guy : 임재경
+ */
+
 package ParkLab.VMap.controller.notion;
 import ParkLab.VMap.model.Service.notion.NotionAuthServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
