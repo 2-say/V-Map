@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:front/dataSets/dataSetColors.dart';
 import 'package:front/dataSets/dataSetTextStyles.dart';
+import 'package:front/firestore/firebaseController.dart';
 import 'package:front/pageFetures/pageFeaturesRecord.dart';
 import 'package:front/pageFetures/pageFeaturesInvitation.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/PageFrame/PageFrameLogin.dart';
+import 'package:front/pageFetures/pageFeatursMains/pageFeaturesTestSets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../widgets/widgetCommonAppbar.dart';
@@ -18,11 +20,14 @@ class PageFeatureMain extends StatefulWidget {
 }
 
 class _PageFeatureMainState extends State<PageFeatureMain> {
-  final List<String> dummyUsers = ['이세희', '조원희', '임재경', '이상현'];
-
   setterGoPageFeatureInvite() {
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (context) => const PageFeatureInvite()));
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -44,13 +49,30 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
         ),
         body: Row(
           children: <Widget>[
-            const WidgetMenuBar(),
-            Expanded(
-              child: Container(
-                height: double.infinity,
-                decoration: BoxDecoration(color: Colors.grey),
-              ),
-            )
+            FutureBuilder(
+                future:
+                    FirebaseController().getUser('testUser', 'test@test.com'),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  //해당 부분은 data를 아직 받아 오지 못했을때 실행되는 부분을 의미한다.
+                  if (snapshot.hasData == false) {
+                    return CircularProgressIndicator();
+                  }
+                  //error가 발생하게 될 경우 반환하게 되는 부분
+                  else if (snapshot.hasError) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Error: ${snapshot.error}',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    );
+                  }
+                  // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
+                  else {
+                    return WidgetMenuBar(myUserInfo: snapshot.data);
+                  }
+                }),
+            const Expanded(child: PageFeaturesTestSets())
           ],
         ));
   }
@@ -94,7 +116,8 @@ class WidgetFloatingButton extends StatelessWidget {
 }
 
 class WidgetMenuBar extends StatefulWidget {
-  const WidgetMenuBar({Key? key}) : super(key: key);
+  WidgetMenuBar({Key? key, required this.myUserInfo}) : super(key: key);
+  Map<String, dynamic>? myUserInfo;
 
   @override
   State<WidgetMenuBar> createState() => _WidgetMenuBarState();
@@ -129,7 +152,7 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
                   alignment: Alignment.center,
                   child: Column(children: [
                     const CircleAvatar(backgroundColor: Colors.blueAccent),
-                    Text('이세희', style: h3)
+                    Text(widget.myUserInfo!['userName'], style: h3)
                   ])),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -227,12 +250,25 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
                       padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
                       backgroundColor: ccKeyColorBackground,
                       shadowColor: Colors.transparent),
-                  onPressed: () {},
+                  onPressed: () async {
+                    final url =
+                        Uri.parse('https://218.150.182.202:32929/notionAuth');
+                    if (await canLaunchUrl(url)) {
+                      launchUrl(url);
+                    } else {
+                      print('--------error message--------');
+                      print('url이 유효하지 않습니다.');
+                    }
+                  },
                   child: Row(
                     children: <Widget>[
                       Text('Notion 연동', style: h3),
                       const SizedBox(width: 4),
-                      const Icon(Icons.circle, size: 12, color: Colors.green),
+                      Icon(Icons.circle,
+                          size: 12,
+                          color: widget.myUserInfo!['accessToken']==''
+                              ? Colors.red
+                              : Colors.green),
                       const Expanded(child: SizedBox()),
                       const Icon(Icons.arrow_forward_ios_rounded, size: 16)
                     ],

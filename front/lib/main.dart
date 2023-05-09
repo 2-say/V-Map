@@ -8,9 +8,9 @@ import 'package:front/pageFetures/pageFeaturesRecord.dart';
 
 import 'firebase_options.dart';
 
-void main() {
+void main() async{
   initFirebase();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 void initFirebase() async {
@@ -19,6 +19,7 @@ void initFirebase() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+    print('initFirebase Successfully.');
   } catch (e) {}
 }
 
@@ -34,6 +35,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),
-        home: PageFeatureMain());
+        home: const PageFeatureMain());
   }
 }

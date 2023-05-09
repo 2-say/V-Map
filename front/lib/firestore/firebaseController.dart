@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:front/testFeatures/debugMessage.dart';
 
 class FirebaseController {
   var db = FirebaseFirestore.instance;
@@ -17,13 +18,12 @@ class FirebaseController {
     return result;
   }
 
-  getStudent(String instName, String name, String password) async {
+  getUser(String userName, String email) async {
     Map<String, dynamic>? result;
     await db
-        .collection('student')
-        .where("inst", isEqualTo: instName)
-        .where('name', isEqualTo: name)
-        .where('birth', isEqualTo: password)
+        .collection('users')
+        .where("userName", isEqualTo: userName)
+        .where('email', isEqualTo: email)
         .get()
         .then((value) {
       if (value.size > 0) {
@@ -33,29 +33,20 @@ class FirebaseController {
     return result;
   }
 
-  addStudent(String instName, List<dynamic> group, String name, String birth,
-      String phone, String examConfig) async {
+  //유저 추가
+  addUser(String userName, String email) async {
     bool duplicationChecker = false;
     Map<String, dynamic> map = {
-      'inst': instName,
-      'group': group,
-      'name': name,
-      'birth': birth ?? "0000",
-      'phone': phone ?? "01000000000",
-      'step': "-",
-      'chapters': [],
-      'testable': false,
-      'recent': "-",
-      'is_master': false,
-      "caseSearch": setSearchParam(name),
-      "examConfig": examConfig
+      'userName': userName,
+      'email': email,
+      'accessToken': '',
+      'dataBaseId': '',
+      'pageId': ''
     };
 
     await db
-        .collection('student')
-        .where('inst', isEqualTo: instName)
-        .where('name', isEqualTo: name)
-        .where('birth', isEqualTo: birth)
+        .collection('users')
+        .where('email', isEqualTo: email)
         .get()
         .then((value) {
       for (var doc in value.docs) {
@@ -64,14 +55,50 @@ class FirebaseController {
       }
     });
     if (duplicationChecker == false) {
-      print('중복 없음을 확인, 학생 추가');
-      db.collection('student').add(map);
+      String messageSuccess = '중복 없음을 확인, 학생 추가';
+      DebugMessage(
+              isItPostType: true,
+              featureName: 'addUser',
+              dataType: '',
+              data: messageSuccess)
+          .firebaseMessage();
+      db.collection('users').add(map);
       return true;
-    }
-    else {
-      print('중복 확인, 추가 거부');
+    } else {
+      String messageFail = '중복 확인, 학생 추가 거부';
+      DebugMessage(
+              isItPostType: true,
+              featureName: 'addUser',
+              dataType: '',
+              data: messageFail)
+          .firebaseMessage();
       return false;
     }
+  }
+
+  updateUser(String email, String accessToken,
+      String dataBaseId, String pageId) async {
+    Map<String, dynamic> map = {
+      'accessToken': accessToken,
+      'dataBaseId': dataBaseId,
+      'pageId': pageId
+    };
+
+    db
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        doc.reference.update(map);
+      }
+      DebugMessage(
+              isItPostType: true,
+              featureName: 'updateUser',
+              dataType: '',
+              data: map.toString())
+          .firebaseMessage();
+    });
   }
 
   setSearchParam(String caseNumber) {
@@ -84,7 +111,8 @@ class FirebaseController {
     return caseSearchList;
   }
 
-  updateStudent(String instName,
+  updateStudent(
+      String instName,
       String orgName,
       String orgBirth,
       List<dynamic> group,
@@ -158,8 +186,8 @@ class FirebaseController {
     });
   }
 
-  setStudentTestable(String instName, String name, String birth,
-      bool testable) {
+  setStudentTestable(
+      String instName, String name, String birth, bool testable) {
     db
         .collection('student')
         .where('inst', isEqualTo: instName)
@@ -231,7 +259,8 @@ class FirebaseController {
     return result;
   }
 
-  addTestResult(String instName,
+  addTestResult(
+      String instName,
       String name,
       String birth,
       String title,
@@ -284,8 +313,8 @@ class FirebaseController {
     return result;
   }
 
-  getTestResult(String instName, String name, String birth,
-      String title) async {
+  getTestResult(
+      String instName, String name, String birth, String title) async {
     dynamic data;
     await db
         .collection('testResult')
@@ -301,8 +330,8 @@ class FirebaseController {
     return data;
   }
 
-  updateStudentRecentResult(String instName, String name, String birth,
-      String recent) {
+  updateStudentRecentResult(
+      String instName, String name, String birth, String recent) {
     Map<String, dynamic> map = {
       // 'testable': false, // 기존 값을 따라야 한다.
       'recent': recent
@@ -323,8 +352,8 @@ class FirebaseController {
 
   /* ExamConfig */
 
-  setStudentExamConfig(String instName, String name, String birth,
-      String examConfig) {
+  setStudentExamConfig(
+      String instName, String name, String birth, String examConfig) {
     db
         .collection('student')
         .where('inst', isEqualTo: instName)
@@ -366,8 +395,8 @@ class FirebaseController {
     return examConfig;
   }
 
-  Future<QueryDocumentSnapshot?> _getExamConfig(String inst,
-      String name) async {
+  Future<QueryDocumentSnapshot?> _getExamConfig(
+      String inst, String name) async {
     await db
         .collection('examConfig')
         .where("inst", isEqualTo: inst)
