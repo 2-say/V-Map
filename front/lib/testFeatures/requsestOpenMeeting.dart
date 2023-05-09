@@ -88,7 +88,6 @@ class FeaturesMeeting {
 
   Future<String> authNotion() async {
     DateTime dt = DateTime.now();
-
     var url = Uri.parse('https://218.150.182.202:32929/notionAuth');
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -101,6 +100,25 @@ class FeaturesMeeting {
     print(token);
     print('post!');
     print(response.body);
+    return response.body.toString();
+  }
+
+  Future<String> authNotion2() async {
+    final response = await http.get(Uri.parse('https://218.150.182.202:32929/notionAuth'));
+    if (response.statusCode == 200) {
+      final locationResponse = await http.get(Uri.parse('https://218.150.182.202:32929/notionApiTest'));
+      if (locationResponse.statusCode == 200) {
+        // 응답 성공
+        final token = Uri.parse(locationResponse.request!.url.queryParameters['token']!);
+        print('Token: $token');
+      } else {
+        // 응답 실패
+        print('Request failed with status: ${locationResponse.statusCode}.');
+      }
+    } else {
+      // 응답 실패
+      print('Request failed with status: ${response.statusCode}.');
+    }
     return response.body.toString();
   }
 }
@@ -124,5 +142,5 @@ void main() {
   //     //만약 성공적으로 return 받는다면 value 출력
   //     .then((value) => print(value));
 
-  FeaturesMeeting().authNotion();
+  FeaturesMeeting().authNotion2();
 }

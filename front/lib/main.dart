@@ -8,8 +8,9 @@ import 'package:front/pageFetures/pageFeaturesRecord.dart';
 
 import 'firebase_options.dart';
 
-void main() async{
-  initFirebase();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
@@ -17,8 +18,7 @@ void initFirebase() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+        options: DefaultFirebaseOptions.currentPlatform);
     print('initFirebase Successfully.');
   } catch (e) {}
 }
