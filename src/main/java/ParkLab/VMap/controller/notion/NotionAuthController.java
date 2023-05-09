@@ -1,7 +1,7 @@
 /**
- * Version : 1.0
+ * Backend - Version : 0.2.0
  * 최종 수정 날짜 : 2023-05-09
- * 커밋한 sweet guy : 이세희 야스 ~ 
+ * 커밋한 sweet guy : 이세희 야스 ~
  */
 
 package ParkLab.VMap.controller.notion;
