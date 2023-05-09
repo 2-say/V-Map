@@ -6,9 +6,12 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @RestController
 public class NotionPatchServiceImpl {
@@ -79,11 +82,29 @@ public class NotionPatchServiceImpl {
         appendToFile(time,user,contents,pageId);
     }
 
+
+
     public void appendToFile(String time, String user, String contents, String pageId) throws IOException {
-        String filePath = "/HOME/V-map/data/"+pageId+".txt"; // 파일 경로
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true)); // 파일 쓰기를 위한 BufferedWriter 객체 생성 (true 옵션으로 append 모드로 열기)
-        writer.write("[" + time + "] " + user + " : " + contents); // 파일에 추가할 내용 작성
-        writer.newLine(); // 새로운 줄에 작성
-        writer.close(); // BufferedWriter 객체 닫기
+        String filePath = "/HOME/V-map/data/"+ pageId + ".txt"; // 파일 경로, 사용자 ID를 파일명에 포함
+        String line = "[" + time + "] " + user + " : " + contents; // 파일에 추가할 한 줄 생성
+        List<String> lines = Files.readAllLines(Paths.get(filePath)); // 파일의 모든 라인을 읽어옴
+        lines.add(line); // 새로운 한 줄을 리스트에 추가
+        List<String> sortedLines = new ArrayList<>(); // 정렬된 라인들을 저장할 리스트 생성
+        for (String currentLine : lines) {
+            if (currentLine.startsWith("[")) { // 현재 라인이 시간 정보를 가지고 있는 경우
+                if (!sortedLines.isEmpty()) { // 정렬된 라인들이 존재하는 경우
+                    sortedLines.sort(Comparator.comparing(s -> s.substring(1, 9))); // 1번째부터 9번째까지의 문자열(시간)로 정렬
+                }
+            }
+            sortedLines.add(currentLine); // 현재 라인을 정렬된 라인들 리스트에 추가
+        }
+        Files.write(Paths.get(filePath), sortedLines); // 정렬된 리스트를 파일에 덮어쓰기
     }
+
+
+
+
+
+
+
 }
