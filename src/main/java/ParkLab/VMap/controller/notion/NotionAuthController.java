@@ -5,11 +5,13 @@
  */
 
 package ParkLab.VMap.controller.notion;
+
 import ParkLab.VMap.model.Service.notion.NotionAuthServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class NotionAuthController {
@@ -20,17 +22,24 @@ public class NotionAuthController {
     }
     //노션 인증 URL 생성
     @GetMapping("/notionAuth")
-    public void handleNotionAuthRequest() {
-        notionAuthServiceImpl.Test();
+    public String handleNotionAuthRequest() {
+        String authUrl= notionAuthServiceImpl.Test();
+        return authUrl;
     }
 
     @GetMapping("/notionApiTest")
-    public void handleNotionAuthRequest1(@RequestParam("code") String code) throws JsonProcessingException {
-        notionAuthServiceImpl.handleCallback(code);
+    public String handleNotionAuthRequest1(@RequestParam("code") String code) throws JsonProcessingException {
+        String authUrl = notionAuthServiceImpl.handleCallback(code);
+        return authUrl;
     }
 
     @GetMapping("/getData")
+    @ResponseBody
     public String find_database(@RequestParam("accessToken") String accessToken) {
-        return notionAuthServiceImpl.find_database(accessToken);
+        String database = notionAuthServiceImpl.find_database(accessToken);
+        return database;
     }
+
+
+
 }
