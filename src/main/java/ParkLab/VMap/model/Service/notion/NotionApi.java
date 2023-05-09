@@ -1,6 +1,5 @@
 package ParkLab.VMap.model.Service.notion;
 
-import ParkLab.VMap.controller.meeting.MeetingDataController;
 import ParkLab.VMap.model.Service.DecodeJson.DecordJsonService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONException;
@@ -20,7 +19,6 @@ import java.util.Map;
 
 @Service
 public class NotionApi {
-    private MeetingDataController meetingDataController = new MeetingDataController();
     private final RestTemplate restTemplate = new RestTemplate();
     ResponseEntity<String> responseEntity;
 

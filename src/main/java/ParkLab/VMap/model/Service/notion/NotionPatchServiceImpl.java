@@ -6,6 +6,10 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 @RestController
 public class NotionPatchServiceImpl {
     private final RestTemplate restTemplate = new RestTemplate();
@@ -14,7 +18,6 @@ public class NotionPatchServiceImpl {
     public void patchToNotion(String requestBody) throws Exception {
 
         DecordJsonService decodeJsonService = new DecordJsonService(requestBody);
-
 
         String contents = decodeJsonService.getContents();
         String accessToken = decodeJsonService.getAccessToken();
@@ -73,5 +76,14 @@ public class NotionPatchServiceImpl {
         } else {
             System.out.println("블록 작성 실패!");
         }
+        appendToFile(time,user,contents,pageId);
+    }
+
+    public void appendToFile(String time, String user, String contents, String pageId) throws IOException {
+        String filePath = "/HOME/V-map/data/"+pageId+".txt"; // 파일 경로
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true)); // 파일 쓰기를 위한 BufferedWriter 객체 생성 (true 옵션으로 append 모드로 열기)
+        writer.write("[" + time + "] " + user + " : " + contents); // 파일에 추가할 내용 작성
+        writer.newLine(); // 새로운 줄에 작성
+        writer.close(); // BufferedWriter 객체 닫기
     }
 }

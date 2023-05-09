@@ -43,9 +43,7 @@
             Map<String, Object> jsonMap = new ObjectMapper().readValue(response, new TypeReference<Map<String, Object>>() {});
             String accessToken = (String) jsonMap.get("access_token");
 
-
             System.out.println("Access Token: " + accessToken);
-            System.out.println("MyDataSingleton.getInstance().getToken() = " + MyDataSingleton.getInstance().getToken());
 
             // Redirect to another page
             return "redirect:/getData?accessToken=" +accessToken;
