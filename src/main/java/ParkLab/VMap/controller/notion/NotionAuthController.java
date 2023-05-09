@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class NotionAuthController {
@@ -22,20 +23,23 @@ public class NotionAuthController {
     }
     //노션 인증 URL 생성
     @GetMapping("/notionAuth")
-    public String handleNotionAuthRequest() {
-        String authUrl= notionAuthServiceImpl.Test();
+    public String handleNotionAuthRequest(RedirectAttributes redirectAttributes) {
+        String authUrl= notionAuthServiceImpl.Test(); //authurl = notionApiTest
+        redirectAttributes.addAttribute("redirectUrl", authUrl);
         return authUrl;
     }
 
     @GetMapping("/notionApiTest")
-    public String handleNotionAuthRequest1(@RequestParam("code") String code) throws JsonProcessingException {
+    public String handleNotionAuthRequest1(@RequestParam("code") String code, RedirectAttributes redirectAttributes) throws JsonProcessingException {
         String authUrl = notionAuthServiceImpl.handleCallback(code);
+        redirectAttributes.addAttribute("redirectUrl", authUrl);
+
         return authUrl;
     }
 
     @GetMapping("/getData")
     @ResponseBody
-    public String find_database(@RequestParam("accessToken") String accessToken) {
+    public String find_database(@RequestParam("accessToken") String accessToken,RedirectAttributes redirectAttributes) {
         String database = notionAuthServiceImpl.find_database(accessToken);
         return database;
     }
