@@ -104,7 +104,10 @@ class FeaturesMeeting {
   }
 
   void authNotion2() async {
-    String url = 'https://218.150.182.202:32929/getData';
+
+
+    String url = 'https://218.150.182.202:32929/notionApiTest?code=123123';
+
     http.Response response = await http.get(Uri.parse(url));
     String responseBody = response.body;
     print(responseBody);

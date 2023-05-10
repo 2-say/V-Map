@@ -11,9 +11,12 @@ import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/PageFrame/PageFrameLogin.dart';
 import 'package:front/pageFetures/pageFeatursMains/pageFeaturesTestSets.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:dio/dio.dart';
+
 
 import '../../widgets/widgetCommonAppbar.dart';
 import '../pageFeaturesInvite.dart';
+
 
 
 
@@ -256,28 +259,72 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
                       backgroundColor: ccKeyColorBackground,
                       shadowColor: Colors.transparent),
                   onPressed: () async {
-                    final url = Uri.parse('https://218.150.182.202:32929/notionAuth');
+                    final url = Uri.parse('https://218.150.182.202:32929/patchNotion');
+                    // final url = 'https://218.150.182.202:32929/index';
                     if (await canLaunch(url.toString())) {
                       // 새 창 열기
                       await launch(url.toString(), forceSafariVC: false);
 
+                      print('r u get?');
                       // GET 요청 보내기
-                      final response = await http.get(url);
-                      if (response.statusCode == 200) {
-                        // JSON 파싱
+                      // final response = await http.get(url);
 
-                        final data = jsonDecode(response.body);
-                        final token = data['token'];
-                        print("이게뭐지");
-                        print(token);
+                      // try {final response = await http.get(
+                      //   Uri.parse(url),
+                      //   headers: {'Content-Type': 'application/json'},
+                      // ) } ;
+                      // try {
+                      //   var response = await http.get(Uri.parse('https://218.150.182.202:32929/notionAuth'),
+                      //     headers: {'Content-Type': 'application/json'},);
+                      //   // HTTP 요청 처리
+                      // } catch (e) {
+                      //   // HTTP 요청 오류 처리
+                      //   print('HTTP 요청 오류: $e');
+                      // }
+                      // final dio = Dio();
+                      // final response = await dio.get(url);
+                      // try {
+                      //   final response = await http.get(
+                      //     url, headers: {'Content-Type': 'application/json'},);
+                      // } catch(e) {
+                      //   while(e != FormatException) {
+                      //     final response = await http.get(
+                      //       url, headers: {'Content-Type': 'application/json'},);
+                      //   }
+                      // }
+                      while (true) {
+                        final response = await http.get(
+                              url, headers: {'Content-Type': 'application/json'},);
 
-                        // token 값 사용 예시
-                        print('token: $token');
-                      } else {
-                        // 오류 처리
-                        throw Exception('Failed to load data');
+                        if (response.statusCode == 200) {
+                          try {
+                            return jsonDecode(response.body);
+                          } catch (_) {
+                            print('Error: Invalid JSON response');
+                            // 요청이 실패한 경우 예외 처리를 수행하거나 재시도하는 코드 작성
+                          }
+                        } else {
+                          print('Error: Failed to fetch data');
+                          // 요청이 실패한 경우 예외 처리를 수행하거나 재시도하는 코드 작성
+                        }
                       }
-                    } else {
+
+                      // if (response.statusCode == 200) {
+                      //   // JSON 파싱
+                      //
+                      //   final data = jsonDecode(response.body);
+                      //   final token = data['token'];
+                      //   print("이게뭐지");
+                      //   print(token);
+                      //
+                      //   // token 값 사용 예시
+                      //   print('token: $token');
+                      // } else {
+                      //   // 오류 처리
+                      //   throw Exception('Failed to load data');
+                      // }
+                    }
+                      else {
                       print('--------error message--------');
                       print('url이 유효하지 않습니다.');
                     }
