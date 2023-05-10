@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:front/dataSets/dataSetColors.dart';
 import 'package:front/dataSets/dataSetTextStyles.dart';
@@ -11,6 +14,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../widgets/widgetCommonAppbar.dart';
 import '../pageFeaturesInvite.dart';
+
+
 
 class PageFeatureMain extends StatefulWidget {
   const PageFeatureMain({Key? key}) : super(key: key);
@@ -251,10 +256,27 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
                       backgroundColor: ccKeyColorBackground,
                       shadowColor: Colors.transparent),
                   onPressed: () async {
-                    final url =
-                        Uri.parse('https://218.150.182.202:32929/notionAuth');
-                    if (await canLaunchUrl(url)) {
-                      launchUrl(url);
+                    final url = Uri.parse('https://218.150.182.202:32929/notionAuth');
+                    if (await canLaunch(url.toString())) {
+                      // 새 창 열기
+                      await launch(url.toString(), forceSafariVC: false);
+
+                      // GET 요청 보내기
+                      final response = await http.get(url);
+                      if (response.statusCode == 200) {
+                        // JSON 파싱
+
+                        final data = jsonDecode(response.body);
+                        final token = data['token'];
+                        print("이게뭐지");
+                        print(token);
+
+                        // token 값 사용 예시
+                        print('token: $token');
+                      } else {
+                        // 오류 처리
+                        throw Exception('Failed to load data');
+                      }
                     } else {
                       print('--------error message--------');
                       print('url이 유효하지 않습니다.');
