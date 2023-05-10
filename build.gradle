@@ -29,6 +29,8 @@ dependencies {
 
 	// RestTemplate PATCH, PUT method 사용 위해 추가
 	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '8.1.0'
+
 
 
 

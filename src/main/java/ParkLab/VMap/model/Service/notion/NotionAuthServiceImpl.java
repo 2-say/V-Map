@@ -30,8 +30,7 @@
             return "redirect:" + authGrantType;
         }
 
-
-        public String handleCallback( String code) throws JsonProcessingException {
+        public String handleCallback(String code) throws JsonProcessingException {
             // Do something with the code
             System.out.println("Authorization Code: " + code);
             TokenRequester requester = new TokenRequester(clientId, clientPw);
@@ -70,7 +69,8 @@
                         Map<String, String> responseMap = new HashMap<>();
                         responseMap.put("accessToken", accessToken);
                         responseMap.put("databaseId", databaseId);
-                        return objectMapper.writeValueAsString(responseMap);
+//                        return objectMapper.writeValueAsString(responseMap);
+                        return databaseId;
                     }
                 }
             } catch (Exception e) {
