@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class NotionPatchController {
     private NotionPatchServiceImpl notionPatchServiceImp;
 
+
     public NotionPatchController() {
         this.notionPatchServiceImp = new NotionPatchServiceImpl();
     }

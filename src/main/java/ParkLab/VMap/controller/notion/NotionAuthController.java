@@ -1,8 +1,9 @@
 /**
- * Backend - Version : 0.3.1
- * 최종 수정 날짜 : 2023-05-11 00:37
- * commit by 임재경
- * commit contents : notionAuth firebase 연동
+ * Backend - Version : 0.3.2
+ * 최종 수정 날짜 : 2023-05-11 10:44
+ * commit by 이세희
+ * commit contents : notionWriteController firebase 추가
+ *
  * issue
  * 1. time 변수가 어떻게 넘어오나 확인해서, 정렬이 어떻게 되는지 확인해봐야함
  * 2. patch 시 저장되는 텍스트가 개행이 되는지 여부 -> 이것도 값이 넘어온 다음에 확인해봐야함 ..

@@ -49,7 +49,7 @@ public class NotionWriterServiceImpl {
         //txt파일 생성
         createTxtFile(pageIdString);
 
-        return responseString;
+        return pageIdString;
     }
 
     private void createTxtFile(String pageId) throws IOException {
