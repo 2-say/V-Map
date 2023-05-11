@@ -1,6 +1,8 @@
 package ParkLab.VMap.model.Service.notion;
 
 import ParkLab.VMap.model.Service.DecodeJson.DecordJsonService;
+import ParkLab.VMap.model.Service.firebase.FirebaseServiceImpl;
+import ParkLab.VMap.model.data.Users;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,17 +23,22 @@ import java.util.Map;
 public class NotionApi {
     private final RestTemplate restTemplate = new RestTemplate();
     ResponseEntity<String> responseEntity;
+    FirebaseServiceImpl firebaseServiceImpl = new FirebaseServiceImpl();
 
-    public String postToNotion(String JsonContentBlock, String requestBody) throws Exception {
+    public String postToNotion(String documentId, String JsonContentBlock, String requestBody) throws Exception {
         // 요청 URL을 설정합니다.
         String url = "https://api.notion.com/v1/pages/";
+
+        // firebase 로 부터 user 의 정보를 받아옴
+        Users users = firebaseServiceImpl.getData(documentId);
+        String accessToken = users.getAccessToken();
+        String databaseId = users.getDataBaseId();
 
         DecordJsonService decodeJsonService = new DecordJsonService(requestBody);
         String meetingName = decodeJsonService.getMeetingName();
         List<String> meetingParticipants = decodeJsonService.getMeetingParticipants();
         String startTime = decodeJsonService.getStartTime();
-        String accessToken = decodeJsonService.getAccessToken();
-        String databaseId = decodeJsonService.getDatabaseId();
+
 
         String json = "{\n" +
                 "  \"parent\": {\n" +

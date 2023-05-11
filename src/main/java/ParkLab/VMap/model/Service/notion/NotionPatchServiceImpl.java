@@ -1,6 +1,8 @@
 package ParkLab.VMap.model.Service.notion;
 
 import ParkLab.VMap.model.Service.DecodeJson.DecordJsonService;
+import ParkLab.VMap.model.Service.firebase.FirebaseServiceImpl;
+import ParkLab.VMap.model.data.Users;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,17 +18,19 @@ import java.util.List;
 @RestController
 public class NotionPatchServiceImpl {
     private final RestTemplate restTemplate = new RestTemplate();
+    FirebaseServiceImpl firebaseServiceImpl = new FirebaseServiceImpl();
+    public void patchToNotion(String documentId, String requestBody) throws Exception {
 
-
-    public void patchToNotion(String requestBody) throws Exception {
+        // firebase 로 부터 user 의 정보를 받아옴
+        Users users = firebaseServiceImpl.getData(documentId);
+        String user = users.getUserName();
+        String accessToken = users.getAccessToken();
+        String pageId = users.getPageId();
 
         DecordJsonService decodeJsonService = new DecordJsonService(requestBody);
 
         String contents = decodeJsonService.getContents();
-        String accessToken = decodeJsonService.getAccessToken();
-        String user = decodeJsonService.getUser();
         String time = decodeJsonService.getTime();
-        String pageId = decodeJsonService.getPageId();
 
         String url = "https://api.notion.com/v1/blocks/"+pageId+"/children/";
         String json = "{\n" +

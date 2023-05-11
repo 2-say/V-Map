@@ -1,35 +1,41 @@
 /**
- * Backend - Version : 0.3.2
- * 최종 수정 날짜 : 2023-05-11 10:44
- * commit by 이세희
- * commit contents : notionWriteController firebase 추가
+ * Backend - Version : 0.4.2
+ * 최종 수정 날짜 : 2023-05-11 13:15
+ * commit by 임재경
+ * commit contents
+ * firebase field update method, field read method 추가
+ * 해당 메소드에 맞춰 Notion Auth, Patch, Write 리팩토링
  *
  * issue
  * 1. time 변수가 어떻게 넘어오나 확인해서, 정렬이 어떻게 되는지 확인해봐야함
  * 2. patch 시 저장되는 텍스트가 개행이 되는지 여부 -> 이것도 값이 넘어온 다음에 확인해봐야함 ..
  * 3. txt 저장 경로 수정
- * 4. notionAuth request param -> documentId 로 바꾸기
- * 5. documentId 를 firebase 에서 찾아와서 해당하는 유저 정보 긁어오기
- * 6. 그 유저 정보에서 databaseid 랑 accesstoken 추가해서 다시 업데이트
- * 7. 나머지 patch랑 post 도 firebase 연동 필요
+ * 4. firebase 에서 아직 meeting data가 추가가 안돼서, meeting data 부분은 구현을 안했음
+ * 4-1. meeting data도 update 와 read 메소드가 필요하며 해당 메소드에 맞도록 notion 리팩토링 필요함
+ * 4-2. 또한 기존에 회의 개설 시 나머지 사용자들의 patch 방식에 대해 회의가 필요함
+ * 4-3. 안건 1. 기존대로 회의 참석자들의 accessToken과 pageId 를 덮어씌운다
+ * 4-4. 안건 2. pageId 를 파라미터로 받아오고, documentId 를 받아와서
+ * 4-5. patch user 정보를 활용하고 회의록을 기록하는 페이지는 pageId 로 인식하도록 한다.
  */
 
 package ParkLab.VMap.controller.notion;
 
-import ParkLab.VMap.model.Service.firebase.FirebaseService;
+import ParkLab.VMap.model.Service.firebase.FirebaseServiceImpl;
 import ParkLab.VMap.model.Service.notion.NotionAuthServiceImpl;
-import ParkLab.VMap.model.data.users;
+import ParkLab.VMap.model.data.Users;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
 @Controller
 public class NotionAuthController {
     private NotionAuthServiceImpl notionAuthServiceImpl;
-    private FirebaseService firebaseService = new FirebaseService();
-    users users = new users();
+    private FirebaseServiceImpl firebaseServiceImpl = new FirebaseServiceImpl();
+    Users users = new Users();
+    String documentId;
     public NotionAuthController() {
         this.notionAuthServiceImpl = new NotionAuthServiceImpl();
     }
@@ -42,21 +48,20 @@ public class NotionAuthController {
     }
 
     @GetMapping("/notionAuth")
-    public String handleNotionAuthRequest(@RequestParam("userName") String userName,@RequestParam("email") String email) {
+    public String handleNotionAuthRequest(@RequestParam("documentId") String documentId) {
         String authUrl= notionAuthServiceImpl.Test(); //authurl = notionApiTest
-
-        users.setUserName(userName);
-        users.setEmail(email);
-
+        this.documentId = documentId;
         return authUrl;
     }
 
     @GetMapping("/getData")
     @ResponseBody
     public void find_database(@RequestParam("accessToken") String accessToken) throws Exception {
+        String databaseId = notionAuthServiceImpl.find_database(accessToken);
+
         users.setAccessToken(accessToken);
-//        String database = notionAuthServiceImpl.find_database(accessToken);
-        users.setDataBaseId(notionAuthServiceImpl.find_database(accessToken));
-        firebaseService.saveData(users);
+        users.setDataBaseId(databaseId);
+
+        firebaseServiceImpl.saveAccessToken(documentId, users);
     }
 }

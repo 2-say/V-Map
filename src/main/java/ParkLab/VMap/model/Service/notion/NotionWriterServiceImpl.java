@@ -18,7 +18,7 @@ public class NotionWriterServiceImpl {
     private BlockWrite blockWrite = new BlockWrite();
     private NotionApi notionApi = new NotionApi();
 
-    public String postNotion(String requestBody) throws Exception {
+    public String postNotion(String documentId, String requestBody) throws Exception {
         DecordJsonService decodeJsonService = new DecordJsonService(requestBody);
 
         List<BlockData> contents = new ArrayList<>();
@@ -39,9 +39,8 @@ public class NotionWriterServiceImpl {
 
         String JsonContentBlock = blockWrite.BlockWrite(contents);
 
-
         //notionApi -> pageId 값 받아오기 (txt파일을 만들 때 필요)
-        String responseString = notionApi.postToNotion(JsonContentBlock, requestBody);
+        String responseString = notionApi.postToNotion(documentId, JsonContentBlock, requestBody);
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, String> responseMap = objectMapper.readValue(responseString, new TypeReference<Map<String,String>>(){});
         String pageIdString = responseMap.get("pageId");
