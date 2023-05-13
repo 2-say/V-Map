@@ -28,6 +28,7 @@ class FirebaseController {
         .then((value) {
       if (value.size > 0) {
         result = value.docs.first.data();
+        result!['id']=value.docs.first.id;
       }
     });
     return result;

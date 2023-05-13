@@ -5,45 +5,18 @@ import 'package:http/http.dart' as http;
 import 'NoCheckCertificateHttpOverrides.dart';
 
 class FeaturesMeeting {
-  Future<String> openMeeting(String meetingName,
+  Future<String> postNotion(String id,String meetingName,
       List<String> meetingParticipants) async {
     DateTime dt = DateTime.now();
-    var url = Uri.parse('https://218.150.182.202:32929/start');
+    var url = Uri.parse('https://218.150.182.202:32929/postNotion??documentId='+id);
     Map<String, Object> data = {
       "meetingName": meetingName,
+      "meetingParticipants": meetingParticipants,
       "time": dt.toString(),
-      "meetingParticipants": meetingParticipants
     };
     DebugMessage(
         isItPostType: true,
         featureName: 'openMeeting',
-        dataType: 'json',
-        data: data)
-        .messagePost();
-    var body = json.encode(data);
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-    final http.Response response =
-    await http.post(url, body: body, headers: headers);
-    print('post!');
-    print(response.body);
-    return response.body.toString();
-  }
-
-  Future<String> postNotion(String conetents,
-      List<String> meetingParticipants) async {
-    DateTime dt = DateTime.now();
-    var url = Uri.parse('https://218.150.182.202:32929/postNotion');
-    Map<String, Object> data = {
-      "contents": conetents,
-      "time": dt.toString(),
-      "meetingParticipants": meetingParticipants
-    };
-    DebugMessage(
-        isItPostType: true,
-        featureName: 'postNotion',
         dataType: 'json',
         data: data)
         .messagePost();

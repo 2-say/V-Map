@@ -3,12 +3,16 @@ import 'package:front/pageFetures/pageFeaturesRecord.dart';
 import 'package:front/pageFetures/pageFeaturesInvitation.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/PageFrame/PageFrameLogin.dart';
+import 'package:front/testFeatures/requsestOpenMeeting.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/widgetCommonAppbar.dart';
 
 class PageFeatureInvite extends StatefulWidget {
-  const PageFeatureInvite({Key? key}) : super(key: key);
+  const PageFeatureInvite({Key? key,required this.myUserInfo,required this.meetingName}) : super(key: key);
+  final String meetingName;
+  final Map<String, dynamic>? myUserInfo;
+
 
   @override
   State<PageFeatureInvite> createState() => _PageFeatureInviteState();
@@ -27,36 +31,11 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('반갑습니다. ${dummyUsers[0]}님!',
+                Text('반갑습니다. ${widget.myUserInfo!['userName']}님!',
+                    style: TextStyle(fontSize: 48, fontFamily: 'apeb')),
+                Text('회의명. ${widget.meetingName}',
                     style: TextStyle(fontSize: 48, fontFamily: 'apeb')),
                 const SizedBox(height: 8),
-                const Text('준비사항 :D',
-                    style: TextStyle(fontSize: 20, fontFamily: 'apeb')),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      const Text('아직 노션 연동이 준비되지 않았습니다.',
-                          style: TextStyle(
-                              color: Colors.redAccent,
-                              fontFamily: 'apeb',
-                              fontSize: 16)),
-                      TextButton(
-                          onPressed: () async {
-                            final url = Uri.parse(
-                                'https://218.150.182.202:32929/notionAuth');
-                            if (await canLaunchUrl(url)) {
-                              launchUrl(url);
-                            } else {
-                              print('--------error message--------');
-                              print('url이 유효하지 않습니다.');
-                            }
-                          },
-                          child: Text('연동하기',
-                              style: TextStyle(
-                                  fontFamily: 'apeb',
-                                  fontSize: 16,
-                                  color: Colors.grey.shade400)))
-                    ]),
                 const Expanded(child: SizedBox()),
                 Column(children: [
                   const Text('접속 목록',
@@ -125,10 +104,11 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                           colors: [Colors.indigo, Colors.green])),
                   child: TextButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => PageFeatureRecord()));
+                        FeaturesMeeting().postNotion(widget.myUserInfo!['id'], widget.meetingName, dummyUsers).then((value) => print(value));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => PageFeatureRecord()));
                       },
                       child: const Text('Start Meeting!',
                           style: TextStyle(

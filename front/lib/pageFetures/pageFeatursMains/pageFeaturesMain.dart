@@ -15,13 +15,10 @@ import 'package:front/pageFetures/pageFeatursMains/pageFeaturesTestSets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dio/dio.dart';
 
-
 import '../../widgets/widgetCommonAppbar.dart';
 import '../pageFeaturesInvite.dart';
 
-
-
-
+// 위젯 상위 트리
 class PageFeatureMain extends StatefulWidget {
   const PageFeatureMain({Key? key}) : super(key: key);
 
@@ -30,14 +27,72 @@ class PageFeatureMain extends StatefulWidget {
 }
 
 class _PageFeatureMainState extends State<PageFeatureMain> {
-  setterGoPageFeatureInvite() {
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => const PageFeatureInvite()));
-  }
+  Map<String, dynamic>? myUserInfo;
 
   @override
   void initState() {
     super.initState();
+    FirebaseController()
+        .getUser('Jay', 'dlaworud@koreatech.ac.kr')
+        .then((result) => {
+              setState(() {
+                print('get UserInfo success fully');
+                myUserInfo = result;
+              })
+            });
+  }
+
+  setterGoPageFeatureInvite() {
+    String meetingName = '';
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            title: const Text('회의 정보 입력',
+                style: TextStyle(fontSize: 20, fontFamily: 'apeb')),
+            content: Container(
+              height: 50,
+              child: TextField(
+                onChanged: (val) {
+                  setState(() {
+                    meetingName = val;
+                  });
+                },
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey)),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey)),
+                    hintText: '회의명 입력'),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child:
+                      const Text('닫기', style: TextStyle(fontFamily: 'apeb'))),
+              TextButton(
+                  onPressed: () {
+                    print(myUserInfo);
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PageFeatureInvite(
+                                meetingName: meetingName,
+                                myUserInfo: myUserInfo)));
+                  },
+                  child: Text(
+                    '초대하기',
+                    style:
+                        TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen),
+                  ))
+            ],
+          );
+        });
   }
 
   @override
@@ -45,6 +100,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
     return Scaffold(
         appBar: WidgetCommonAppbar(
             appBar: AppBar(), currentPage: 'meeting', loginState: true),
+        //플로팅 버튼 들어갈곳
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
@@ -60,8 +116,8 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
         body: Row(
           children: <Widget>[
             FutureBuilder(
-                future:
-                    FirebaseController().getUser('testUser', 'test@test.com'),
+                future: FirebaseController()
+                    .getUser('Jay', 'dlaworud@koreatech.ac.kr'),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   //해당 부분은 data를 아직 받아 오지 못했을때 실행되는 부분을 의미한다.
                   if (snapshot.hasData == false) {
@@ -88,7 +144,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
   }
 }
 
-//플로팅 버튼
+//플로팅 버튼 위젯 따로 선언 해둠
 class WidgetFloatingButton extends StatelessWidget {
   WidgetFloatingButton(
       {Key? key,
@@ -261,36 +317,20 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
                       backgroundColor: ccKeyColorBackground,
                       shadowColor: Colors.transparent),
                   onPressed: () async {
-                    FirebaseController firebaseController = FirebaseController();
-                    final collectionRef = firebaseController.db.collection("users");
-                    final query = collectionRef.where("userName", isEqualTo: "Jay").limit(1); //로그인 시 해당 유저로 이름 변경필요 Jay-> ~~
-                    try {
-                      QuerySnapshot snapshot = await query.get();
-                      if (snapshot.size == 1) {
-                        final doc = snapshot.docs[0];
-                        final data = doc.data() as Map<String, dynamic>;
-                        final docId = doc.id;
-                        print(docId); // 출력해보기
-                        final url = Uri.parse('https://218.150.182.202:32929/notionAuth?documentId=' + docId);
-                        if (await canLaunch(url.toString())) {
-                          await launch(url.toString(), forceSafariVC: false);
-                        }
-                      } else {
-                        print("Document not found");
-                      }
-                    } catch (e) {
-                      print("Error getting document: $e");
+                    final url = Uri.parse(
+                        'https://218.150.182.202:32929/notionAuth?documentId=' +
+                            widget.myUserInfo!['id']);
+                    if (await canLaunch(url.toString())) {
+                      await launch(url.toString(), forceSafariVC: false);
                     }
-                  }
-
-                  ,
+                  },
                   child: Row(
                     children: <Widget>[
                       Text('Notion 연동', style: h3),
                       const SizedBox(width: 4),
                       Icon(Icons.circle,
                           size: 12,
-                          color: widget.myUserInfo!['accessToken']==''
+                          color: widget.myUserInfo!['accessToken'] == ''
                               ? Colors.red
                               : Colors.green),
                       const Expanded(child: SizedBox()),
