@@ -3,6 +3,7 @@ package ParkLab.VMap.model.Service.DecodeJson;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DecordJsonService {
@@ -16,14 +17,15 @@ public class DecordJsonService {
     private String contents;
     private String user;
 
-    public DecordJsonService(String json) throws Exception {
+    public DecordJsonService(String requestBody) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(json);
+        JsonNode jsonNode = objectMapper.readTree(requestBody);
 
         this.meetingName = jsonNode.get("meetingName") != null ? jsonNode.get("meetingName").asText() : null;
 
         JsonNode participantsNode = jsonNode.get("meetingParticipants");
-        if (participantsNode != null) {
+        if (participantsNode != null && participantsNode.isArray()) {
+            this.meetingParticipants = new ArrayList<>();
             for (JsonNode participantNode : participantsNode) {
                 this.meetingParticipants.add(participantNode.asText());
             }

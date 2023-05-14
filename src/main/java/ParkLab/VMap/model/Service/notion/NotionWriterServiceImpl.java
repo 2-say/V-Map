@@ -23,15 +23,17 @@ public class NotionWriterServiceImpl {
 
         List<BlockData> contents = new ArrayList<>();
         String meetingName = decodeJsonService.getMeetingName();
-        List<String> meetingParticipants = decodeJsonService.getMeetingParticipants();
         String startTime = decodeJsonService.getStartTime();
 
+        List<String> meetingParticipants = decodeJsonService.getMeetingParticipants();
+        String participantsString = String.join(" ", meetingParticipants);
 
-        contents.add(new BlockData("\\n  :", BlockType.HEADING_2));
+
+        contents.add(new BlockData(" :", BlockType.HEADING_2));
         contents.add(new BlockData(meetingName, BlockType.CALLOUT));
 
         contents.add(new BlockData("회의 참석자", BlockType.HEADING_1));
-        contents.add(new BlockData(meetingParticipants.toString(), BlockType.PARAGRAPH));
+        contents.add(new BlockData(participantsString, BlockType.PARAGRAPH));
 
         contents.add(new BlockData("회의 시간", BlockType.HEADING_1));
         contents.add(new BlockData(startTime, BlockType.PARAGRAPH));
@@ -52,7 +54,7 @@ public class NotionWriterServiceImpl {
     }
 
     private void createTxtFile(String pageId) throws IOException {
-        String directoryPath = "/HOME/V-map/data/";
+        String directoryPath = "/home/lab329/VMap/data/";
         String fileName = pageId + ".txt";
         File directory = new File(directoryPath);
         File file = new File(directoryPath + fileName);

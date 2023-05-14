@@ -43,7 +43,6 @@ public class NotionAuthController {
     @GetMapping("/notionApiTest")
     public String handleNotionAuthRequest1(@RequestParam("code") String code) throws JsonProcessingException {
         String authUrl = notionAuthServiceImpl.handleCallback(code);
-
         return authUrl;
     }
 

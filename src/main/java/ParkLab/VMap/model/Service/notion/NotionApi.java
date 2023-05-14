@@ -36,7 +36,11 @@ public class NotionApi {
 
         DecordJsonService decodeJsonService = new DecordJsonService(requestBody);
         String meetingName = decodeJsonService.getMeetingName();
+
         List<String> meetingParticipants = decodeJsonService.getMeetingParticipants();
+        String participantsString = String.join(" ", meetingParticipants);
+        System.out.printf("들어가는 회의값은 다음과 같습니다. %s ",participantsString);
+
         String startTime = decodeJsonService.getStartTime();
 
 
@@ -47,7 +51,7 @@ public class NotionApi {
                 "  \"properties\": {\n" +
                 "    \"유형\": {\n" +
                 "      \"select\": {\n" +
-                "        \"name\": \""+meetingParticipants+"\"\n" +
+                "        \"name\": \""+participantsString+"\"\n" +
                 "      }\n" +
                 "    },\n" +
                 "    \"이름\": {\n" +

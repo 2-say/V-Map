@@ -37,8 +37,8 @@ public class NotionPatchServiceImpl {
                 "   \"children\": [\n" +
                 "      {\n" +
                 "         \"object\": \"block\",\n" +
-                "         \"type\": \"heading_2\",\n" +
-                "         \"heading_2\": {\n" +
+                "         \"type\": \"paragraph\",\n" +
+                "         \"paragraph\": {\n" +
                 "            \"rich_text\": [{ \"type\": \"text\", \"text\": { \"content\": \"["+time+"] "+user+" : "+contents+"\" } }]\n" +
                 "         }\n" +
                 "      },\n" +
@@ -89,7 +89,7 @@ public class NotionPatchServiceImpl {
 
 
     public void appendToFile(String time, String user, String contents, String pageId) throws IOException {
-        String filePath = "/HOME/V-map/data/"+ pageId + ".txt"; // 파일 경로, 사용자 ID를 파일명에 포함
+        String filePath = "/home/lab329/VMap/data/"+ pageId + ".txt"; // 파일 경로, 사용자 ID를 파일명에 포함
         String line = "[" + time + "] " + user + " : " + contents; // 파일에 추가할 한 줄 생성
         List<String> lines = Files.readAllLines(Paths.get(filePath)); // 파일의 모든 라인을 읽어옴
         lines.add(line); // 새로운 한 줄을 리스트에 추가
