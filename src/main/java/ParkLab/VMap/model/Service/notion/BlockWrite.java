@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockWrite {
-    String completedTasks = new String();
+    String completedTasks = "";
     List<String> unmarkedBlocks = new ArrayList<>();
 
     public String BlockWrite(List<BlockData> dataList) throws Exception {
@@ -25,6 +25,7 @@ public class BlockWrite {
 
 
     public void childBlockMake(BlockType type,String content) {
+
         String childBlock = "{\n"
                 + "    \"object\": \"block\",\n"
                 + "    \"type\": \""+ type.getValue() + "\",\n"
