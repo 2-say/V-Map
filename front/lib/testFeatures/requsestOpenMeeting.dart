@@ -5,55 +5,61 @@ import 'package:http/http.dart' as http;
 import 'NoCheckCertificateHttpOverrides.dart';
 
 class FeaturesMeeting {
-  Future<String> postNotion(String id,String meetingName,
-      List<String> meetingParticipants) async {
-    DateTime dt = DateTime.now();
-    var url = Uri.parse('https://218.150.182.202:32929/postNotion??documentId='+id);
-    Map<String, Object> data = {
-      "meetingName": meetingName,
-      "meetingParticipants": meetingParticipants,
-      "time": dt.toString(),
-    };
-    DebugMessage(
-        isItPostType: true,
-        featureName: 'openMeeting',
-        dataType: 'json',
-        data: data)
-        .messagePost();
-    var body = json.encode(data);
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-    final http.Response response =
-    await http.post(url, body: body, headers: headers);
-    print('post!');
-    print(response.body);
-    return response.body.toString();
-  }
 
-  Future<String> patchNotion(String meetingName,
-      String meetingParticipants) async {
+
+
+  void postNotion() async {
+      final url = Uri.parse('https://218.150.182.202:32929/postNotion?documentId=GVv5VTZcV6sw5UZmfGqV');
+
+      // JSON body
+      final body = {
+        "meetingName": "2023 5월 11일 테스트 회의",
+        "meetingParticipants": ["세희", "재경", "원희", "상현"],
+        "startTime": "2023-05-11T16:22:31"
+      };
+
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        // 요청이 성공적으로 완료됨
+        print('GET request successful');
+        print('Response body: ${response.body}');
+      } else {
+        // 요청이 실패함
+        print('GET request failed with status: ${response.statusCode}');
+      }
+
+
+
+    }
+
+
+
+
+  Future<String> patchNotion(String meetingName, String meetingParticipants) async {
     DateTime dt = DateTime.now();
     var url = Uri.parse('https://218.150.182.202:32929/patchNotion');
     Map<String, Object> data = {
-      "contents": meetingName,
-      "time": dt.toString(),
-      "user": meetingParticipants
+      "meetingName": meetingName,
+      "startTime": dt.toString(),
+      "meetingParticipants": meetingParticipants,
     };
     DebugMessage(
-        isItPostType: true,
-        featureName: 'patchNotion',
-        dataType: 'json',
-        data: data)
-        .messagePost();
+      isItPostType: true,
+      featureName: 'patchNotion',
+      dataType: 'json',
+      data: data,
+    ).messagePost();
     var body = json.encode(data);
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
-    final http.Response response =
-    await http.post(url, body: body, headers: headers);
+    final http.Response response = await http.post(url, body: body, headers: headers);
     print('post!');
     print(response.body);
     return response.body.toString();
@@ -67,24 +73,15 @@ class FeaturesMeeting {
       'Accept': 'application/json',
     };
     final http.Response response = await http.get(url);
-    final token = Uri
-        .parse(response.body)
-        .queryParameters['token'];
+    final token = Uri.parse(response.body).queryParameters['token'];
     print(token);
     print('post!');
     print(response.body);
     return response.body.toString();
   }
 
-  void authNotion2() async {
 
 
-    String url = 'https://218.150.182.202:32929/notionApiTest?code=123123';
-
-    http.Response response = await http.get(Uri.parse(url));
-    String responseBody = response.body;
-    print(responseBody);
-  }
 }
 
 
@@ -92,7 +89,7 @@ void main() {
   HttpOverrides.global = NoCheckCertificateHttpOverrides(); //안전하지 않아도 연결하도록
 
   // const String dummyMeetingName = 'testMeeting';
-  // final List<String> dummyParticipants = ['이세희', '임재경', '조원희'];
+  //
   // const String dummyParticipant = '이세희';
   // const String dummyContents = '이세희는 신이고 이는 증명 가능하다.';
   // FeaturesMeeting()
@@ -105,5 +102,8 @@ void main() {
   //     //만약 성공적으로 return 받는다면 value 출력
   //     .then((value) => print(value));
 
-  FeaturesMeeting().authNotion2();
+  final List<String> dummyParticipants = ['이세희', '임재경', '조원희'];
+//"GVv5VTZcV6sw5UZmfGqV", "2023 5월 15132일 테스트 회의", ["세희", "재경", "원희", "상현"]
+  FeaturesMeeting().postNotion();
+
 }
