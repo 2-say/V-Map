@@ -9,9 +9,10 @@ import 'package:url_launcher/url_launcher.dart';
 import '../widgets/widgetCommonAppbar.dart';
 
 class PageFeatureInvite extends StatefulWidget {
-  const PageFeatureInvite({Key? key,required this.myUserInfo,required this.meetingName}) : super(key: key);
+  const PageFeatureInvite({Key? key,required this.myUserInfo,required this.meetingName,required this.meetingCode}) : super(key: key);
   final String meetingName;
   final Map<String, dynamic>? myUserInfo;
+  final String meetingCode;
 
 
   @override
@@ -76,7 +77,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                         const Text('초대코드',
                             textAlign: TextAlign.start,
                             style: TextStyle(fontSize: 24, fontFamily: 'apeb')),
-                        Text('23rjkewhfjkh2349fwefk',
+                        Text(widget.meetingCode,
                             style: TextStyle(fontSize: 24, fontFamily: 'apm'))
                       ],
                     )),

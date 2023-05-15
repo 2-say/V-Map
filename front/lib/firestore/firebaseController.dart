@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:front/testFeatures/debugMessage.dart';
 
@@ -87,11 +89,24 @@ class FirebaseController {
 
   //----------------------------------------------------------------------- 이하 meeting 컬렉션 관련 함수
 
-  //유저 추가
+  //미팅 추가
   addMeeting(Map<String, dynamic> clerk, String zoomUrlClerk, String zoomUrlEtc,
       String meetingName, String startTime) async {
+    Random _random = Random();
+
+    String randomHexString(int length) {
+      StringBuffer sb = StringBuffer();
+      for (var i = 0; i < length; i++) {
+        sb.write(_random.nextInt(16).toRadixString(16));
+      }
+      return sb.toString();
+    }
+
+    String password = randomHexString(12);
+
     bool duplicationChecker = false;
     Map<String, dynamic> map = {
+      'password': password,
       'clerk': clerk,
       'etc': [],
       'meetingName': meetingName,
@@ -108,6 +123,46 @@ class FirebaseController {
         .collection('meetings')
         .where('clerk', isEqualTo: clerk)
         .where('startTime', isEqualTo: startTime)
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        print(doc.data());
+        duplicationChecker = true;
+      }
+    });
+    if (duplicationChecker == false) {
+      String messageSuccess = '중복 없음을 확인, 회의록 추가';
+      DebugMessage(
+              isItPostType: true,
+              featureName: 'addMeeting',
+              dataType: '',
+              data: messageSuccess)
+          .firebaseMessage();
+      db.collection('meetings').add(map);
+      return password;
+    } else {
+      String messageFail = '중복 확인, 회의록 추가 거부';
+      DebugMessage(
+              isItPostType: true,
+              featureName: 'addMeeting',
+              dataType: '',
+              data: messageFail)
+          .firebaseMessage();
+      return false;
+    }
+  }
+
+  updateMeetingParticipants(Map<String, dynamic> participants,
+      String meetingName, String clerk) async {
+    bool duplicationChecker = false;
+    Map<String, dynamic> map = {
+      'etc': [],
+    };
+
+    await db
+        .collection('meetings')
+        .where('clerk', isEqualTo: clerk)
+        .where('meetingName', isEqualTo: meetingName)
         .get()
         .then((value) {
       for (var doc in value.docs) {

@@ -42,6 +42,79 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
             });
   }
 
+  setterGoPageFeatureInvitation() {
+    String meetingName = '';
+    String clerkName = '';
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            title: const Text('참여할 회의 정보 입력',
+                style: TextStyle(fontSize: 20, fontFamily: 'apeb')),
+            content: Container(
+              height: 120,
+              child: Column(
+                children: [
+                  TextField(
+                    onChanged: (val) {
+                      setState(() {
+                        meetingName = val;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
+                        hintText: '참여할 회의명 입력'),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    onChanged: (val) {
+                      setState(() {
+                        clerkName = val;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
+                        hintText: '서기 유저 이름 입력'),
+                  )
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child:
+                      const Text('닫기', style: TextStyle(fontFamily: 'apeb'))),
+              //이 부분에 zoom 관련 코드 받아서 바로 리턴받을 수 있도록 !
+              TextButton(
+                  onPressed: () {
+                    DateTime dt = DateTime.now();
+                    print(myUserInfo);
+                    //zoom 회의방 열기 어쩌구저쩌구,
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PageFeatureInvitation()));
+                  },
+                  child: Text(
+                    '초대하기',
+                    style:
+                        TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen),
+                  ))
+            ],
+          );
+        });
+  }
+
   setterGoPageFeatureInvite() {
     String meetingName = '';
     showDialog(
@@ -77,15 +150,20 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                       const Text('닫기', style: TextStyle(fontFamily: 'apeb'))),
               //이 부분에 zoom 관련 코드 받아서 바로 리턴받을 수 있도록 !
               TextButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    String meetingCode = '';
                     DateTime dt = DateTime.now();
                     print(myUserInfo);
                     //zoom 회의방 열기 어쩌구저쩌구,
-                    FirebaseController().addMeeting(myUserInfo!, 'testtest', 'testtest', meetingName, dt.toString());
+                    await FirebaseController()
+                        .addMeeting(myUserInfo!, 'testtest', 'testtest',
+                            meetingName, dt.toString())
+                        .then((value) => meetingCode = value);
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => PageFeatureInvite(
+                                meetingCode: meetingCode,
                                 meetingName: meetingName,
                                 myUserInfo: myUserInfo)));
                   },
@@ -109,7 +187,9 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             WidgetFloatingButton(
-                buttonTitle: '회의 참가', buttonIcon: Icons.compare_arrows),
+                buttonTitle: '회의 참가',
+                buttonIcon: Icons.compare_arrows,
+                setter: setterGoPageFeatureInvitation),
             const SizedBox(height: 8),
             WidgetFloatingButton(
                 buttonTitle: '회의 개설',
