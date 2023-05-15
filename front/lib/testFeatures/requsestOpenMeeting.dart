@@ -8,34 +8,34 @@ class FeaturesMeeting {
 
 
 
-  void postNotion() async {
-      final url = Uri.parse('https://218.150.182.202:32929/postNotion?documentId=GVv5VTZcV6sw5UZmfGqV');
+  Future<String> postNotion(String id, String meetingName, List<String> meetingParticipants) async {
+    final url = Uri.parse('https://218.150.182.202:32929/postNotion?documentId='+id);
+    DateTime dt = DateTime.now();
+    // JSON body
+    final body = {
+      "meetingName": meetingName,
+      "meetingParticipants": meetingParticipants,
+      "startTime": dt.toIso8601String()
+    };
 
-      // JSON body
-      final body = {
-        "meetingName": "2023 5월 11일 테스트 회의",
-        "meetingParticipants": ["세희", "재경", "원희", "상현"],
-        "startTime": "2023-05-11T16:22:31"
-      };
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
 
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(body),
-      );
-
-      if (response.statusCode == 200) {
-        // 요청이 성공적으로 완료됨
-        print('GET request successful');
-        print('Response body: ${response.body}');
-      } else {
-        // 요청이 실패함
-        print('GET request failed with status: ${response.statusCode}');
-      }
-
-
-
+    if (response.statusCode == 200) {
+      // 요청이 성공적으로 완료됨
+      print('GET request successful');
+      print('Response body: ${response.body}');
+      return response.body.toString();
+    } else {
+      // 요청이 실패함
+      print('GET request failed with status: ${response.statusCode}');
+      throw Exception('GET request failed');
     }
+  }
+
 
 
 
@@ -104,6 +104,6 @@ void main() {
 
   final List<String> dummyParticipants = ['이세희', '임재경', '조원희'];
 //"GVv5VTZcV6sw5UZmfGqV", "2023 5월 15132일 테스트 회의", ["세희", "재경", "원희", "상현"]
-  FeaturesMeeting().postNotion();
 
+  FeaturesMeeting().postNotion("GVv5VTZcV6sw5UZmfGqV", "2023 5월 15132일 테스트 회의" , dummyParticipants);
 }
