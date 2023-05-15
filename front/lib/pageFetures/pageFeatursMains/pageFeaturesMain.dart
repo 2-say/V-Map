@@ -14,6 +14,7 @@ import 'package:front/pageFetures/pageFeatursMains/pageFeaturesTestSets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dio/dio.dart';
 
+import '../../ZoomMeeting/Zoom_Creat_Meeting.dart';
 import '../../widgets/widgetCommonAppbar.dart';
 import '../pageFeaturesInvite.dart';
 
@@ -140,6 +141,30 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
               //이 부분에 zoom 관련 코드 받아서 바로 리턴받을 수 있도록 !
               TextButton(
                   onPressed: () async {
+                    ZoomMeetingCreator zoomMeetingCreator = ZoomMeetingCreator();
+
+                    // print("여기보세요");
+
+
+                    String meetingCode = '';
+                    DateTime dt = DateTime.now();
+                    print(myUserInfo);
+                    await zoomMeetingCreator.createZoomMeeting();
+
+                    // Access startUrl and joinUrl
+                    final startUrl = zoomMeetingCreator.startUrl;
+                    final joinUrl = zoomMeetingCreator.joinUrl;
+
+                    if (startUrl != null && joinUrl != null) {
+                      print("여기보세요");
+                      print('Start URL: $startUrl');
+                      print('Join URL: $joinUrl');
+
+                      // Continue with your code logic using startUrl and joinUrl
+                    } else {
+                      print('Failed to obtain Zoom meeting URLs');
+                    }
+
                     Map<String, dynamic>? result;
                     String meetingCode = '';
                     DateTime dt = DateTime.now();
