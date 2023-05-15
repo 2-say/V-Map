@@ -75,9 +75,13 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                   },
                   child:
                       const Text('닫기', style: TextStyle(fontFamily: 'apeb'))),
+              //이 부분에 zoom 관련 코드 받아서 바로 리턴받을 수 있도록 !
               TextButton(
                   onPressed: () {
+                    DateTime dt = DateTime.now();
                     print(myUserInfo);
+                    //zoom 회의방 열기 어쩌구저쩌구,
+                    FirebaseController().addMeeting(myUserInfo!, 'testtest', 'testtest', meetingName, dt.toString());
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(

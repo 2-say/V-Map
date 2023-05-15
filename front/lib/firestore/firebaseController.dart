@@ -4,20 +4,6 @@ import 'package:front/testFeatures/debugMessage.dart';
 class FirebaseController {
   var db = FirebaseFirestore.instance;
 
-  getInst(String name) async {
-    Map<String, dynamic>? result;
-    await db
-        .collection('inst')
-        .where('name', isEqualTo: name)
-        .get()
-        .then((inst) {
-      if (inst.size > 0) {
-        result = inst.docs.first.data();
-      }
-    });
-    return result;
-  }
-
   getUser(String userName, String email) async {
     Map<String, dynamic>? result;
     await db
@@ -28,7 +14,7 @@ class FirebaseController {
         .then((value) {
       if (value.size > 0) {
         result = value.docs.first.data();
-        result!['id']=value.docs.first.id;
+        result!['id'] = value.docs.first.id;
       }
     });
     return result;
@@ -77,19 +63,16 @@ class FirebaseController {
     }
   }
 
-  updateUser(String email, String accessToken,
-      String dataBaseId, String pageId) async {
+  //유저 정보 업데이트
+  updateUser(String email, String accessToken, String dataBaseId,
+      String pageId) async {
     Map<String, dynamic> map = {
       'accessToken': accessToken,
       'dataBaseId': dataBaseId,
       'pageId': pageId
     };
 
-    db
-        .collection('users')
-        .where('email', isEqualTo: email)
-        .get()
-        .then((value) {
+    db.collection('users').where('email', isEqualTo: email).get().then((value) {
       for (var doc in value.docs) {
         doc.reference.update(map);
       }
@@ -102,6 +85,59 @@ class FirebaseController {
     });
   }
 
+  //----------------------------------------------------------------------- 이하 meeting 컬렉션 관련 함수
+
+  //유저 추가
+  addMeeting(Map<String, dynamic> clerk, String zoomUrlClerk, String zoomUrlEtc,
+      String meetingName, String startTime) async {
+    bool duplicationChecker = false;
+    Map<String, dynamic> map = {
+      'clerk': clerk,
+      'etc': [],
+      'meetingName': meetingName,
+      'zoomUrlClerk': zoomUrlClerk,
+      'zoomUrlEtc': zoomUrlEtc,
+      'startTime': startTime,
+      'endTime': '',
+      'contents': [],
+      'abridge': [],
+      'agenda': [],
+    };
+
+    await db
+        .collection('meetings')
+        .where('clerk', isEqualTo: clerk)
+        .where('startTime', isEqualTo: startTime)
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        print(doc.data());
+        duplicationChecker = true;
+      }
+    });
+    if (duplicationChecker == false) {
+      String messageSuccess = '중복 없음을 확인, 회의록 추가';
+      DebugMessage(
+              isItPostType: true,
+              featureName: 'addMeeting',
+              dataType: '',
+              data: messageSuccess)
+          .firebaseMessage();
+      db.collection('meetings').add(map);
+      return true;
+    } else {
+      String messageFail = '중복 확인, 회의록 추가 거부';
+      DebugMessage(
+              isItPostType: true,
+              featureName: 'addMeeting',
+              dataType: '',
+              data: messageFail)
+          .firebaseMessage();
+      return false;
+    }
+  }
+
+  //----------------------------------------------------------------------- 이하 레퍼런스용 함수
   setSearchParam(String caseNumber) {
     List<String> caseSearchList = [""];
     String temp = "";

@@ -67,6 +67,12 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        const Text('회의방 url (서기용)',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(fontSize: 24, fontFamily: 'apeb')),
+                        const Text('회의방 url (참여자용)',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(fontSize: 24, fontFamily: 'apeb')),
                         const Text('초대코드',
                             textAlign: TextAlign.start,
                             style: TextStyle(fontSize: 24, fontFamily: 'apeb')),
