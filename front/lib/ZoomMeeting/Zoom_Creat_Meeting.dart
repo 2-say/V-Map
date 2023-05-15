@@ -8,7 +8,7 @@ void main() {
 
 
 void createZoomMeeting() async {
-  final apiKey = 'ru1ye_lgTMWHIiPiY6G7SQ';
+  final apiKey = 'mRwuKPjNQB6aVxvp7QiiuA';
   final apiSecret = 'c0hcgeYFsHjNNJ0DOG2EvbKOtQGOqxVrDHXN';
   final zoomUserId = 'bbq0322@naver.com';
 
