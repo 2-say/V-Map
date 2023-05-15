@@ -166,12 +166,10 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                     }
 
                     Map<String, dynamic>? result;
-                    String meetingCode = '';
-                    DateTime dt = DateTime.now();
                     print(myUserInfo);
                     //zoom 회의방 열기 어쩌구저쩌구,
                     await FirebaseController()
-                        .addMeeting(myUserInfo!, 'testtest', 'testtest',
+                        .addMeeting(myUserInfo!, startUrl!, joinUrl!,
                             meetingName, dt.toString())
                         .then((value) => meetingCode = value);
                     await FirebaseController()
