@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
+import '../testFeatures/requsestOpenMeeting.dart';
+
 Future<String> getToken(String clientId, String clientSecret) async {
   final response = await http.post(
     Uri.parse("https://openapi.vito.ai/v1/authenticate"),
@@ -47,6 +49,9 @@ Future<void> streamingTranscribe(String clientId, String clientSecret, {Map<Stri
       if (msg["final"]) {
         //stdout.write("${msg["alternatives"][0]["text"]}/");
         print(msg["alternatives"][0]["text"]);
+        FeaturesMeeting featuresMeeting = FeaturesMeeting();
+        featuresMeeting.patchNotion("GVv5VTZcV6sw5UZmfGqV","세희",msg["alternatives"][0]["text"]);
+
       }
     }).onDone(() {
       print("\nDone.");
