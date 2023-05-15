@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
+import '../testFeatures/NoCheckCertificateHttpOverrides.dart';
 import '../testFeatures/requsestOpenMeeting.dart';
 
 Future<String> getToken(String clientId, String clientSecret) async {
@@ -91,6 +92,7 @@ Future<Stream<List<int>>> startRecorderFFMpeg() async { // 수정된 함수
 }
 
 void main() async {
+  HttpOverrides.global = NoCheckCertificateHttpOverrides();
   final clientId = "jp4X0g-b-gPYQBlqrh8v";
   final clientSecret = "q2cjhxRgsHpRMnUWJr8EhGP02xQAhOpd6irMEwpA";
 
