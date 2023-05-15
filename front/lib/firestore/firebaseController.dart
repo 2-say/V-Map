@@ -152,44 +152,56 @@ class FirebaseController {
     }
   }
 
-  updateMeetingParticipants(Map<String, dynamic> participants,
-      String meetingName, String clerk) async {
-    bool duplicationChecker = false;
-    Map<String, dynamic> map = {
-      'etc': [],
-    };
-
+  // 회의 정보 get
+  getMeetingInfo(String meetingCode) async {
+    Map<String, dynamic>? result;
     await db
         .collection('meetings')
-        .where('clerk', isEqualTo: clerk)
-        .where('meetingName', isEqualTo: meetingName)
+        .where('password', isEqualTo: meetingCode)
+        .get()
+        .then((value) {
+      if (value.size > 0) {
+        result = value.docs.first.data();
+        print(result!['meetingName']);
+      }
+      DebugMessage(
+              isItPostType: true,
+              featureName: 'updateMeetingParticipants',
+              dataType: '',
+              data: result)
+          .firebaseMessage();
+    });
+    print(result!['meetingName']);
+    return result;
+  }
+
+  // 회의 업데이트 함수
+  updateMeetingParticipants(
+      Map<String, dynamic> participants, String meetingCode) async {
+    Map<String, dynamic>? result;
+    await db
+        .collection('meetings')
+        .where('password', isEqualTo: meetingCode)
         .get()
         .then((value) {
       for (var doc in value.docs) {
-        print(doc.data());
-        duplicationChecker = true;
+        doc.reference.update({
+          'etc': FieldValue.arrayUnion([participants])
+        });
+        if (value.size > 0) {
+          result = value.docs.first.data();
+          print(result!['meetingName']);
+        }
       }
+      DebugMessage(
+              isItPostType: true,
+              featureName: 'updateMeetingParticipants',
+              dataType: '',
+              data: participants.toString())
+          .firebaseMessage();
     });
-    if (duplicationChecker == false) {
-      String messageSuccess = '중복 없음을 확인, 회의록 추가';
-      DebugMessage(
-              isItPostType: true,
-              featureName: 'addMeeting',
-              dataType: '',
-              data: messageSuccess)
-          .firebaseMessage();
-      db.collection('meetings').add(map);
-      return true;
-    } else {
-      String messageFail = '중복 확인, 회의록 추가 거부';
-      DebugMessage(
-              isItPostType: true,
-              featureName: 'addMeeting',
-              dataType: '',
-              data: messageFail)
-          .firebaseMessage();
-      return false;
-    }
+    print(result!['meetingName']);
+    return result;
   }
 
   //----------------------------------------------------------------------- 이하 레퍼런스용 함수

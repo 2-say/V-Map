@@ -8,7 +8,6 @@ import 'package:front/firestore/firebaseController.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:front/pageFetures/pageFeaturesRecord.dart';
-import 'package:front/pageFetures/pageFeaturesInvitation.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/PageFrame/PageFrameLogin.dart';
 import 'package:front/pageFetures/pageFeatursMains/pageFeaturesTestSets.dart';
@@ -43,8 +42,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
   }
 
   setterGoPageFeatureInvitation() {
-    String meetingName = '';
-    String clerkName = '';
+    String meetingCode = '';
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -54,37 +52,19 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
             title: const Text('참여할 회의 정보 입력',
                 style: TextStyle(fontSize: 20, fontFamily: 'apeb')),
             content: Container(
-              height: 120,
-              child: Column(
-                children: [
-                  TextField(
-                    onChanged: (val) {
-                      setState(() {
-                        meetingName = val;
-                      });
-                    },
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey)),
-                        hintText: '참여할 회의명 입력'),
-                  ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    onChanged: (val) {
-                      setState(() {
-                        clerkName = val;
-                      });
-                    },
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey)),
-                        hintText: '서기 유저 이름 입력'),
-                  )
-                ],
+              height: 50,
+              child: TextField(
+                onChanged: (val) {
+                  setState(() {
+                    meetingCode = val;
+                  });
+                },
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey)),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey)),
+                    hintText: '회의코드 입력'),
               ),
             ),
             actions: <Widget>[
@@ -96,14 +76,23 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                       const Text('닫기', style: TextStyle(fontFamily: 'apeb'))),
               //이 부분에 zoom 관련 코드 받아서 바로 리턴받을 수 있도록 !
               TextButton(
-                  onPressed: () {
-                    DateTime dt = DateTime.now();
+                  onPressed: () async {
+                    Map<String, dynamic>? result;
                     print(myUserInfo);
                     //zoom 회의방 열기 어쩌구저쩌구,
+                    await FirebaseController()
+                        .updateMeetingParticipants(myUserInfo!, meetingCode)
+                        .then((value) {
+                      result = value;
+                      print(value['meetingName']);
+                    });
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PageFeatureInvitation()));
+                            builder: (context) => PageFeatureInvite(
+                                  myUserInfo: myUserInfo,
+                                  meetingInfo: result,
+                                )));
                   },
                   child: Text(
                     '초대하기',
@@ -151,6 +140,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
               //이 부분에 zoom 관련 코드 받아서 바로 리턴받을 수 있도록 !
               TextButton(
                   onPressed: () async {
+                    Map<String, dynamic>? result;
                     String meetingCode = '';
                     DateTime dt = DateTime.now();
                     print(myUserInfo);
@@ -159,13 +149,16 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                         .addMeeting(myUserInfo!, 'testtest', 'testtest',
                             meetingName, dt.toString())
                         .then((value) => meetingCode = value);
+                    await FirebaseController()
+                        .getMeetingInfo(meetingCode)
+                        .then((value) => result = value);
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => PageFeatureInvite(
-                                meetingCode: meetingCode,
-                                meetingName: meetingName,
-                                myUserInfo: myUserInfo)));
+                                  meetingInfo: result,
+                                  myUserInfo: myUserInfo,
+                                )));
                   },
                   child: Text(
                     '초대하기',
