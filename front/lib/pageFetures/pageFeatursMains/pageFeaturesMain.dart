@@ -149,21 +149,23 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                     String meetingCode = '';
                     DateTime dt = DateTime.now();
                     print(myUserInfo);
-                    await zoomMeetingCreator.createZoomMeeting();
-
-                    // Access startUrl and joinUrl
-                    final startUrl = zoomMeetingCreator.startUrl;
-                    final joinUrl = zoomMeetingCreator.joinUrl;
-
-                    if (startUrl != null && joinUrl != null) {
-                      print("여기보세요");
-                      print('Start URL: $startUrl');
-                      print('Join URL: $joinUrl');
-
-                      // Continue with your code logic using startUrl and joinUrl
-                    } else {
-                      print('Failed to obtain Zoom meeting URLs');
-                    }
+                    final startUrl ='';
+                    final joinUrl ='';
+                    // await zoomMeetingCreator.createZoomMeeting();
+                    //
+                    // // Access startUrl and joinUrl
+                    //  startUrl = zoomMeetingCreator.startUrl;
+                    //  joinUrl = zoomMeetingCreator.joinUrl;
+                    //
+                    // if (startUrl != null && joinUrl != null) {
+                    //   print("여기보세요");
+                    //   print('Start URL: $startUrl');
+                    //   print('Join URL: $joinUrl');
+                    //
+                    //   // Continue with your code logic using startUrl and joinUrl
+                    // } else {
+                    //   print('Failed to obtain Zoom meeting URLs');
+                    // }
 
                     Map<String, dynamic>? result;
                     print(myUserInfo);

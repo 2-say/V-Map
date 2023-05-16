@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:front/firestore/firebaseController.dart';
 import 'package:front/testFeatures/debugMessage.dart';
 import 'package:http/http.dart' as http;
 import 'NoCheckCertificateHttpOverrides.dart';
@@ -101,9 +102,11 @@ void main() {
   //     .patchNotion(dummyContents, dummyParticipant)
   //     //만약 성공적으로 return 받는다면 value 출력
   //     .then((value) => print(value));
+//
+//   final List<String> dummyParticipants = ['이세희', '임재경', '조원희'];
+// //"GVv5VTZcV6sw5UZmfGqV", "2023 5월 15132일 테스트 회의", ["세희", "재경", "원희", "상현"]
+//
+//   FeaturesMeeting().postNotion("GVv5VTZcV6sw5UZmfGqV", "2023 5월 15132일 테스트 회의" , dummyParticipants);
 
-  final List<String> dummyParticipants = ['이세희', '임재경', '조원희'];
-//"GVv5VTZcV6sw5UZmfGqV", "2023 5월 15132일 테스트 회의", ["세희", "재경", "원희", "상현"]
-
-  FeaturesMeeting().postNotion("GVv5VTZcV6sw5UZmfGqV", "2023 5월 15132일 테스트 회의" , dummyParticipants);
+FirebaseController().updateMeetingContents('7de0a808ff14', 'test', '00:00', '00:00', 'ㅋㅋㅋㅋㅋ 테스트!');
 }

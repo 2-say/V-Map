@@ -1,12 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:front/dataSets/dataSetColors.dart';
 import '../dataSets/dataSetTextStyles.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
 
+import '../firestore/firebaseController.dart';
 import '../widgets/widgetCommonAppbar.dart';
 
 class PageFeatureRecord extends StatefulWidget {
-  const PageFeatureRecord({Key? key}) : super(key: key);
+  const PageFeatureRecord(
+      {Key? key, required this.meetingInfo, required this.userInfo})
+      : super(key: key);
+  final Map<String, dynamic>? meetingInfo;
+  final Map<String, dynamic>? userInfo;
 
   @override
   State<PageFeatureRecord> createState() => _PageFeatureRecordState();
@@ -14,43 +20,30 @@ class PageFeatureRecord extends StatefulWidget {
 
 class _PageFeatureRecordState extends State<PageFeatureRecord> {
   //dataSet
-  final List<String> statusCheckTitle = ['노션 연동', '스테레오 녹음', '마이크 녹음'];
   final ScrollController agendaListViewScroller = ScrollController();
   late bool isRecordOn;
   late List<bool> statusCheck;
-  late int time;
-  late String meetingName;
-  late String timeStamp;
-  late int participants;
   late int currentTime;
-  late List<String> agendaList;
-  late List<dynamic> talk;
+  late List<String> agendaList = [];
+  late List<dynamic> talk = [];
+  int count =0;
+
+  //회의록 내용을 스트리밍 형태로 받아올 수 있는 객체 선언
+  late Stream<QuerySnapshot<Map<String, dynamic>>> streamConnectContents;
 
   @override
   void initState() {
+    // 스트리밍 객체를 어떤 문서에 연결할 것인지 위젯 빌드 전 할당
+    streamConnectContents = FirebaseFirestore.instance
+        .collection('meetings')
+        .where('password', isEqualTo: widget.meetingInfo!['password'])
+        .snapshots();
     //현재 녹음 여부 기본 false로 선언
     isRecordOn = false;
     //연동 , 스테레오 녹음 , 마이크 녹음 등의 체크를 false로 기본 선언
     statusCheck = List.filled(3, false);
     //현재 녹음 시간 0으로 선언
-    time = 0;
-    meetingName = '회의록 By V-Map';
-    timeStamp = '2023/03/14 · 16:00';
-    participants = 4;
     currentTime = 0;
-    agendaList = [
-      '오늘 점심 메뉴 정하기',
-      '랩실 청소 당번 정하기',
-      '랩실 의자 교체 작업',
-      '연구 보고서 작성 회의일자 정하기',
-      '진행 과정 보고'
-    ];
-    talk = [
-      ['0:02', '이상현', '안녕하세요'],
-      ['0:03', '이세희', '반갑습니다.'],
-      ['0:07', '조원희', '모두 오랜만입니다.'],
-      ['0:12', '임재경', '그러게요, 정말 오랜만에 뵙는 것 같아요.']
-    ];
     //이 함수가 실행 되어야 위젯 변수들의 초기화가 완료됨.
     super.initState();
   }
@@ -78,9 +71,10 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text('회의명 : $meetingName', style: b1eb),
+                        Text('회의명 : ${widget.meetingInfo!['meetingName']}',
+                            style: b1eb),
                         Text(
-                          '$timeStamp · 참여자 $participants명',
+                          '${widget.meetingInfo!['startTime']} · 참여자 ${widget.meetingInfo!['etc'].length + 1}명',
                           style: const TextStyle(
                               fontFamily: 'apb', color: Colors.grey),
                         )
@@ -110,7 +104,8 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                               fontFamily: 'apeb', color: Colors.redAccent)),
                   const SizedBox(width: 8),
                   Row(
-                    children: List<Widget>.generate(participants, (index) {
+                    children: List<Widget>.generate(
+                        widget.meetingInfo!['etc'].length, (index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: CircleAvatar(
@@ -164,7 +159,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                                   visualDensity:
                                       const VisualDensity(vertical: -3),
                                   title: Text(
-                                    agendaList[index],
+                                    '',
                                     style: const TextStyle(
                                         fontFamily: 'apm', color: Colors.grey),
                                   ),
@@ -242,44 +237,67 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                 ),
                 Expanded(
                     child: Container(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: List.generate(talk.length, (index) {
-                        return ListTile(
-                          title: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                SizedBox(
-                                  width: 32,
-                                  child: Text(
-                                    '${talk[index][0]}',
-                                    style: const TextStyle(
-                                        fontFamily: 'apm', fontSize: 14),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Text(
-                                  '${talk[index][1]}',
-                                  style: const TextStyle(
-                                      fontFamily: 'apeb', fontSize: 20),
-                                ),
-                                const Expanded(child: SizedBox()),
-                                Text(
-                                  '${talk[index][2]}',
-                                  style: const TextStyle(
-                                      fontFamily: 'apm', fontSize: 16),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                )),
+                        child: StreamBuilder<
+                                QuerySnapshot<Map<String, dynamic>>>(
+                            stream: streamConnectContents,
+                            builder: (context, snapshot) {
+                              //에러 없이 데이터가 성공적으로 수신되었다면
+                              if (snapshot.hasData && snapshot.data != null) {
+                                var docs = snapshot.data?.docs.first.data();
+                                return SingleChildScrollView(
+                                    child: Column(
+                                        children: List.generate(
+                                            docs?['contents'].length, (index) {
+                                  return ListTile(
+                                      title: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 6),
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text(
+                                                    docs?['contents'][index]
+                                                        ['startTime'],
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        fontFamily: 'apm',
+                                                        color: Colors.grey)),
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                    docs?['contents'][index]
+                                                        ['user'],
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontFamily: 'apeb')),
+                                                const SizedBox(width: 8),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                      color:
+                                                          Colors.grey.shade300),
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                      docs?['contents'][index]
+                                                          ['text'],
+                                                      style: const TextStyle(
+                                                          fontSize: 14,
+                                                          fontFamily: 'apm')),
+                                                )
+                                              ])));
+                                })));
+                              } else if (snapshot.hasError) {
+                                return const Text('Error');
+                                // 기타 경우 ( 불러오는 중 )
+                              } else {
+                                return const CircularProgressIndicator();
+                              }
+                            }))),
                 Container(
                   width: double.infinity,
                   height: 60,
@@ -290,7 +308,11 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   ], begin: Alignment.centerLeft, end: Alignment.centerRight)),
                   child: IconButton(
                       onPressed: () {
+                        //firebase 컨트롤러 만들어놨어~ 이거 써서 업데이트 하면 돼
+                        FirebaseController().updateMeetingContents(widget.meetingInfo!['password'], 'testUser', '00:00', '00:00', 'ㅋㅋㅋㅋㅋ 테스트!${count}');
+                        count++;
                         setState(() {
+                          //isRecordOn이 true일때 녹음 기능이 작동하도록 하면 될듯!
                           isRecordOn = !isRecordOn;
                         });
                       },

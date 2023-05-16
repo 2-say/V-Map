@@ -5,6 +5,8 @@ import 'package:front/PageFrame/PageFrameLogin.dart';
 import 'package:front/testFeatures/requsestOpenMeeting.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../dataSets/dataSetColors.dart';
+import '../dataSets/dataSetTextStyles.dart';
 import '../widgets/widgetCommonAppbar.dart';
 
 class PageFeatureInvite extends StatefulWidget {
@@ -53,75 +55,23 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                               WidgetCircleAvatar(userName: dummyUsers[index]))),
                 ]),
                 const SizedBox(height: 8),
-                Container(
-                    //크기 정의 먼저
-                    width: double.infinity,
-                    height: 68,
-                    // 그 다음 정렬 여부 , padding or margin
-                    alignment: Alignment.center,
-                    // 그 다음 deco
-                    decoration: BoxDecoration(
-                      //deco는 색 - 나머지 순으로
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    // 기초 정의가 끝나면 child 정의
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('초대코드',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(fontSize: 16, fontFamily: 'apeb')),
-                        Text(widget.meetingInfo!['zoomUrlClerk'],
-                            style: TextStyle(fontSize: 16, fontFamily: 'apm'))
-                      ],
-                    )),
-                Container(
-                    //크기 정의 먼저
-                    width: double.infinity,
-                    height: 68,
-                    // 그 다음 정렬 여부 , padding or margin
-                    alignment: Alignment.center,
-                    // 그 다음 deco
-                    decoration: BoxDecoration(
-                      //deco는 색 - 나머지 순으로
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    // 기초 정의가 끝나면 child 정의
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('초대코드',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(fontSize: 16, fontFamily: 'apeb')),
-                        Text(widget.meetingInfo!['zoomUrlEtc'],
-                            style: TextStyle(fontSize: 16, fontFamily: 'apm'))
-                      ],
-                    )),
-                Container(
-                    //크기 정의 먼저
-                    width: double.infinity,
-                    height: 68,
-                    // 그 다음 정렬 여부 , padding or margin
-                    alignment: Alignment.center,
-                    // 그 다음 deco
-                    decoration: BoxDecoration(
-                      //deco는 색 - 나머지 순으로
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    // 기초 정의가 끝나면 child 정의
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('초대코드',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(fontSize: 16, fontFamily: 'apeb')),
-                        Text(widget.meetingInfo!['password'],
-                            style: TextStyle(fontSize: 16, fontFamily: 'apm'))
-                      ],
-                    )),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: WidgetCardRedirectionCode(
+                            code: widget.meetingInfo!['zoomUrlClerk'],
+                            boardType: '줌 바로가기 ( 서기용 )'),
+                      ),
+                      Expanded(
+                        child: WidgetCardRedirectionCode(
+                            code: widget.meetingInfo!['zoomUrlEtc'],
+                            boardType: '줌 바로가기 ( 일반 참가자 )'),
+                      )
+                    ]),
+                WidgetCardRedirectionCode(
+                    code: widget.meetingInfo!['password'],
+                    boardType: '회의 초대코드'),
                 SizedBox(height: 24),
                 Container(
                   alignment: Alignment.center,
@@ -140,10 +90,12 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                             .postNotion(widget.myUserInfo!['id'],
                                 widget.meetingInfo!['meetingName'], dummyUsers)
                             .then((value) => print(value));
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (_) => PageFeatureRecord()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => PageFeatureRecord(
+                                    meetingInfo: widget.meetingInfo,
+                                    userInfo: widget.myUserInfo)));
                       },
                       child: const Text('Start Meeting!',
                           style: TextStyle(
@@ -179,5 +131,46 @@ class WidgetCircleAvatar extends StatelessWidget {
         )
       ],
     );
+  }
+}
+
+class WidgetCardRedirectionCode extends StatelessWidget {
+  const WidgetCardRedirectionCode(
+      {Key? key, required this.boardType, required this.code})
+      : super(key: key);
+  final String boardType;
+  final String code;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        //크기 정의 먼저
+        height: 68,
+        // 그 다음 정렬 여부 , padding or margin
+        alignment: Alignment.center,
+        // 그 다음 deco
+        decoration: BoxDecoration(
+          //deco는 색 - 나머지 순으로
+          color: Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(24),
+        ),
+        // 기초 정의가 끝나면 child 정의
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text(boardType,
+              textAlign: TextAlign.start,
+              style: TextStyle(fontSize: 16, fontFamily: 'apeb')),
+          TextButton(
+              onPressed: () async {
+                final url = Uri.parse(code);
+                if (await canLaunch(url.toString())) {
+                  await launch(url.toString(), forceSafariVC: false);
+                }
+              },
+              child: const Text('바로가기',
+                  style: TextStyle(
+                      fontFamily: 'apeb',
+                      fontSize: 16,
+                      color: Colors.blueAccent)))
+        ]));
   }
 }

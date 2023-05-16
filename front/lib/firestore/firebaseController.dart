@@ -103,6 +103,12 @@ class FirebaseController {
     }
 
     String password = randomHexString(12);
+    Map<String, dynamic> testContents = {
+      'user': '2sangH',
+      'startTime': '00:00',
+      'endTime': '00:00',
+      'text': '여기에 map 형태로 데이터 추가해줘'
+    };
 
     bool duplicationChecker = false;
     Map<String, dynamic> map = {
@@ -114,7 +120,7 @@ class FirebaseController {
       'zoomUrlEtc': zoomUrlEtc,
       'startTime': startTime,
       'endTime': '',
-      'contents': [],
+      'contents': [testContents],
       'abridge': [],
       'agenda': [],
     };
@@ -202,6 +208,33 @@ class FirebaseController {
     });
     print(result!['meetingName']);
     return result;
+  }
+
+  updateMeetingContents(String meetingCode, String user, String startTime,
+      String endTime, String text) async {
+    Map<String, dynamic>? content = {
+      'startTime': startTime,
+      'endTime': endTime,
+      'user': user,
+      'text': text
+    };
+    await db
+        .collection('meetings')
+        .where('password', isEqualTo: meetingCode)
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        doc.reference.update({
+          'contents': FieldValue.arrayUnion([content])
+        });
+      }
+      DebugMessage(
+              isItPostType: true,
+              featureName: 'updateMeetingParticipants',
+              dataType: '',
+              data: content.toString())
+          .firebaseMessage();
+    });
   }
 
   //----------------------------------------------------------------------- 이하 레퍼런스용 함수
