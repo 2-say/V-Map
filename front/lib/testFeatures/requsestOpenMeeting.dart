@@ -10,6 +10,7 @@ class FeaturesMeeting {
 
 
   Future<String> postNotion(String id, String meetingName, List<String> meetingParticipants) async {
+
     final url = Uri.parse('https://218.150.182.202:32929/postNotion?documentId='+id);
     DateTime dt = DateTime.now();
     // JSON body
@@ -18,7 +19,7 @@ class FeaturesMeeting {
       "meetingParticipants": meetingParticipants,
       "startTime": dt.toIso8601String()
     };
-
+    HttpOverrides.global = NoCheckCertificateHttpOverrides();
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -39,15 +40,13 @@ class FeaturesMeeting {
 
 
 
-
-
   Future<String> patchNotion(String id, String user, String content) async {
     DateTime dt = DateTime.now();
     var url = Uri.parse('https://218.150.182.202:32929/patchNotion?documentId='+id);
     Map<String, Object> data = {
       "user": user,
       "time": dt.toString(),
-      "content": content,
+      "contents": content,
     };
     DebugMessage(
       isItPostType: true,
@@ -81,32 +80,10 @@ class FeaturesMeeting {
     return response.body.toString();
   }
 
-
-
 }
 
-
-void main() {
-  HttpOverrides.global = NoCheckCertificateHttpOverrides(); //안전하지 않아도 연결하도록
-
-  // const String dummyMeetingName = 'testMeeting';
-  //
-  // const String dummyParticipant = '이세희';
-  // const String dummyContents = '이세희는 신이고 이는 증명 가능하다.';
-  // FeaturesMeeting()
-  //     .postNotion(dummyMeetingName, dummyParticipants)
-  //     //만약 성공적으로 return 받는다면 value 출력
-  //     .then((value) => print(value));
-  //
-  // FeaturesMeeting()
-  //     .patchNotion(dummyContents, dummyParticipant)
-  //     //만약 성공적으로 return 받는다면 value 출력
-  //     .then((value) => print(value));
 //
-//   final List<String> dummyParticipants = ['이세희', '임재경', '조원희'];
-// //"GVv5VTZcV6sw5UZmfGqV", "2023 5월 15132일 테스트 회의", ["세희", "재경", "원희", "상현"]
-//
-//   FeaturesMeeting().postNotion("GVv5VTZcV6sw5UZmfGqV", "2023 5월 15132일 테스트 회의" , dummyParticipants);
-
-FirebaseController().updateMeetingContents('7de0a808ff14', 'test', '00:00', '00:00', 'ㅋㅋㅋㅋㅋ 테스트!');
-}
+// void main() {
+//   HttpOverrides.global = NoCheckCertificateHttpOverrides(); //안전하지 않아도 연결하도록
+//   // FirebaseController().updateMeetingContents('7de0a808ff14', 'test', '00:00', '00:00', 'ㅋㅋㅋㅋㅋ 테스트!');
+// }

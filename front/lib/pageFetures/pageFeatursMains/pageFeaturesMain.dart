@@ -35,11 +35,11 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
     FirebaseController()
         .getUser('Jay', 'dlaworud@koreatech.ac.kr')
         .then((result) => {
-              setState(() {
-                print('get UserInfo success fully');
-                myUserInfo = result;
-              })
-            });
+      setState(() {
+        print('get UserInfo success fully');
+        myUserInfo = result;
+      })
+    });
   }
 
   setterGoPageFeatureInvitation() {
@@ -74,7 +74,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                     Navigator.pop(context);
                   },
                   child:
-                      const Text('닫기', style: TextStyle(fontFamily: 'apeb'))),
+                  const Text('닫기', style: TextStyle(fontFamily: 'apeb'))),
               //이 부분에 zoom 관련 코드 받아서 바로 리턴받을 수 있도록 !
               TextButton(
                   onPressed: () async {
@@ -91,14 +91,14 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => PageFeatureInvite(
-                                  myUserInfo: myUserInfo,
-                                  meetingInfo: result,
-                                )));
+                              myUserInfo: myUserInfo,
+                              meetingInfo: result,
+                            )));
                   },
                   child: Text(
                     '초대하기',
                     style:
-                        TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen),
+                    TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen),
                   ))
             ],
           );
@@ -137,7 +137,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                     Navigator.pop(context);
                   },
                   child:
-                      const Text('닫기', style: TextStyle(fontFamily: 'apeb'))),
+                  const Text('닫기', style: TextStyle(fontFamily: 'apeb'))),
               //이 부분에 zoom 관련 코드 받아서 바로 리턴받을 수 있도록 !
               TextButton(
                   onPressed: () async {
@@ -172,7 +172,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                     //zoom 회의방 열기 어쩌구저쩌구,
                     await FirebaseController()
                         .addMeeting(myUserInfo!, startUrl!, joinUrl!,
-                            meetingName, dt.toString())
+                        meetingName, dt.toString())
                         .then((value) => meetingCode = value);
                     await FirebaseController()
                         .getMeetingInfo(meetingCode)
@@ -181,14 +181,14 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => PageFeatureInvite(
-                                  meetingInfo: result,
-                                  myUserInfo: myUserInfo,
-                                )));
+                              meetingInfo: result,
+                              myUserInfo: myUserInfo,
+                            )));
                   },
                   child: Text(
                     '초대하기',
                     style:
-                        TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen),
+                    TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen),
                   ))
             ],
           );
@@ -250,9 +250,9 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
 class WidgetFloatingButton extends StatelessWidget {
   WidgetFloatingButton(
       {Key? key,
-      required this.buttonTitle,
-      required this.buttonIcon,
-      this.setter})
+        required this.buttonTitle,
+        required this.buttonIcon,
+        this.setter})
       : super(key: key);
   String buttonTitle;
   IconData buttonIcon;
@@ -293,11 +293,11 @@ class WidgetMenuBar extends StatefulWidget {
 
 class _WidgetMenuBarState extends State<WidgetMenuBar> {
   TextStyle h1 =
-      const TextStyle(fontFamily: 'apeb', fontSize: 18, color: Colors.black);
+  const TextStyle(fontFamily: 'apeb', fontSize: 18, color: Colors.black);
   TextStyle h2 =
-      const TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.grey);
+  const TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.grey);
   TextStyle h3 =
-      const TextStyle(fontFamily: 'apm', fontSize: 14, color: Colors.black);
+  const TextStyle(fontFamily: 'apm', fontSize: 14, color: Colors.black);
 
   @override
   Widget build(BuildContext context) {

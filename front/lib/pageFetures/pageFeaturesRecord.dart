@@ -1,12 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:front/dataSets/dataSetColors.dart';
+import 'package:rxdart/rxdart.dart';
 import '../dataSets/dataSetTextStyles.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:speech_to_text/speech_recognition_error.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'dart:async';
 
 import '../firestore/firebaseController.dart';
+import '../testFeatures/requsestOpenMeeting.dart';
 import '../widgets/widgetCommonAppbar.dart';
-
 class PageFeatureRecord extends StatefulWidget {
   const PageFeatureRecord(
       {Key? key, required this.meetingInfo, required this.userInfo})
@@ -27,6 +32,25 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
   late List<String> agendaList = [];
   late List<dynamic> talk = [];
   int count =0;
+  var statuses = BehaviorSubject<String>();
+  final TextEditingController _textEditingController = TextEditingController();
+  var words = StreamController<SpeechRecognitionResult>();
+
+  // speech_to_text 추가 - 임재경
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+  String _text = '';
+  final _textList = <String>[''];
+  final List<String> _recognizedWords = [];
+
+  // 시간
+  final stopwatch = Stopwatch();
+  late String elapsedStart;
+  late String elapsedEnd;
+
+
+
+  FeaturesMeeting featuresMeeting = FeaturesMeeting();
 
   //회의록 내용을 스트리밍 형태로 받아올 수 있는 객체 선언
   late Stream<QuerySnapshot<Map<String, dynamic>>> streamConnectContents;
@@ -42,10 +66,145 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
     isRecordOn = false;
     //연동 , 스테레오 녹음 , 마이크 녹음 등의 체크를 false로 기본 선언
     statusCheck = List.filled(3, false);
-    //현재 녹음 시간 0으로 선언
+    //현재 녹음 시간 0으로 선언=
     currentTime = 0;
     //이 함수가 실행 되어야 위젯 변수들의 초기화가 완료됨.
+    _speech = stt.SpeechToText();
+    // 시간 측정 시작
+    stopwatch.start();
     super.initState();
+    _textEditingController.addListener(_onTextChanged);
+  }
+
+
+
+
+
+
+  @override
+  void dispose() {
+    _textEditingController.removeListener(_onTextChanged);
+    _textEditingController.dispose();
+  }
+
+  void _onTextChanged() {
+    print(_textEditingController.text);
+    try{
+      if(_textEditingController.text != "listening")
+      {
+        print("start");
+        _startListening();
+      }
+      else if(_textEditingController.text == "done")
+      {
+        _startListening();
+      }
+    } catch(e){
+      print("catch(3)");
+      stopListening();
+      _startListening();
+    }
+  }
+
+
+
+
+  void handleValue(bool value) {
+    // 값 처리 로직을 구현
+    print('Boolean 값: $value');
+  }
+
+
+
+  void statusListener(String status) {
+    statuses.add(status);
+  }
+
+  void _startListening() async {
+    bool available = await _speech.initialize(
+      onStatus: statusListener,
+    );
+    statuses.listen((status) {
+      setState(() {
+        if(status == "done") status = "listening";
+        _textEditingController.text = status;
+      });
+    });
+
+    print('start meeting');
+    _isListening = true;
+    _listen();
+  }
+
+  void stopListening() {
+    print('stop meeting');
+    _speech.stop();
+    _isListening = false;
+    // print(_isListening);
+  }
+
+
+  String getDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  void _listen() async {
+    // if (_isListening) {
+    _speech.listen(
+      onResult: (result) {
+        setState(() {
+          if (result.alternates.last.confidence >= 0.89) {
+            _text = result.alternates.last.recognizedWords;
+            _textList.add(_text);
+            elapsedStart = getDuration(stopwatch.elapsed);
+            if (_textList.length >= 2) {
+              List<String> previousElements = _textList[_textList.length - 2]
+                  .split(' ');
+              List<String> lastElements = _textList.last.split(' ');
+
+              List<String> result1 = [];
+              for (int i = 0; i < lastElements.length; i++) {
+                String item = lastElements[i];
+                if (i >= previousElements.length || item != previousElements[i]) {
+                  result1.add(item);
+                }
+              }
+              String result = result1.join(' ');
+
+              if(result.isNotEmpty) {
+                elapsedEnd = getDuration(stopwatch.elapsed);
+                FirebaseController().updateMeetingContents(
+                    widget.meetingInfo!['password'],
+                    widget.userInfo!['userName'], elapsedStart, elapsedEnd,
+                    result);
+                count++;
+                featuresMeeting.patchNotion(widget.userInfo!['id'],widget.userInfo!['userName'], result);
+              }
+            }else{
+                print(_textList.first);
+                FirebaseController().updateMeetingContents(
+                    widget.meetingInfo!['password'],
+                    widget.userInfo!['userName'], elapsedStart, elapsedEnd,
+                    _textList.first);
+                count++;
+                featuresMeeting.patchNotion(widget.userInfo!['id'], widget.userInfo!['userName'], _textList.first);
+            }
+          }
+          // print(result.toString());
+          // user 정보 가져오고, time 값,
+          // 여기에 firebase 에 meeting data 추가하는 method 추가 후에,
+          // firebase 에서 회의 data를 갱신 받아서 출력
+        });
+      },
+      cancelOnError: false,
+      partialResults: true,
+      listenFor: Duration(hours: 2),
+      listenMode: stt.ListenMode.dictation,
+    );
+    // }
   }
 
   @override
@@ -61,7 +220,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-              //세로 정렬 : start( 시작점 부터 )
+            //세로 정렬 : start( 시작점 부터 )
               mainAxisAlignment: MainAxisAlignment.start,
               //가로 정렬 : start ( 시작점 부터 )
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,11 +256,11 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   ),
                   isRecordOn
                       ? const Text('녹음 중',
-                          style: TextStyle(
-                              fontFamily: 'apeb', color: Colors.blueAccent))
+                      style: TextStyle(
+                          fontFamily: 'apeb', color: Colors.blueAccent))
                       : const Text('일시 정지 중',
-                          style: TextStyle(
-                              fontFamily: 'apeb', color: Colors.redAccent)),
+                      style: TextStyle(
+                          fontFamily: 'apeb', color: Colors.redAccent)),
                   const SizedBox(width: 8),
                   Row(
                     children: List<Widget>.generate(
@@ -140,7 +299,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   decoration: const BoxDecoration(
                       border: Border.symmetric(
                           horizontal:
-                              BorderSide(width: 1, color: Colors.grey))),
+                          BorderSide(width: 1, color: Colors.grey))),
                   child: Text('자동 요약 안건', style: b1eb),
                 ),
                 Container(
@@ -157,7 +316,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                               return ListTile(
                                   dense: true,
                                   visualDensity:
-                                      const VisualDensity(vertical: -3),
+                                  const VisualDensity(vertical: -3),
                                   title: Text(
                                     '',
                                     style: const TextStyle(
@@ -177,7 +336,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   decoration: const BoxDecoration(
                       border: Border.symmetric(
                           horizontal:
-                              BorderSide(width: 1, color: Colors.grey))),
+                          BorderSide(width: 1, color: Colors.grey))),
                   child: Text('회의 내용', style: b1eb),
                 ),
                 Container(
@@ -238,7 +397,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                 Expanded(
                     child: Container(
                         child: StreamBuilder<
-                                QuerySnapshot<Map<String, dynamic>>>(
+                            QuerySnapshot<Map<String, dynamic>>>(
                             stream: streamConnectContents,
                             builder: (context, snapshot) {
                               //에러 없이 데이터가 성공적으로 수신되었다면
@@ -248,49 +407,49 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                                     child: Column(
                                         children: List.generate(
                                             docs?['contents'].length, (index) {
-                                  return ListTile(
-                                      title: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 6),
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: <Widget>[
-                                                Text(
-                                                    docs?['contents'][index]
-                                                        ['startTime'],
-                                                    style: const TextStyle(
-                                                        fontSize: 14,
-                                                        fontFamily: 'apm',
-                                                        color: Colors.grey)),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                    docs?['contents'][index]
-                                                        ['user'],
-                                                    style: const TextStyle(
-                                                        fontSize: 16,
-                                                        fontFamily: 'apeb')),
-                                                const SizedBox(width: 8),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              4),
-                                                      color:
-                                                          Colors.grey.shade300),
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                      docs?['contents'][index]
-                                                          ['text'],
-                                                      style: const TextStyle(
-                                                          fontSize: 14,
-                                                          fontFamily: 'apm')),
-                                                )
-                                              ])));
-                                })));
+                                          return ListTile(
+                                              title: Padding(
+                                                  padding: const EdgeInsets.symmetric(
+                                                      vertical: 6),
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                      children: <Widget>[
+                                                        Text(
+                                                            docs?['contents'][index]
+                                                            ['startTime'],
+                                                            style: const TextStyle(
+                                                                fontSize: 14,
+                                                                fontFamily: 'apm',
+                                                                color: Colors.grey)),
+                                                        const SizedBox(width: 8),
+                                                        Text(
+                                                            docs?['contents'][index]
+                                                            ['user'],
+                                                            style: const TextStyle(
+                                                                fontSize: 16,
+                                                                fontFamily: 'apeb')),
+                                                        const SizedBox(width: 8),
+                                                        Container(
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                              BorderRadius.circular(
+                                                                  4),
+                                                              color:
+                                                              Colors.grey.shade300),
+                                                          padding:
+                                                          const EdgeInsets.all(8.0),
+                                                          child: Text(
+                                                              docs?['contents'][index]
+                                                              ['text'],
+                                                              style: const TextStyle(
+                                                                  fontSize: 14,
+                                                                  fontFamily: 'apm')),
+                                                        )
+                                                      ])));
+                                        })));
                               } else if (snapshot.hasError) {
                                 return const Text('Error');
                                 // 기타 경우 ( 불러오는 중 )
@@ -303,17 +462,16 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   height: 60,
                   decoration: BoxDecoration(
                       gradient: LinearGradient(colors: [
-                    isRecordOn ? ccKeyColorGreen : Colors.red,
-                    ccKeyColorCyan
-                  ], begin: Alignment.centerLeft, end: Alignment.centerRight)),
+                        isRecordOn ? ccKeyColorGreen : Colors.red,
+                        ccKeyColorCyan
+                      ], begin: Alignment.centerLeft, end: Alignment.centerRight)),
                   child: IconButton(
                       onPressed: () {
-                        //firebase 컨트롤러 만들어놨어~ 이거 써서 업데이트 하면 돼
-                        FirebaseController().updateMeetingContents(widget.meetingInfo!['password'], 'testUser', '00:00', '00:00', 'ㅋㅋㅋㅋㅋ 테스트!${count}');
-                        count++;
                         setState(() {
                           //isRecordOn이 true일때 녹음 기능이 작동하도록 하면 될듯!
                           isRecordOn = !isRecordOn;
+                          if(isRecordOn) { _startListening(); }
+                          else { stopListening(); }
                         });
                       },
                       icon: Icon(

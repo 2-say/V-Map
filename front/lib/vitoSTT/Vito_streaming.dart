@@ -92,7 +92,7 @@ Future<Stream<List<int>>> startRecorderFFMpeg() async { // 수정된 함수
 }
 
 void main() async {
-  HttpOverrides.global = NoCheckCertificateHttpOverrides();
+
   final clientId = "jp4X0g-b-gPYQBlqrh8v";
   final clientSecret = "q2cjhxRgsHpRMnUWJr8EhGP02xQAhOpd6irMEwpA";
 

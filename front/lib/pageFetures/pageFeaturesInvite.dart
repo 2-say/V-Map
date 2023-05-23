@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:front/pageFetures/pageFeaturesRecord.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
@@ -7,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../dataSets/dataSetColors.dart';
 import '../dataSets/dataSetTextStyles.dart';
+import '../testFeatures/NoCheckCertificateHttpOverrides.dart';
 import '../widgets/widgetCommonAppbar.dart';
 
 class PageFeatureInvite extends StatefulWidget {
@@ -18,12 +21,14 @@ class PageFeatureInvite extends StatefulWidget {
   final Map<String, dynamic>? myUserInfo;
   final Map<String, dynamic>? meetingInfo;
 
+
   @override
   State<PageFeatureInvite> createState() => _PageFeatureInviteState();
 }
 
 class _PageFeatureInviteState extends State<PageFeatureInvite> {
   final List<String> dummyUsers = ['이세희', '조원희', '임재경', '이상현'];
+
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +91,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                           colors: [Colors.indigo, Colors.green])),
                   child: TextButton(
                       onPressed: () {
+                        HttpOverrides.global = NoCheckCertificateHttpOverrides();
                         FeaturesMeeting()
                             .postNotion(widget.myUserInfo!['id'],
                                 widget.meetingInfo!['meetingName'], dummyUsers)
