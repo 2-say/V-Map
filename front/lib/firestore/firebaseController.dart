@@ -40,12 +40,12 @@ class FirebaseController {
   }
 
   //유저 추가
-  addUser(String userName, String password,String email) async {
+  addUser(String userName, String password, String email) async {
     bool duplicationChecker = false;
     Map<String, dynamic> map = {
       'userName': userName,
       'email': email,
-      'password':password,
+      'password': password,
       'accessToken': '',
       'dataBaseId': '',
       'pageId': ''
@@ -197,6 +197,21 @@ class FirebaseController {
     });
     print(result!['meetingName']);
     return result;
+  }
+
+  updateMeetingClerk(Map<String, dynamic> clerkInfo, String meetingCode) async {
+    Map<String, dynamic> map = {
+      'clerk': clerkInfo,
+    };
+    await db
+        .collection('meetings')
+        .where('password', isEqualTo: meetingCode)
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        doc.reference.update(map);
+      }
+    });
   }
 
   // 회의 업데이트 함수

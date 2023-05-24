@@ -28,12 +28,12 @@ import '../testFeatures/requsestOpenMeeting.dart';
 import '../widgets/widgetCommonAppbar.dart';
 import '../pageFetures/pageFeaturesInvite.dart';
 
-
-
 class PageFeatureRecord extends StatefulWidget {
-
   const PageFeatureRecord(
-      {Key? key, required this.meetingInfo, required this.userInfo, required this.meetingId})
+      {Key? key,
+      required this.meetingInfo,
+      required this.userInfo,
+      required this.meetingId})
       : super(key: key);
   final Map<String, dynamic>? meetingInfo;
   final Map<String, dynamic>? userInfo;
@@ -51,7 +51,6 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
   late int currentTime;
   late List<String> agendaList = [];
   late List<dynamic> talk = [];
-  int count =0;
   var statuses = BehaviorSubject<String>();
   final TextEditingController _textEditingController = TextEditingController();
   var words = StreamController<SpeechRecognitionResult>();
@@ -62,9 +61,6 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
   String _text = '';
   final _textList = <String>[''];
   final List<String> _recognizedWords = [];
-
-
-
 
   FeaturesMeeting featuresMeeting = FeaturesMeeting();
 
@@ -94,13 +90,12 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
     var url = Uri.parse('https://api.zoom.us/v2/meetings/$meetingId/status');
 
     var headers = {
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6InJ1MXllX2xnVE1XSElpUGlZNkc3U1EiLCJleHAiOjE3MDM4NjE5NDAsImlhdCI6MTY4NDk0MTU1Nn0.M03nmML-4E_UVC1AYPWX2e3gYIuzL7RlVTAjzF2vaa4',
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6InJ1MXllX2xnVE1XSElpUGlZNkc3U1EiLCJleHAiOjE3MDM4NjE5NDAsImlhdCI6MTY4NDk0MTU1Nn0.M03nmML-4E_UVC1AYPWX2e3gYIuzL7RlVTAjzF2vaa4',
       'Content-Type': 'application/json'
     };
 
-    var body = jsonEncode({
-      'action': 'end'
-    });
+    var body = jsonEncode({'action': 'end'});
 
     var response = await http.put(url, headers: headers, body: body);
 
@@ -111,9 +106,6 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
     }
   }
 
-
-
-
   @override
   void dispose() {
     _textEditingController.removeListener(_onTextChanged);
@@ -122,32 +114,24 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
 
   void _onTextChanged() {
     print(_textEditingController.text);
-    try{
-      if(_textEditingController.text != "listening")
-      {
+    try {
+      if (_textEditingController.text != "listening") {
         print("start");
         _startListening();
-      }
-      else if(_textEditingController.text == "done")
-      {
+      } else if (_textEditingController.text == "done") {
         _startListening();
       }
-    } catch(e){
+    } catch (e) {
       print("catch(3)");
       stopListening();
       _startListening();
     }
   }
 
-
-
-
   void handleValue(bool value) {
     // 값 처리 로직을 구현
     print('Boolean 값: $value');
   }
-
-
 
   void statusListener(String status) {
     statuses.add(status);
@@ -159,7 +143,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
     );
     statuses.listen((status) {
       setState(() {
-        if(status == "done") status = "listening";
+        if (status == "done") status = "listening";
         _textEditingController.text = status;
       });
     });
@@ -175,7 +159,6 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
     _isListening = false;
     // print(_isListening);
   }
-
 
   String getDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -194,37 +177,48 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
             _textList.add(_text);
             var dt2 = DateTime.now();
             if (_textList.length >= 2) {
-              List<String> previousElements = _textList[_textList.length - 2]
-                  .split(' ');
+              List<String> previousElements =
+                  _textList[_textList.length - 2].split(' ');
               List<String> lastElements = _textList.last.split(' ');
 
               List<String> result1 = [];
               for (int i = 0; i < lastElements.length; i++) {
                 String item = lastElements[i];
-                if (i >= previousElements.length || item != previousElements[i]) {
+                if (i >= previousElements.length ||
+                    item != previousElements[i]) {
                   result1.add(item);
                 }
               }
               String result = result1.join(' ');
 
-              if(result.isNotEmpty) {
+              if (result.isNotEmpty) {
                 var dt2_end = DateTime.now();
-                FirebaseController().updateMeetingContents(
-                    widget.meetingInfo!['password'],
-                    widget.userInfo!['userName'], dt2.toString(), dt2_end.toString(),
-                    result);
-                count++;
-                featuresMeeting.patchNotion(dt2.toString(),widget.userInfo!['id'],widget.userInfo!['userName'], result);
+                featuresMeeting
+                    .patchNotion(dt2.toString(), widget.userInfo!['id'],
+                        widget.userInfo!['userName'], result)
+                    .then((_) {
+                  FirebaseController().updateMeetingContents(
+                      widget.meetingInfo!['password'],
+                      widget.userInfo!['userName'],
+                      dt2.toString(),
+                      dt2_end.toString(),
+                      result);
+                });
               }
-            }else{
-                print(_textList.first);
-                var dt2_end = DateTime.now();
+            } else {
+              print(_textList.first);
+              var dt2_end = DateTime.now();
+              featuresMeeting
+                  .patchNotion(dt2.toString(), widget.userInfo!['id'],
+                      widget.userInfo!['userName'], _textList.first)
+                  .then((_) {
                 FirebaseController().updateMeetingContents(
                     widget.meetingInfo!['password'],
-                    widget.userInfo!['userName'], dt2.toString(), dt2_end.toString(),
+                    widget.userInfo!['userName'],
+                    dt2.toString(),
+                    dt2_end.toString(),
                     _textList.first);
-                count++;
-                featuresMeeting.patchNotion(dt2.toString(),widget.userInfo!['id'], widget.userInfo!['userName'], _textList.first);
+              });
             }
           }
           // print(result.toString());
@@ -254,7 +248,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            //세로 정렬 : start( 시작점 부터 )
+              //세로 정렬 : start( 시작점 부터 )
               mainAxisAlignment: MainAxisAlignment.start,
               //가로 정렬 : start ( 시작점 부터 )
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,11 +284,11 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   ),
                   isRecordOn
                       ? const Text('녹음 중',
-                      style: TextStyle(
-                          fontFamily: 'apeb', color: Colors.blueAccent))
+                          style: TextStyle(
+                              fontFamily: 'apeb', color: Colors.blueAccent))
                       : const Text('일시 정지 중',
-                      style: TextStyle(
-                          fontFamily: 'apeb', color: Colors.redAccent)),
+                          style: TextStyle(
+                              fontFamily: 'apeb', color: Colors.redAccent)),
                   const SizedBox(width: 8),
                   Row(
                     children: List<Widget>.generate(
@@ -333,7 +327,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   decoration: const BoxDecoration(
                       border: Border.symmetric(
                           horizontal:
-                          BorderSide(width: 1, color: Colors.grey))),
+                              BorderSide(width: 1, color: Colors.grey))),
                   child: Text('자동 요약 안건', style: b1eb),
                 ),
                 Container(
@@ -350,7 +344,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                               return ListTile(
                                   dense: true,
                                   visualDensity:
-                                  const VisualDensity(vertical: -3),
+                                      const VisualDensity(vertical: -3),
                                   title: Text(
                                     '',
                                     style: const TextStyle(
@@ -370,7 +364,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   decoration: const BoxDecoration(
                       border: Border.symmetric(
                           horizontal:
-                          BorderSide(width: 1, color: Colors.grey))),
+                              BorderSide(width: 1, color: Colors.grey))),
                   child: Text('회의 내용', style: b1eb),
                 ),
                 Container(
@@ -431,7 +425,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                 Expanded(
                     child: Container(
                         child: StreamBuilder<
-                            QuerySnapshot<Map<String, dynamic>>>(
+                                QuerySnapshot<Map<String, dynamic>>>(
                             stream: streamConnectContents,
                             builder: (context, snapshot) {
                               //에러 없이 데이터가 성공적으로 수신되었다면
@@ -441,49 +435,49 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                                     child: Column(
                                         children: List.generate(
                                             docs?['contents'].length, (index) {
-                                          return ListTile(
-                                              title: Padding(
-                                                  padding: const EdgeInsets.symmetric(
-                                                      vertical: 6),
-                                                  child: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                      children: <Widget>[
-                                                        Text(
-                                                            docs?['contents'][index]
-                                                            ['startTime'],
-                                                            style: const TextStyle(
-                                                                fontSize: 14,
-                                                                fontFamily: 'apm',
-                                                                color: Colors.grey)),
-                                                        const SizedBox(width: 8),
-                                                        Text(
-                                                            docs?['contents'][index]
-                                                            ['user'],
-                                                            style: const TextStyle(
-                                                                fontSize: 16,
-                                                                fontFamily: 'apeb')),
-                                                        const SizedBox(width: 8),
-                                                        Container(
-                                                          decoration: BoxDecoration(
-                                                              borderRadius:
-                                                              BorderRadius.circular(
-                                                                  4),
-                                                              color:
-                                                              Colors.grey.shade300),
-                                                          padding:
-                                                          const EdgeInsets.all(8.0),
-                                                          child: Text(
-                                                              docs?['contents'][index]
-                                                              ['text'],
-                                                              style: const TextStyle(
-                                                                  fontSize: 14,
-                                                                  fontFamily: 'apm')),
-                                                        )
-                                                      ])));
-                                        })));
+                                  return ListTile(
+                                      title: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 6),
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text(
+                                                    docs?['contents'][index]
+                                                        ['startTime'],
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        fontFamily: 'apm',
+                                                        color: Colors.grey)),
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                    docs?['contents'][index]
+                                                        ['user'],
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontFamily: 'apeb')),
+                                                const SizedBox(width: 8),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                      color:
+                                                          Colors.grey.shade300),
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                      docs?['contents'][index]
+                                                          ['text'],
+                                                      style: const TextStyle(
+                                                          fontSize: 14,
+                                                          fontFamily: 'apm')),
+                                                )
+                                              ])));
+                                })));
                               } else if (snapshot.hasError) {
                                 return const Text('Error');
                                 // 기타 경우 ( 불러오는 중 )
@@ -492,26 +486,31 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                               }
                             }))),
 
-
                 Row(
                   children: [
                     Flexible(
-                      flex : 9,
+                      flex: 9,
                       child: Container(
                         width: double.infinity,
                         height: 60,
                         decoration: BoxDecoration(
-                            gradient: LinearGradient(colors: [
+                            gradient: LinearGradient(
+                                colors: [
                               isRecordOn ? ccKeyColorGreen : Colors.red,
                               ccKeyColorCyan
-                            ], begin: Alignment.centerLeft, end: Alignment.centerRight)),
+                            ],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight)),
                         child: IconButton(
                             onPressed: () {
                               setState(() {
                                 //isRecordOn이 true일때 녹음 기능이 작동하도록 하면 될듯!
                                 isRecordOn = !isRecordOn;
-                                if(isRecordOn) { _startListening(); }
-                                else { stopListening(); }
+                                if (isRecordOn) {
+                                  _startListening();
+                                } else {
+                                  stopListening();
+                                }
                               });
                             },
                             icon: Icon(
@@ -523,14 +522,15 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                       ),
                     ),
                     Flexible(
-                      flex : 1,
+                      flex: 1,
                       child: Container(
                         width: double.infinity,
                         height: 60,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [Colors.orange, Colors.deepOrange],
-                            begin: Alignment.centerLeft, end: Alignment.centerRight,
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
                           ),
                           borderRadius: BorderRadius.circular(50),
                         ),
@@ -539,23 +539,23 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                             //HttpOverrides.global = NoCheckCertificateHttpOverrides();
                             print('meeting ID: ${widget.meetingId}');
                             endZoomMeeting(widget.meetingId);
-
-
                           },
                           style: TextButton.styleFrom(
                             primary: Colors.transparent,
                             elevation: 0,
                           ),
                           child: Text(
-
                             '회의 종료',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
-                          ),),),),
-                  ],),
-
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ]),
         ),
       ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:front/firestore/firebaseController.dart';
 import 'package:front/pageFetures/pageFeaturesRecord.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/PageFrame/PageFrameLogin.dart';
@@ -211,7 +212,15 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                         FeaturesMeeting()
                             .postNotion(widget.myUserInfo!['id'],
                                 widget.meetingInfo!['meetingName'], dummyUsers)
-                            .then((value) => print(value));
+                            .then((value) {
+                              print('debug kk');
+                              print(value);
+                              String pageId = value;
+                              FirebaseController().updateUser(widget.myUserInfo!['email'], widget.myUserInfo!['accessToken'], widget.myUserInfo!['dataBaseId'], pageId);
+                              FirebaseController().getUser(widget.myUserInfo!['userName'], widget.myUserInfo!['email']).then((value) {
+                                FirebaseController().updateMeetingClerk(value, widget.meetingInfo!['password']);
+                              });
+                        });
                         Navigator.push(
                             context,
                             MaterialPageRoute(

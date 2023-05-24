@@ -30,7 +30,8 @@ class FeaturesMeeting {
       // 요청이 성공적으로 완료됨
       print('GET request successful');
       print('Response body: ${response.body}');
-      return response.body.toString();
+      Map<String,dynamic> jsonData = jsonDecode(response.body);
+      return jsonData['pageId'];
     } else {
       // 요청이 실패함
       print('GET request failed with status: ${response.statusCode}');
