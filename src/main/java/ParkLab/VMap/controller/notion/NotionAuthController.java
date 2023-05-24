@@ -1,10 +1,9 @@
 /**
- * Backend - Version : 0.4.2
- * 최종 수정 날짜 : 2023-05-11 13:15
- * commit by 임재경
+ * Backend - Version : 1.2.2
+ * 최종 수정 날짜 : 2023-05-25 18:50
+ * commit by 이세희
  * commit contents
- * firebase field update method, field read method 추가
- * 해당 메소드에 맞춰 Notion Auth, Patch, Write 리팩토링
+ *
  *
  * issue
  * 1. time 변수가 어떻게 넘어오나 확인해서, 정렬이 어떻게 되는지 확인해봐야함

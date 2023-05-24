@@ -30,7 +30,9 @@ public class NotionPatchServiceImpl {
         DecordJsonService decodeJsonService = new DecordJsonService(requestBody);
 
         String contents = decodeJsonService.getContents();
+        System.out.printf("콘텐츠는 ? %s",contents);
         String time = decodeJsonService.getTime();
+        System.out.printf("시간은 ? %s",time);
 
         String url = "https://api.notion.com/v1/blocks/"+pageId+"/children/";
         String json = "{\n" +
@@ -41,22 +43,7 @@ public class NotionPatchServiceImpl {
                 "         \"paragraph\": {\n" +
                 "            \"rich_text\": [{ \"type\": \"text\", \"text\": { \"content\": \"["+time+"] "+user+" : "+contents+"\" } }]\n" +
                 "         }\n" +
-                "      },\n" +
-                "      {\n" +
-                "         \"object\": \"block\",\n" +
-                "         \"type\": \"paragraph\",\n" +
-                "         \"paragraph\": {\n" +
-                "            \"rich_text\": [\n" +
-                "               {\n" +
-                "                  \"type\": \"text\",\n" +
-                "                  \"text\": {\n" +
-                "                     \"content\": \"내용\",\n" +
-                "                     \"link\": { \"url\": \"https://develop247.tistory.com/\" }\n" +
-                "                  }\n" +
-                "               }\n" +
-                "            ]\n" +
-                "         }\n" +
-                "      }\n" +
+                "      }" +
                 "   ]\n" +
                 "}";
 
