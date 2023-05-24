@@ -35,6 +35,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
     super.initState();
     streamConnectContents = FirebaseFirestore.instance
         .collection('users')
+        .where('email', isEqualTo: widget.myUserInfo!['email'])
         .where('pw', isEqualTo: widget.myUserInfo!['pw'])
         .snapshots();
     // FirebaseController()
