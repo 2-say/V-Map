@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/PageFrame/PageFrameLogin.dart';
 import 'package:front/pageFetures/pageFeaturesRecord.dart';
 
 import '../PageFrame/PageFrameRanding.dart';
@@ -33,13 +34,15 @@ class WidgetCommonAppbar extends StatelessWidget
           color:
               currentPage == 'meeting' ? ccKeyColorBackground : ccKeyColorGrey,
           child: IconButton(
-              constraints: BoxConstraints(),
-              padding: EdgeInsets.zero,
-              icon: Image.asset("assets/vmaplogo.png", width: 24, height: 24),
-              onPressed: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const PageFeatureMain())))),
+            constraints: BoxConstraints(),
+            padding: EdgeInsets.zero,
+            icon: Image.asset("assets/vmaplogo.png", width: 24, height: 24),
+            onPressed: () {},
+            // onPressed: () => Navigator.pushReplacement(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => const PageFeatureMain()))
+          )),
       titleSpacing: 0,
       centerTitle: center,
       title: Row(
@@ -70,7 +73,11 @@ class WidgetCommonAppbar extends StatelessWidget
                   ? TextButton(
                       onPressed: () {}, child: Text('Sign Out', style: h1))
                   : TextButton(
-                      onPressed: () {}, child: Text('Sign In/Up', style: h1))),
+                      onPressed: () => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PageFrameLogin())),
+                      child: Text('Sign In/Up', style: h1))),
         ],
       ),
     );

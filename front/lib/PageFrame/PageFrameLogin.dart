@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/dataSets/dataSetColors.dart';
+import 'package:front/firestore/firebaseController.dart';
 import '../dataSets/dataSetTextStyles.dart';
 import '../pageFetures/pageFeatursMains/pageFeaturesMain.dart';
+import '../widgets/widgetCommonAppbar.dart';
 
 class PageFrameLogin extends StatefulWidget {
   const PageFrameLogin({Key? key}) : super(key: key);
@@ -12,156 +14,127 @@ class PageFrameLogin extends StatefulWidget {
 }
 
 class _PageFrameLoginState extends State<PageFrameLogin> {
-  //dataSet
+  bool pwLook = true;
+  String inputEmail = '';
+  String inputPw = '';
 
+  //dataSet
 
   @override
   void initState() {
-
     //이 함수가 실행 되어야 위젯 변수들의 초기화가 완료됨.
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    TextStyle title = const TextStyle(fontFamily: 'apeb', fontSize: 24);
+    TextStyle b1 = const TextStyle(fontFamily: 'apl', fontSize: 16);
+    TextStyle b2 = const TextStyle(fontFamily: 'apl', fontSize: 14);
     return Scaffold(
-
       //전체를 감싸는 컨테이너, 배경색을 담당
-      appBar: AppBar(
-        title: Row(
-          children: <Widget>[
-            Text('V-MAP', style: TextStyle(fontSize: 30)),
-            SizedBox(width: 80),
-            TextButton(onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => PageFrameRanding()));
-            }, child: Text('about', style: TextStyle(fontSize: 20)),
-                style: TextButton.styleFrom(
-                    primary: Colors.white,
-                    minimumSize: Size(200, 75)
-                )),
-            TextButton(onPressed: () {}, child: Text('Team', style: TextStyle(fontSize: 20)),
-                style: TextButton.styleFrom(
-                    primary: Colors.white,
-                    minimumSize: Size(200, 75)
-                )),
-            Expanded(child: Container()),
-            Container(
-              width: 300, height: 75,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [Colors.white, Colors.green]
-                  )
-              ),
-              child: TextButton(onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => PageFrameLogin()));
-              }, child: Text('Sign In/Sign Up', style: TextStyle(fontSize: 20)),
-                style: TextButton.styleFrom(
-                  primary: Colors.white,
-                  minimumSize: Size(300, 75),),
-              ),
-            )
-
-          ],
-        ),
-
-        leading: IconButton(icon: Icon(Icons.computer), onPressed: () {}),
-
-
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.white, Colors.green]
-            )
-        ),
-        child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 450, height: 500,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30), topLeft: Radius.circular(30)),
-                    color: Colors.grey[200],
-                  ),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 30),
-                      Text('Welcome!', style: TextStyle(
-                        fontSize: 30, fontWeight: FontWeight.bold,),
-                        textAlign: TextAlign.left,
-                      ),
-                      SizedBox(height: 50),
-                      Icon(Icons.emoji_emotions, size: 300,color: Colors.lightGreen,),
-
-                    ],),),
-
-                Container(
-                  width: 450, height: 500,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(30), topRight: Radius.circular(30)),
+      appBar: WidgetCommonAppbar(
+          appBar: AppBar(), currentPage: 'about', loginState: false),
+      body: Center(
+        child: Expanded(
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [ccKeyColorCyan, ccKeyColorGreen])),
+            child: Material(
+              elevation: 10,
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                width: 400,
+                decoration: BoxDecoration(
                     color: Colors.white,
-                  ),
-                  child: Column(
+                    borderRadius: BorderRadius.circular(16)),
+                child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 30),
-                      Text('Login', style: TextStyle(
-                        fontSize: 30, fontWeight: FontWeight.w900,),
-                      ),
-                      SizedBox(height: 50),
-
-                      Text('USERNAME', style: TextStyle(
-                        fontWeight: FontWeight.w500),
-                      ),
-                     TextField(decoration: InputDecoration(border: OutlineInputBorder(),)),
-                      SizedBox(height: 30),
-                      Text('PASSWORD', style: TextStyle(
-                        fontWeight: FontWeight.w500),
-                      ),
-                      TextField(decoration: InputDecoration(border: OutlineInputBorder(),)),
-
-                      SizedBox(height: 30),
+                      const SizedBox(height: 32),
+                      Text('환영합니다.', style: title),
+                      const SizedBox(height: 32),
+                      Text('아이디', style: b1),
+                      const SizedBox(height: 4),
+                      TextField(
+                          onChanged: (val) {
+                            setState(() {
+                              inputEmail = val;
+                            });
+                          },
+                          decoration:
+                              InputDecoration(border: OutlineInputBorder())),
+                      const SizedBox(height: 24),
+                      Text('비밀번호', style: b1),
+                      const SizedBox(height: 4),
+                      TextField(
+                          onChanged: (val) {
+                            setState(() {
+                              inputPw = val;
+                            });
+                          },
+                          obscureText: pwLook,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    pwLook = !pwLook;
+                                  });
+                                },
+                                icon: Icon(pwLook == true
+                                    ? Icons.visibility_off
+                                    : Icons.visibility)),
+                            border: OutlineInputBorder(),
+                          )),
+                      const SizedBox(height: 24),
                       Container(
-                        width: 450, height: 75,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                                colors: [Colors.lightGreen, Colors.green]
-                            )
-                        ),
-                        child: TextButton(onPressed: () {
-                          Navigator.push(
-                              context, MaterialPageRoute(builder: (_) => PageFeatureMain()));
-                        }, child: Text('Lets Go!', style: TextStyle(fontSize: 30)),
-                          style: TextButton.styleFrom(
-                            primary: Colors.white,
-                            minimumSize: Size(300, 50),),
-                        ),
-                      ),
-                      Text('Forgot your password', style: TextStyle(fontSize: 15)),
-                      Text('Not a member yet?', style: TextStyle(fontSize: 15)),
-                      TextButton(onPressed: () {}, child: Text('Sign uip with Google'), style: TextButton.styleFrom(
-                        primary: Colors.grey,
-                      ),)
-                    ],),),
-              ],
-            )),
+                          width: double.infinity,
+                          height: 60,
+                          decoration: BoxDecoration(
+                              color: ccKeyColorGreen,
+                              borderRadius: BorderRadius.circular(8)),
+                          child: TextButton(
+                              onPressed: () async {
+                                await FirebaseController()
+                                    .loginUser(inputEmail, inputPw)
+                                    .then((value) {
+                                  if (value == null) {
+                                  } else {
+                                    print(value);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => PageFeatureMain(
+                                                myUserInfo: value)));
+                                  }
+                                });
+                              },
+                              style: TextButton.styleFrom(
+                                primary: Colors.white,
+                                minimumSize: Size(300, 50),
+                              ),
+                              child: Text('로그인', style: title))),
+                      const SizedBox(height: 16),
+                      TextButton(
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                        onPressed: () {},
+                        child: Text('아직 회원이 아니신가요?', style: b2),
+                      )
+                    ]),
+              ),
+            ),
+          ),
+        ),
       ),
-
-
-
-
-
-
-
     );
   }
 }

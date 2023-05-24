@@ -24,7 +24,7 @@ class PageFrameRanding extends StatelessWidget {
     //declare ui----------------------------------------------------------------
     return Scaffold(
         appBar: WidgetCommonAppbar(
-            appBar: AppBar(), currentPage: 'about', loginState: true),
+            appBar: AppBar(), currentPage: 'about', loginState: false),
         body: Center(
             child: Column(children: <Widget>[
           Container(

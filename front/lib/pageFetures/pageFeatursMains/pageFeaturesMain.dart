@@ -20,26 +20,31 @@ import '../pageFeaturesInvite.dart';
 
 // 위젯 상위 트리
 class PageFeatureMain extends StatefulWidget {
-  const PageFeatureMain({Key? key}) : super(key: key);
+  const PageFeatureMain({Key? key, required this.myUserInfo}) : super(key: key);
+  final Map<String, dynamic>? myUserInfo;
 
   @override
   State<PageFeatureMain> createState() => _PageFeatureMainState();
 }
 
 class _PageFeatureMainState extends State<PageFeatureMain> {
-  Map<String, dynamic>? myUserInfo;
+  late Stream<QuerySnapshot<Map<String, dynamic>>> streamConnectContents;
 
   @override
   void initState() {
     super.initState();
-    FirebaseController()
-        .getUser('Jay', 'dlaworud@koreatech.ac.kr')
-        .then((result) => {
-      setState(() {
-        print('get UserInfo success fully');
-        myUserInfo = result;
-      })
-    });
+    streamConnectContents = FirebaseFirestore.instance
+        .collection('users')
+        .where('pw', isEqualTo: widget.myUserInfo!['pw'])
+        .snapshots();
+    // FirebaseController()
+    //     .getUser('Jay', 'dlaworud@koreatech.ac.kr')
+    //     .then((result) => {
+    //   setState(() {
+    //     print('get UserInfo success fully');
+    //     myUserInfo = result;
+    //   })
+    // });
   }
 
   setterGoPageFeatureInvitation() {
@@ -74,15 +79,16 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                     Navigator.pop(context);
                   },
                   child:
-                  const Text('닫기', style: TextStyle(fontFamily: 'apeb'))),
+                      const Text('닫기', style: TextStyle(fontFamily: 'apeb'))),
               //이 부분에 zoom 관련 코드 받아서 바로 리턴받을 수 있도록 !
               TextButton(
                   onPressed: () async {
                     Map<String, dynamic>? result;
-                    print(myUserInfo);
+                    print(widget.myUserInfo);
                     //zoom 회의방 열기 어쩌구저쩌구,
                     await FirebaseController()
-                        .updateMeetingParticipants(myUserInfo!, meetingCode)
+                        .updateMeetingParticipants(
+                            widget.myUserInfo!, meetingCode)
                         .then((value) {
                       result = value;
                       print(value['meetingName']);
@@ -91,14 +97,14 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => PageFeatureInvite(
-                              myUserInfo: myUserInfo,
-                              meetingInfo: result,
-                            )));
+                                  myUserInfo: widget.myUserInfo,
+                                  meetingInfo: result,
+                                )));
                   },
                   child: Text(
                     '초대하기',
                     style:
-                    TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen),
+                        TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen),
                   ))
             ],
           );
@@ -137,20 +143,20 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                     Navigator.pop(context);
                   },
                   child:
-                  const Text('닫기', style: TextStyle(fontFamily: 'apeb'))),
+                      const Text('닫기', style: TextStyle(fontFamily: 'apeb'))),
               //이 부분에 zoom 관련 코드 받아서 바로 리턴받을 수 있도록 !
               TextButton(
                   onPressed: () async {
-                    ZoomMeetingCreator zoomMeetingCreator = ZoomMeetingCreator();
+                    ZoomMeetingCreator zoomMeetingCreator =
+                        ZoomMeetingCreator();
 
                     // print("여기보세요");
 
-
                     String meetingCode = '';
                     DateTime dt = DateTime.now();
-                    print(myUserInfo);
-                    final startUrl ='';
-                    final joinUrl ='';
+                    print(widget.myUserInfo);
+                    final startUrl = '';
+                    final joinUrl = '';
                     // await zoomMeetingCreator.createZoomMeeting();
                     //
                     // // Access startUrl and joinUrl
@@ -168,11 +174,11 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                     // }
 
                     Map<String, dynamic>? result;
-                    print(myUserInfo);
+                    print(widget.myUserInfo);
                     //zoom 회의방 열기 어쩌구저쩌구,
                     await FirebaseController()
-                        .addMeeting(myUserInfo!, startUrl!, joinUrl!,
-                        meetingName, dt.toString())
+                        .addMeeting(widget.myUserInfo!, startUrl!, joinUrl!,
+                            meetingName, dt.toString())
                         .then((value) => meetingCode = value);
                     await FirebaseController()
                         .getMeetingInfo(meetingCode)
@@ -181,14 +187,14 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => PageFeatureInvite(
-                              meetingInfo: result,
-                              myUserInfo: myUserInfo,
-                            )));
+                                  meetingInfo: result,
+                                  myUserInfo: widget.myUserInfo,
+                                )));
                   },
                   child: Text(
                     '초대하기',
                     style:
-                    TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen),
+                        TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen),
                   ))
             ],
           );
@@ -217,9 +223,8 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
         ),
         body: Row(
           children: <Widget>[
-            FutureBuilder(
-                future: FirebaseController()
-                    .getUser('Jay', 'dlaworud@koreatech.ac.kr'),
+            StreamBuilder(
+                stream: streamConnectContents,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   //해당 부분은 data를 아직 받아 오지 못했을때 실행되는 부분을 의미한다.
                   if (snapshot.hasData == false) {
@@ -237,7 +242,8 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                   }
                   // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
                   else {
-                    return WidgetMenuBar(myUserInfo: snapshot.data);
+                    var docs = snapshot.data?.docs.first.data();
+                    return WidgetMenuBar(myUserInfo: docs);
                   }
                 }),
             const Expanded(child: PageFeaturesTestSets())
@@ -250,9 +256,9 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
 class WidgetFloatingButton extends StatelessWidget {
   WidgetFloatingButton(
       {Key? key,
-        required this.buttonTitle,
-        required this.buttonIcon,
-        this.setter})
+      required this.buttonTitle,
+      required this.buttonIcon,
+      this.setter})
       : super(key: key);
   String buttonTitle;
   IconData buttonIcon;
@@ -293,11 +299,11 @@ class WidgetMenuBar extends StatefulWidget {
 
 class _WidgetMenuBarState extends State<WidgetMenuBar> {
   TextStyle h1 =
-  const TextStyle(fontFamily: 'apeb', fontSize: 18, color: Colors.black);
+      const TextStyle(fontFamily: 'apeb', fontSize: 18, color: Colors.black);
   TextStyle h2 =
-  const TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.grey);
+      const TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.grey);
   TextStyle h3 =
-  const TextStyle(fontFamily: 'apm', fontSize: 14, color: Colors.black);
+      const TextStyle(fontFamily: 'apm', fontSize: 14, color: Colors.black);
 
   @override
   Widget build(BuildContext context) {

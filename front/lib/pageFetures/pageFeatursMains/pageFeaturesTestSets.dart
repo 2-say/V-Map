@@ -59,7 +59,7 @@ class _PageFeaturesTestSetsState extends State<PageFeaturesTestSets> {
         ),
         TextButton(
             onPressed: () {
-              FirebaseController().addUser(inputTextUserName, inputTextEmail);
+              // FirebaseController().addUser(inputTextUserName, inputTextEmail);
             },
             child:
                 const Text('학생 추가 테스트', style: TextStyle(color: Colors.white))),

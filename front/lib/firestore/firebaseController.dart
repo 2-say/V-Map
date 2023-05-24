@@ -22,12 +22,30 @@ class FirebaseController {
     return result;
   }
 
+  //유저 로그인용
+  loginUser(String email, String pw) async {
+    Map<String, dynamic>? result;
+    await db
+        .collection('users')
+        .where("email", isEqualTo: email)
+        .where('pw', isEqualTo: pw)
+        .get()
+        .then((value) {
+      if (value.size > 0) {
+        result = value.docs.first.data();
+        result!['id'] = value.docs.first.id;
+      }
+    });
+    return result;
+  }
+
   //유저 추가
-  addUser(String userName, String email) async {
+  addUser(String userName, String password,String email) async {
     bool duplicationChecker = false;
     Map<String, dynamic> map = {
       'userName': userName,
       'email': email,
+      'password':password,
       'accessToken': '',
       'dataBaseId': '',
       'pageId': ''
