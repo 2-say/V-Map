@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:front/dataSets/dataSetColors.dart';
@@ -12,12 +14,30 @@ import 'dart:async';
 import '../firestore/firebaseController.dart';
 import '../testFeatures/requsestOpenMeeting.dart';
 import '../widgets/widgetCommonAppbar.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
+import '../dataSets/dataSetTextStyles.dart';
+import 'package:front/PageFrame/PageFrameRanding.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:speech_to_text/speech_recognition_error.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+
+import '../firestore/firebaseController.dart';
+import '../testFeatures/NoCheckCertificateHttpOverrides.dart';
+import '../testFeatures/requsestOpenMeeting.dart';
+import '../widgets/widgetCommonAppbar.dart';
+import '../pageFetures/pageFeaturesInvite.dart';
+
+
+
 class PageFeatureRecord extends StatefulWidget {
+
   const PageFeatureRecord(
-      {Key? key, required this.meetingInfo, required this.userInfo})
+      {Key? key, required this.meetingInfo, required this.userInfo, required this.meetingId})
       : super(key: key);
   final Map<String, dynamic>? meetingInfo;
   final Map<String, dynamic>? userInfo;
+  final int meetingId;
 
   @override
   State<PageFeatureRecord> createState() => _PageFeatureRecordState();
@@ -76,7 +96,26 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
     _textEditingController.addListener(_onTextChanged);
   }
 
+  Future<void> endZoomMeeting(int? meetingId) async {
+    var url = Uri.parse('https://api.zoom.us/v2/meetings/$meetingId/status');
 
+    var headers = {
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6InJ1MXllX2xnVE1XSElpUGlZNkc3U1EiLCJleHAiOjE3MDM4NjE5NDAsImlhdCI6MTY4NDk0MTU1Nn0.M03nmML-4E_UVC1AYPWX2e3gYIuzL7RlVTAjzF2vaa4',
+      'Content-Type': 'application/json'
+    };
+
+    var body = jsonEncode({
+      'action': 'end'
+    });
+
+    var response = await http.put(url, headers: headers, body: body);
+
+    if (response.statusCode == 204) {
+      print('Zoom meeting ended successfully.');
+    } else {
+      print('Failed to end Zoom meeting. Status code: ${response.statusCode}');
+    }
+  }
 
 
 
@@ -457,30 +496,71 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                                 return const CircularProgressIndicator();
                               }
                             }))),
-                Container(
-                  width: double.infinity,
-                  height: 60,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        isRecordOn ? ccKeyColorGreen : Colors.red,
-                        ccKeyColorCyan
-                      ], begin: Alignment.centerLeft, end: Alignment.centerRight)),
-                  child: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          //isRecordOn이 true일때 녹음 기능이 작동하도록 하면 될듯!
-                          isRecordOn = !isRecordOn;
-                          if(isRecordOn) { _startListening(); }
-                          else { stopListening(); }
-                        });
-                      },
-                      icon: Icon(
-                          isRecordOn
-                              ? Icons.pause_circle_outline
-                              : Icons.play_circle_outline,
-                          size: 36,
-                          color: Colors.white)),
-                )
+
+
+                Row(
+                  children: [
+                    Flexible(
+                      flex : 9,
+                      child: Container(
+                        width: double.infinity,
+                        height: 60,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(colors: [
+                              isRecordOn ? ccKeyColorGreen : Colors.red,
+                              ccKeyColorCyan
+                            ], begin: Alignment.centerLeft, end: Alignment.centerRight)),
+                        child: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                //isRecordOn이 true일때 녹음 기능이 작동하도록 하면 될듯!
+                                isRecordOn = !isRecordOn;
+                                if(isRecordOn) { _startListening(); }
+                                else { stopListening(); }
+                              });
+                            },
+                            icon: Icon(
+                                isRecordOn
+                                    ? Icons.pause_circle_outline
+                                    : Icons.play_circle_outline,
+                                size: 36,
+                                color: Colors.white)),
+                      ),
+                    ),
+                    Flexible(
+                      flex : 1,
+                      child: Container(
+                        width: double.infinity,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Colors.orange, Colors.deepOrange],
+                            begin: Alignment.centerLeft, end: Alignment.centerRight,
+                          ),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            //HttpOverrides.global = NoCheckCertificateHttpOverrides();
+                            print('meeting ID: ${widget.meetingId}');
+                            endZoomMeeting(widget.meetingId);
+
+
+                          },
+                          style: TextButton.styleFrom(
+                            primary: Colors.transparent,
+                            elevation: 0,
+                          ),
+                          child: Text(
+
+                            '회의 종료',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),),),),
+                  ],),
+
               ]),
         ),
       ),

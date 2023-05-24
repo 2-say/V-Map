@@ -6,11 +6,92 @@ import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/PageFrame/PageFrameLogin.dart';
 import 'package:front/testFeatures/requsestOpenMeeting.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../dataSets/dataSetColors.dart';
 import '../dataSets/dataSetTextStyles.dart';
 import '../testFeatures/NoCheckCertificateHttpOverrides.dart';
 import '../widgets/widgetCommonAppbar.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
+import 'package:crypto/crypto.dart';
+
+class ZoomMeetingCreator {
+  final apiKey = 'ru1ye_lgTMWHIiPiY6G7SQ';
+  final apiSecret = 'c0hcgeYFsHjNNJ0DOG2EvbKOtQGOqxVrDHXN';
+  String? startUrl;
+  String? joinUrl;
+  late int meetingId = 0;
+
+  Future<Map<String, dynamic?>> createZoomMeeting() async {
+    final payload = {
+      'iss': apiKey,
+      'exp': DateTime.now()
+              .toUtc()
+              .add(Duration(hours: 2))
+              .millisecondsSinceEpoch ~/
+          1000,
+    };
+
+    final base64UrlHeader = base64Url
+        .encode(utf8.encode(json.encode({'alg': 'HS256', 'typ': 'JWT'})));
+    final base64UrlPayload =
+        base64Url.encode(utf8.encode(json.encode(payload)));
+    final signingInput = '$base64UrlHeader.$base64UrlPayload';
+    final hmacSha256 = Hmac(sha256, utf8.encode(apiSecret));
+    final base64UrlSignature =
+        base64Url.encode(hmacSha256.convert(utf8.encode(signingInput)).bytes);
+    final token = '$signingInput.$base64UrlSignature';
+
+    final url = 'https://api.zoom.us/v2/users/me/meetings';
+    final headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    final data = {
+      'topic': 'Zoom Meeting',
+      'type': 2,
+      'start_time': '2023-05-03T13:00:00Z',
+      'duration': 60,
+      'timezone': 'Asia/Seoul',
+      'agenda': 'This is a test meeting'
+    };
+
+    final response = await http.post(Uri.parse(url),
+        headers: headers, body: json.encode(data));
+
+    if (response.statusCode == 201) {
+      print("******************successe**********************");
+      final responseData = await json.decode(response.body);
+      startUrl = responseData['start_url'];
+      joinUrl = responseData['join_url'];
+      meetingId = responseData['id'];
+
+      final startTimeString = responseData['start_time'];
+      final startTime = DateTime.parse(startTimeString);
+      // final duration = int.parse(data['duration'].toString());
+
+      print('Start URL: $startUrl');
+      print('Join URL: $joinUrl');
+      print('Start Time: $startTime');
+      print('meeting ID: $meetingId');
+
+      return {
+        'startUrl': startUrl,
+        'joinUrl': joinUrl,
+        'meetingId': meetingId,
+      };
+    } else {
+      print(
+          'Failed to create Zoom meeting. Status code: ${response.statusCode}');
+      return {
+        'startUrl': null,
+        'joinUrl': null,
+        'meetingId': null,
+      };
+    }
+  }
+}
 
 class PageFeatureInvite extends StatefulWidget {
   const PageFeatureInvite({
@@ -21,14 +102,13 @@ class PageFeatureInvite extends StatefulWidget {
   final Map<String, dynamic>? myUserInfo;
   final Map<String, dynamic>? meetingInfo;
 
-
   @override
   State<PageFeatureInvite> createState() => _PageFeatureInviteState();
 }
 
 class _PageFeatureInviteState extends State<PageFeatureInvite> {
   final List<String> dummyUsers = ['이세희', '조원희', '임재경', '이상현'];
-
+  late int zoomInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +139,40 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                           (index) =>
                               WidgetCircleAvatar(userName: dummyUsers[index]))),
                 ]),
+                const SizedBox(height: 8),
+                Flexible(
+                  child: Container(
+                    width: double.infinity,
+                    height: 68,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.orange, Colors.deepOrange],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: TextButton(
+                      onPressed: () async {
+                        await ZoomMeetingCreator()
+                            .createZoomMeeting()
+                            .then((value) => zoomInfo = value['meetingId']);
+                        print('meeting ID: ${zoomInfo}');
+                      },
+                      style: TextButton.styleFrom(
+                        primary: Colors.transparent,
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        'Zoom 회의 방 개설',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 8),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -91,7 +205,9 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                           colors: [Colors.indigo, Colors.green])),
                   child: TextButton(
                       onPressed: () {
-                        HttpOverrides.global = NoCheckCertificateHttpOverrides();
+                        print('check :zoomInfo-$zoomInfo');
+                        HttpOverrides.global =
+                            NoCheckCertificateHttpOverrides();
                         FeaturesMeeting()
                             .postNotion(widget.myUserInfo!['id'],
                                 widget.meetingInfo!['meetingName'], dummyUsers)
@@ -101,7 +217,9 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                             MaterialPageRoute(
                                 builder: (_) => PageFeatureRecord(
                                     meetingInfo: widget.meetingInfo,
-                                    userInfo: widget.myUserInfo)));
+                                    userInfo: widget.myUserInfo,
+                                    meetingId:
+                                        zoomInfo)));
                       },
                       child: const Text('Start Meeting!',
                           style: TextStyle(
