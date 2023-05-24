@@ -40,12 +40,11 @@ class FeaturesMeeting {
 
 
 
-  Future<String> patchNotion(String id, String user, String content) async {
-    DateTime dt = DateTime.now();
+  Future<String> patchNotion(String dt, String id, String user, String content) async {
     var url = Uri.parse('https://218.150.182.202:32929/patchNotion?documentId='+id);
     Map<String, Object> data = {
       "user": user,
-      "time": dt.toString(),
+      "time": dt,
       "contents": content,
     };
     DebugMessage(

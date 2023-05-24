@@ -63,10 +63,6 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
   final _textList = <String>[''];
   final List<String> _recognizedWords = [];
 
-  // 시간
-  final stopwatch = Stopwatch();
-  late String elapsedStart;
-  late String elapsedEnd;
 
 
 
@@ -90,8 +86,6 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
     currentTime = 0;
     //이 함수가 실행 되어야 위젯 변수들의 초기화가 완료됨.
     _speech = stt.SpeechToText();
-    // 시간 측정 시작
-    stopwatch.start();
     super.initState();
     _textEditingController.addListener(_onTextChanged);
   }
@@ -198,7 +192,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
           if (result.alternates.last.confidence >= 0.89) {
             _text = result.alternates.last.recognizedWords;
             _textList.add(_text);
-            elapsedStart = getDuration(stopwatch.elapsed);
+            var dt2 = DateTime.now();
             if (_textList.length >= 2) {
               List<String> previousElements = _textList[_textList.length - 2]
                   .split(' ');
@@ -214,22 +208,23 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
               String result = result1.join(' ');
 
               if(result.isNotEmpty) {
-                elapsedEnd = getDuration(stopwatch.elapsed);
+                var dt2_end = DateTime.now();
                 FirebaseController().updateMeetingContents(
                     widget.meetingInfo!['password'],
-                    widget.userInfo!['userName'], elapsedStart, elapsedEnd,
+                    widget.userInfo!['userName'], dt2.toString(), dt2_end.toString(),
                     result);
                 count++;
-                featuresMeeting.patchNotion(widget.userInfo!['id'],widget.userInfo!['userName'], result);
+                featuresMeeting.patchNotion(dt2.toString(),widget.userInfo!['id'],widget.userInfo!['userName'], result);
               }
             }else{
                 print(_textList.first);
+                var dt2_end = DateTime.now();
                 FirebaseController().updateMeetingContents(
                     widget.meetingInfo!['password'],
-                    widget.userInfo!['userName'], elapsedStart, elapsedEnd,
+                    widget.userInfo!['userName'], dt2.toString(), dt2_end.toString(),
                     _textList.first);
                 count++;
-                featuresMeeting.patchNotion(widget.userInfo!['id'], widget.userInfo!['userName'], _textList.first);
+                featuresMeeting.patchNotion(dt2.toString(),widget.userInfo!['id'], widget.userInfo!['userName'], _textList.first);
             }
           }
           // print(result.toString());
