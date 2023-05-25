@@ -27,6 +27,7 @@ import '../testFeatures/NoCheckCertificateHttpOverrides.dart';
 import '../testFeatures/requsestOpenMeeting.dart';
 import '../widgets/widgetCommonAppbar.dart';
 import '../pageFetures/pageFeaturesInvite.dart';
+import '../widgets/widgetCommonAppbarM.dart';
 
 class PageFeatureRecord extends StatefulWidget {
   const PageFeatureRecord(
@@ -239,7 +240,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
   Widget build(BuildContext context) {
     return Scaffold(
       //전체를 감싸는 컨테이너, 배경색을 담당
-      appBar: WidgetCommonAppbar(
+      appBar: WidgetCommonAppbarM(
           appBar: AppBar(), currentPage: 'meeting', loginState: true),
       body: Container(
         color: Colors.white,

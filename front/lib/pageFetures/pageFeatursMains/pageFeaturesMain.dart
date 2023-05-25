@@ -10,12 +10,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:front/pageFetures/pageFeaturesRecord.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:front/PageFrame/PageFrameLogin.dart';
-import 'package:front/pageFetures/pageFeatursMains/pageFeaturesTestSets.dart';
+import 'package:front/pageFetures/pageFeatursMains/pageFeaturesMainForm.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dio/dio.dart';
 
 import '../../ZoomMeeting/Zoom_Creat_Meeting.dart';
 import '../../widgets/widgetCommonAppbar.dart';
+import '../../widgets/widgetCommonAppbarM.dart';
 import '../pageFeaturesInvite.dart';
 
 // 위젯 상위 트리
@@ -205,7 +206,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: WidgetCommonAppbar(
+        appBar: WidgetCommonAppbarM(
             appBar: AppBar(), currentPage: 'meeting', loginState: true),
         //플로팅 버튼 들어갈곳
         floatingActionButton: Column(
@@ -247,7 +248,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                     return WidgetMenuBar(myUserInfo: docs);
                   }
                 }),
-            const Expanded(child: PageFeaturesTestSets())
+            const Expanded(child: PageFeaturesMainForm())
           ],
         ));
   }
@@ -300,16 +301,17 @@ class WidgetMenuBar extends StatefulWidget {
 
 class _WidgetMenuBarState extends State<WidgetMenuBar> {
   TextStyle h1 =
-      const TextStyle(fontFamily: 'apeb', fontSize: 18, color: Colors.black);
+      const TextStyle(fontFamily: 'apeb', fontSize: 18, color: Colors.white);
   TextStyle h2 =
-      const TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.grey);
+      TextStyle(fontFamily: 'apeb', fontSize: 16, color: crKeyColorB1F);
   TextStyle h3 =
-      const TextStyle(fontFamily: 'apm', fontSize: 14, color: Colors.black);
+      const TextStyle(fontFamily: 'apm', fontSize: 14, color: Colors.white);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 196,
+      color: crKeyColorB1MenuL,
+      width: 168,
       height: double.infinity,
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -317,16 +319,15 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  child: Text('내 워크스페이스', style: h1)),
               SizedBox(height: 12),
               Container(
                   width: double.infinity,
                   alignment: Alignment.center,
                   child: Column(children: [
-                    const CircleAvatar(backgroundColor: Colors.blueAccent),
+                    CircleAvatar(
+                      backgroundColor: Colors.blueAccent,
+                      child: Text(widget.myUserInfo!['userName'][0]),
+                    ),
                     Text(widget.myUserInfo!['userName'], style: h3)
                   ])),
               Padding(
@@ -336,7 +337,7 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                      backgroundColor: ccKeyColorBackground,
+                      backgroundColor: crKeyColorB1MenuBtn,
                       shadowColor: Colors.transparent),
                   onPressed: () {},
                   child: Row(
@@ -345,10 +346,11 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
                       const Expanded(child: SizedBox())
                     ],
                   )),
+              const SizedBox(height: 4),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                      backgroundColor: ccKeyColorBackground,
+                      backgroundColor: crKeyColorB1MenuBtn,
                       shadowColor: Colors.transparent),
                   onPressed: () {},
                   child: Row(
@@ -369,7 +371,7 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                      backgroundColor: ccKeyColorBackground,
+                      backgroundColor: crKeyColorB1MenuBtn,
                       shadowColor: Colors.transparent),
                   onPressed: () {},
                   child: Row(
@@ -378,10 +380,11 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
                       const Expanded(child: SizedBox())
                     ],
                   )),
+              const SizedBox(height: 4),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                      backgroundColor: ccKeyColorBackground,
+                      backgroundColor: crKeyColorB1MenuBtn,
                       shadowColor: Colors.transparent),
                   onPressed: () {},
                   child: Row(
@@ -408,7 +411,7 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                      backgroundColor: ccKeyColorBackground,
+                      backgroundColor: crKeyColorB1MenuBtn,
                       shadowColor: Colors.transparent),
                   onPressed: () {},
                   child: Row(
@@ -420,10 +423,11 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
                       const Icon(Icons.arrow_forward_ios_rounded, size: 16)
                     ],
                   )),
+              const SizedBox(height: 4),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                      backgroundColor: ccKeyColorBackground,
+                      backgroundColor: crKeyColorB1MenuBtn,
                       shadowColor: Colors.transparent),
                   onPressed: () async {
                     final url = Uri.parse(
