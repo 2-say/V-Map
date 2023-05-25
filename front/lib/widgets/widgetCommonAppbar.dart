@@ -13,40 +13,29 @@ class WidgetCommonAppbar extends StatelessWidget
       {Key? key,
       required this.appBar,
       required this.currentPage,
-      required this.loginState,
-      this.center = false})
+      required this.loginState})
       : super(key: key);
 
   final AppBar appBar;
   final String currentPage;
   final bool loginState;
-  final bool center;
 
   @override
   Widget build(BuildContext context) {
     TextStyle h1 =
-        const TextStyle(fontSize: 16, fontFamily: 'apl', color: Colors.black);
+        TextStyle(fontSize: 14, fontFamily: 'seqm', color: crKeyColorB1F);
     return AppBar(
       elevation: 0,
-      backgroundColor: ccKeyColorGrey,
-      leading: Container(
-          width: 40,
-          color:
-              currentPage == 'meeting' ? ccKeyColorBackground : ccKeyColorGrey,
-          child: IconButton(
-            constraints: BoxConstraints(),
-            padding: EdgeInsets.zero,
-            icon: Image.asset("assets/vmaplogo.png", width: 24, height: 24),
-            onPressed: () {},
-            // onPressed: () => Navigator.pushReplacement(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) => const PageFeatureMain()))
-          )),
+      backgroundColor: crKeyColorB1,
       titleSpacing: 0,
-      centerTitle: center,
+      centerTitle: true,
       title: Row(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
+          Text('V - MAP',
+              style: TextStyle(
+                  color: crKeyColorB1F, fontFamily: 'seqbl', fontSize: 24)),
+          const SizedBox(width: 160),
           WidgetButtonContainer(
               currentPage: currentPage,
               pageName: 'about',
@@ -60,12 +49,22 @@ class WidgetCommonAppbar extends StatelessWidget
                   child: Text('About', style: h1))),
           WidgetButtonContainer(
               currentPage: currentPage,
+              pageName: 'recording',
+              child: TextButton(
+                  onPressed: () {
+                    // Navigator.pushReplacement(context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => PageFrameTeam()));
+                  },
+                  child: Text('Recording', style: h1))),
+          WidgetButtonContainer(
+              currentPage: currentPage,
               pageName: 'team',
               child: TextButton(
                   onPressed: () => Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => PageFrameTeam())),
                   child: Text('Team', style: h1))),
-          const Expanded(child: SizedBox()),
+          const SizedBox(width: 160),
           WidgetButtonContainer(
               currentPage: currentPage,
               pageName: loginState == true ? 'sign out' : 'sign in',
@@ -84,7 +83,7 @@ class WidgetCommonAppbar extends StatelessWidget
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(32);
+  Size get preferredSize => const Size.fromHeight(48);
 }
 
 class WidgetButtonContainer extends StatelessWidget {
@@ -101,9 +100,18 @@ class WidgetButtonContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        alignment: Alignment.center,
         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
         height: 100,
-        color: currentPage == pageName ? ccKeyColorBackground : ccKeyColorGrey,
-        child: child);
+        color: currentPage == pageName ? crKeyColorB1 : crKeyColorB1,
+        child: (pageName == 'sign out' || pageName == 'sign in')
+            ? Container(
+                width: 100,
+                height: 32,
+                decoration: BoxDecoration(
+                    border: Border.all(color: crKeyColorB1F, width: 1),
+                    borderRadius: BorderRadius.circular(16)),
+                child: child)
+            : child);
   }
 }

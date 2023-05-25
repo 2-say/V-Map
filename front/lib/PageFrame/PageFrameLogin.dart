@@ -28,9 +28,14 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle title = const TextStyle(fontFamily: 'apeb', fontSize: 24);
-    TextStyle b1 = const TextStyle(fontFamily: 'apl', fontSize: 16);
-    TextStyle b2 = const TextStyle(fontFamily: 'apl', fontSize: 14);
+    TextStyle title =
+        TextStyle(fontFamily: 'apeb', fontSize: 24, color: crKeyColorB1F);
+    TextStyle button =
+    TextStyle(fontFamily: 'apeb', fontSize: 24, color: Colors.white);
+    TextStyle b1 =
+        TextStyle(fontFamily: 'apl', fontSize: 16, color: crKeyColorB1F);
+    TextStyle b2 =
+        TextStyle(fontFamily: 'apl', fontSize: 14, color: crKeyColorB1F);
     return Scaffold(
       //전체를 감싸는 컨테이너, 배경색을 담당
       appBar: WidgetCommonAppbar(
@@ -45,7 +50,7 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
                 gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [ccKeyColorCyan, ccKeyColorGreen])),
+                    colors: [crKeyColorB1, crKeyColorB1L])),
             child: Material(
               elevation: 10,
               borderRadius: BorderRadius.circular(16),
@@ -53,7 +58,8 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
                 padding: const EdgeInsets.all(16),
                 width: 400,
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    border: Border.all(color: crKeyColorB1L, width: 1),
+                    color: crKeyColorB1,
                     borderRadius: BorderRadius.circular(16)),
                 child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -66,17 +72,26 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
                       Text('아이디', style: b1),
                       const SizedBox(height: 4),
                       TextField(
+                          style: TextStyle(
+                              color: crKeyColorB1F, fontFamily: 'seqm'),
                           onChanged: (val) {
                             setState(() {
                               inputEmail = val;
                             });
                           },
-                          decoration:
-                              InputDecoration(border: OutlineInputBorder())),
+                          decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: crKeyColorB1F, width: 1)),
+                              focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.white, width: 1)))),
                       const SizedBox(height: 24),
                       Text('비밀번호', style: b1),
                       const SizedBox(height: 4),
                       TextField(
+                          style: TextStyle(
+                              color: crKeyColorB1F, fontFamily: 'seqm'),
                           onChanged: (val) {
                             setState(() {
                               inputPw = val;
@@ -84,6 +99,12 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
                           },
                           obscureText: pwLook,
                           decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: crKeyColorB1F, width: 1)),
+                            focusedBorder: const OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1)),
                             suffixIcon: IconButton(
                                 onPressed: () {
                                   setState(() {
@@ -122,7 +143,7 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
                                 primary: Colors.white,
                                 minimumSize: Size(300, 50),
                               ),
-                              child: Text('로그인', style: title))),
+                              child: Text('로그인', style: button))),
                       const SizedBox(height: 16),
                       TextButton(
                         style: TextButton.styleFrom(padding: EdgeInsets.zero),
