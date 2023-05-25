@@ -17,6 +17,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 
+
 class ZoomMeetingCreator {
   final apiKey = 'ru1ye_lgTMWHIiPiY6G7SQ';
   final apiSecret = 'c0hcgeYFsHjNNJ0DOG2EvbKOtQGOqxVrDHXN';
@@ -110,6 +111,9 @@ class PageFeatureInvite extends StatefulWidget {
 class _PageFeatureInviteState extends State<PageFeatureInvite> {
   final List<String> dummyUsers = ['이세희', '조원희', '임재경', '이상현'];
   late int zoomInfo;
+  late String StartUrlInfo;
+  late String JoinUrlInfo;
+  bool ClickCheckOn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -141,54 +145,76 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                               WidgetCircleAvatar(userName: dummyUsers[index]))),
                 ]),
                 const SizedBox(height: 8),
-                Flexible(
-                  child: Container(
-                    width: double.infinity,
-                    height: 68,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.orange, Colors.deepOrange],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
+
+                if (ClickCheckOn == false) ...[
+                  Flexible(
+                    child: Container(
+                      width: double.infinity,
+                      height: 68,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.orange, Colors.deepOrange],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ),
+                        borderRadius: BorderRadius.circular(50),
                       ),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: TextButton(
-                      onPressed: () async {
-                        await ZoomMeetingCreator()
-                            .createZoomMeeting()
-                            .then((value) => zoomInfo = value['meetingId']);
-                        print('meeting ID: ${zoomInfo}');
-                      },
-                      style: TextButton.styleFrom(
-                        primary: Colors.transparent,
-                        elevation: 0,
-                      ),
-                      child: Text(
-                        'Zoom 회의 방 개설',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
+                      child: TextButton(
+                        onPressed: () async {
+                          await ZoomMeetingCreator()
+                              .createZoomMeeting()
+                              .then((value) {
+                            if (value != null) {
+                              zoomInfo = value['meetingId'];
+                              StartUrlInfo = value['startUrl'];
+                              JoinUrlInfo = value['joinUrl'];
+                              setState(() {
+                                ClickCheckOn = true;
+                              });
+                            } else {
+                              print("버튼을 다시 눌러주세요..");
+                            }
+                          });
+                          print(
+                              '==================Invite==============================');
+                          print('meeting ID: ${zoomInfo}');
+                          print('start: ${StartUrlInfo}');
+                          print('join: ${JoinUrlInfo}');
+                          print(ClickCheckOn);
+                        },
+                        style: TextButton.styleFrom(
+                          primary: Colors.transparent,
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Zoom 회의 방 개설',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ] else ...[
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: WidgetCardRedirectionCode(
+                              code: StartUrlInfo,
+                              boardType: '줌 바로가기 ( 서기용 )'),
+                        ),
+                        Expanded(
+                          child: WidgetCardRedirectionCode(
+                              code: JoinUrlInfo,
+                              boardType: '줌 바로가기 ( 일반 참가자 )'),
+                        )
+                      ]),
+                ],
+
                 const SizedBox(height: 8),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                        child: WidgetCardRedirectionCode(
-                            code: widget.meetingInfo!['zoomUrlClerk'],
-                            boardType: '줌 바로가기 ( 서기용 )'),
-                      ),
-                      Expanded(
-                        child: WidgetCardRedirectionCode(
-                            code: widget.meetingInfo!['zoomUrlEtc'],
-                            boardType: '줌 바로가기 ( 일반 참가자 )'),
-                      )
-                    ]),
+
                 WidgetCardRedirectionCode(
                     code: widget.meetingInfo!['password'],
                     boardType: '회의 초대코드'),
@@ -213,13 +239,21 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                             .postNotion(widget.myUserInfo!['id'],
                                 widget.meetingInfo!['meetingName'], dummyUsers)
                             .then((value) {
-                              print('debug kk');
-                              print(value);
-                              String pageId = value;
-                              FirebaseController().updateUser(widget.myUserInfo!['email'], widget.myUserInfo!['accessToken'], widget.myUserInfo!['dataBaseId'], pageId);
-                              FirebaseController().getUser(widget.myUserInfo!['userName'], widget.myUserInfo!['email']).then((value) {
-                                FirebaseController().updateMeetingClerk(value, widget.meetingInfo!['password']);
-                              });
+                          print('debug kk');
+                          print(value);
+                          String pageId = value;
+                          FirebaseController().updateUser(
+                              widget.myUserInfo!['email'],
+                              widget.myUserInfo!['accessToken'],
+                              widget.myUserInfo!['dataBaseId'],
+                              pageId);
+                          FirebaseController()
+                              .getUser(widget.myUserInfo!['userName'],
+                                  widget.myUserInfo!['email'])
+                              .then((value) {
+                            FirebaseController().updateMeetingClerk(
+                                value, widget.meetingInfo!['password']);
+                          });
                         });
                         Navigator.push(
                             context,
@@ -227,8 +261,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                                 builder: (_) => PageFeatureRecord(
                                     meetingInfo: widget.meetingInfo,
                                     userInfo: widget.myUserInfo,
-                                    meetingId:
-                                        zoomInfo)));
+                                    meetingId: zoomInfo)));
                       },
                       child: const Text('Start Meeting!',
                           style: TextStyle(
