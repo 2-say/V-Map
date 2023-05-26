@@ -29,15 +29,15 @@ import '../widgets/widgetCommonAppbar.dart';
 import '../pageFetures/pageFeaturesInvite.dart';
 import '../widgets/widgetCommonAppbarM.dart';
 
-class PageFeatureRecord extends StatefulWidget {
-  const PageFeatureRecord({Key? key, required this.meetingInfo, required this.userInfo, required this.meetingId})
+class PageFeatureRecordReview extends StatefulWidget {
+  const PageFeatureRecordReview({Key? key, required this.meetingInfo, required this.userInfo, required this.meetingId})
       : super(key: key);
   final Map<String, dynamic>? meetingInfo;
   final Map<String, dynamic>? userInfo;
   final int meetingId;
 
   @override
-  State<PageFeatureRecord> createState() => _PageFeatureRecordState();
+  State<PageFeatureRecordReview> createState() => _PageFeatureRecordReviewState();
 }
 
 enum MenuType {
@@ -46,7 +46,7 @@ enum MenuType {
   delete,
 }
 
-class _PageFeatureRecordState extends State<PageFeatureRecord> {
+class _PageFeatureRecordReviewState extends State<PageFeatureRecordReview> {
   //dataSet
   final ScrollController agendaListViewScroller = ScrollController();
   late bool isRecordOn;
@@ -361,6 +361,14 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   child: Image.asset('assets/wave.png'),
                 ),
                 const SizedBox(height: 16),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  height: 48,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                      border: Border.symmetric(horizontal: BorderSide(width: 1, color: Colors.grey))),
+                  child: Text('자동 요약 안건', style: b1eb),
+                ),
                 Container(
                     padding: const EdgeInsets.all(4.0),
                     height: 136,
