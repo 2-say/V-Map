@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @Scope("prototype")
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class NotionWriteController {
 
     private NotionWriterServiceImpl notionWriterServiceImpl;

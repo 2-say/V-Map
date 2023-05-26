@@ -8,7 +8,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class SummarizeController {
     @GetMapping("/summarize")
     @ResponseBody

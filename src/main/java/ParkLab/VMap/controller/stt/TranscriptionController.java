@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Controller
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class TranscriptionController {
 
     @GetMapping("/index")

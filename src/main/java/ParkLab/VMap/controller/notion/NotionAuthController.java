@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class NotionAuthController {
     private NotionAuthServiceImpl notionAuthServiceImpl;
     private FirebaseServiceImpl firebaseServiceImpl = new FirebaseServiceImpl();
