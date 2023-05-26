@@ -1,6 +1,7 @@
 package ParkLab.VMap.controller.textrank;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,8 +14,8 @@ import java.net.http.HttpResponse;
 public class SummarizeController {
     @GetMapping("/summarize")
     @ResponseBody
-    public String summarize() {
-        String apiUrl = "http://127.0.0.1:5000/summarize";
+    public String summarize(@RequestParam("documentId") String documentId) {
+        String apiUrl = "http://127.0.0.1:5000/summarize" + documentId;
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
