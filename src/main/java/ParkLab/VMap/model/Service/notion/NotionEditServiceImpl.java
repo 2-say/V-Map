@@ -33,7 +33,6 @@ public class NotionEditServiceImpl {
         OkHttpClient client = new OkHttpClient();
         // 변수로 전달되는 값을 대체하여 JSON 객체 생성
         String content = extractedContents + " : " + contents;
-
         JSONObject jsonBody = new JSONObject();
         JSONObject richText = new JSONObject();
         richText.put("type", "text");
@@ -147,6 +146,7 @@ public class NotionEditServiceImpl {
     }
 
     public void setDocumentId(String documentId, String requestBody) throws Exception {
+        System.out.println("documentId = " + documentId);
         ClerkInfo clerkInfo = firebaseMeetingsServiceImpl.getClerkInfo(documentId);
 
         DecordJsonService decodeJsonService = new DecordJsonService(requestBody);
@@ -162,6 +162,9 @@ public class NotionEditServiceImpl {
         this.accessToken = clerkInfo.getAccessToken();
         this.pageId = clerkInfo.getPageId();
         this.time = time;
+
+        System.out.println("accessToken = " + accessToken);
+        System.out.println("pageId = " + pageId);
 
         updateNotionBlock(retrieveNotionBlock());
     }

@@ -50,9 +50,13 @@ public class FirebaseMeetingsServiceImpl {
             if (data != null) {
                 clerkInfo.setAccessToken((String) data.get("accessToken"));
                 clerkInfo.setPageId((String) data.get("pageId"));
+                return clerkInfo;
+            }
+            else {
+                System.out.println("null !!!!");
             }
         }
 
-        return clerkInfo;
+        return null;
     }
 }
