@@ -24,12 +24,14 @@ import ParkLab.VMap.model.Service.notion.NotionAuthServiceImpl;
 import ParkLab.VMap.model.data.Users;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
+@CrossOrigin
 public class NotionAuthController {
     private NotionAuthServiceImpl notionAuthServiceImpl;
     private FirebaseServiceImpl firebaseServiceImpl = new FirebaseServiceImpl();

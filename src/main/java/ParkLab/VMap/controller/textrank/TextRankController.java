@@ -1,10 +1,12 @@
 package ParkLab.VMap.controller.textrank;
 
 import ParkLab.VMap.model.Service.python.CallTextRank;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin
 public class TextRankController {
     @GetMapping("/textRank")
     public static void textRank() {

@@ -6,13 +6,11 @@ import ParkLab.VMap.model.data.Users;
 import org.json.JSONObject;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @Scope("prototype")
+@CrossOrigin
 public class NotionWriteController {
 
     private NotionWriterServiceImpl notionWriterServiceImpl;
