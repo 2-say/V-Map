@@ -448,10 +448,10 @@ class _PageFeatureRecordReviewState extends State<PageFeatureRecordReview> {
                                                                       docs?['contents'][index],
                                                                       index)
                                                                   .then((_) {
-                                                                  FeaturesMeeting().deleteNotion(
-                                                                      docs?['contents'][index]['startTime'],
-                                                                      widget.meetingInfo!['Id'],
-                                                                      docs?['contents'][index]['text']);
+                                                                  // FeaturesMeeting().deleteNotion(
+                                                                  //     docs?['contents'][index]['startTime'],
+                                                                  //     widget.meetingInfo!['Id'],
+                                                                  //     docs?['contents'][index]['text']);
                                                                 });
                                                     }, itemBuilder: (BuildContext buildContext) {
                                                       return [
