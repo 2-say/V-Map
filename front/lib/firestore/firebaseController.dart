@@ -186,13 +186,6 @@ class FirebaseController {
         .then((value) {
       if (value.size > 0) {
         result = value.docs.first.data();
-        result!['id'] = value.docs.first.id;
-        Map<String, dynamic> map = {
-          'id': value.docs.first.id,
-        };
-        for (var doc in value.docs) {
-          doc.reference.update(map);
-        }
         print(result!['meetingName']);
       }
       DebugMessage(
