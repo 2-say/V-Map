@@ -443,7 +443,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                                                           ? setterGoPageFeatureInvite(docs?['contents'][index],index)
                                                           : result.toString().split('.')[1] == 'change'
                                                               ? print('kk')
-                                                              : print('kk');
+                                                              : FirebaseController().deleteMeetingContents(widget.meetingInfo!['password'], docs?['contents'][index], index);
                                                     }, itemBuilder: (BuildContext buildContext) {
                                                       return [
                                                         for (final value in MenuType.values)

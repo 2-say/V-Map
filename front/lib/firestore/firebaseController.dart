@@ -285,8 +285,6 @@ class FirebaseController {
       var origin = value.docs.first.data()['contents'];
       // 회의내용 갈아끼우기
       origin[index] = content;
-      //맵으로 다시 감싸기
-      Map<String, dynamic> data = {'contents': origin};
       //트랜잭션 실행 ( 이거 하기전까지는 다른 유저는 모두 대기상태
       db.runTransaction((transaction) async {
         DocumentSnapshot _snapshot = await transaction.get(docRef);
@@ -300,6 +298,39 @@ class FirebaseController {
               featureName: 'updateMeetingParticipants',
               dataType: '',
               data: content.toString())
+          .firebaseMessage();
+    });
+  }
+
+  deleteMeetingContents(String meetingCode,Map<String, dynamic> content, int index) async {
+    await db
+        .collection('meetings')
+        .where('password', isEqualTo: meetingCode)
+        .get()
+        .then((value) {
+      //찾은 문서의 id 추출
+      String id = value.docs.first.id;
+      //해당 id의 문서 레퍼런스 추출
+      DocumentReference docRef =
+      FirebaseFirestore.instance.collection('meetings').doc(id);
+      //회의내용 추출
+      var origin = value.docs.first.data()['contents'];
+      // 회의내용 갈아끼우기
+      origin.removeAt(index);
+      //맵으로 다시 감싸기
+      //트랜잭션 실행 ( 이거 하기전까지는 다른 유저는 모두 대기상태
+      db.runTransaction((transaction) async {
+        DocumentSnapshot _snapshot = await transaction.get(docRef);
+        if (!_snapshot.exists) {
+          throw Exception('Does not exists');
+        }
+        docRef.update({"contents": origin});
+      });
+      DebugMessage(
+          isItPostType: true,
+          featureName: 'updateMeetingParticipants',
+          dataType: '',
+          data: content.toString())
           .firebaseMessage();
     });
   }
