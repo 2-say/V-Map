@@ -17,7 +17,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 
-
 class ZoomMeetingCreator {
   final apiKey = 'ru1ye_lgTMWHIiPiY6G7SQ';
   final apiSecret = 'c0hcgeYFsHjNNJ0DOG2EvbKOtQGOqxVrDHXN';
@@ -145,7 +144,6 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                               WidgetCircleAvatar(userName: dummyUsers[index]))),
                 ]),
                 const SizedBox(height: 8),
-
                 if (ClickCheckOn == false) ...[
                   Flexible(
                     child: Container(
@@ -202,8 +200,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                       children: <Widget>[
                         Expanded(
                           child: WidgetCardRedirectionCode(
-                              code: StartUrlInfo,
-                              boardType: '줌 바로가기 ( 서기용 )'),
+                              code: StartUrlInfo, boardType: '줌 바로가기 ( 서기용 )'),
                         ),
                         Expanded(
                           child: WidgetCardRedirectionCode(
@@ -212,9 +209,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                         )
                       ]),
                 ],
-
                 const SizedBox(height: 8),
-
                 WidgetCardRedirectionCode(
                     code: widget.meetingInfo!['password'],
                     boardType: '회의 초대코드'),
@@ -231,7 +226,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                           end: Alignment.centerRight,
                           colors: [Colors.indigo, Colors.green])),
                   child: TextButton(
-                      onPressed: () {
+                      onPressed: () async {
                         print('check :zoomInfo-$zoomInfo');
                         HttpOverrides.global =
                             NoCheckCertificateHttpOverrides();
@@ -242,11 +237,16 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                           print('debug kk');
                           print(value);
                           String pageId = value;
-                          FirebaseController().updateUser(
-                              widget.myUserInfo!['email'],
-                              widget.myUserInfo!['accessToken'],
-                              widget.myUserInfo!['dataBaseId'],
-                              pageId);
+                          FirebaseController()
+                              .getUser(widget.myUserInfo!['userName'],
+                                  widget.myUserInfo!['email'])
+                              .then((result) {
+                            FirebaseController().updateUser(
+                                result!['email'],
+                                result!['accessToken'],
+                                result!['dataBaseId'],
+                                pageId);
+                          });
                           FirebaseController()
                               .getUser(widget.myUserInfo!['userName'],
                                   widget.myUserInfo!['email'])
