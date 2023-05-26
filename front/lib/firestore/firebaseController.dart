@@ -280,7 +280,7 @@ class FirebaseController {
       String id = value.docs.first.id;
       //해당 id의 문서 레퍼런스 추출
       DocumentReference docRef =
-          FirebaseFirestore.instance.collection('meetings').doc('id');
+          FirebaseFirestore.instance.collection('meetings').doc(id);
       //회의내용 추출
       var origin = value.docs.first.data()['contents'];
       // 회의내용 갈아끼우기
@@ -293,7 +293,7 @@ class FirebaseController {
         if (!_snapshot.exists) {
           throw Exception('Does not exists');
         }
-        docRef.update({"id": origin});
+        docRef.update({"contents": origin});
       });
       DebugMessage(
               isItPostType: true,

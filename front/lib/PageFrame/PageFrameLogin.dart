@@ -41,117 +41,115 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
       appBar: WidgetCommonAppbar(
           appBar: AppBar(), currentPage: 'about', loginState: false),
       body: Center(
-        child: Expanded(
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [crKeyColorB1, crKeyColorB1L])),
-            child: Material(
-              elevation: 10,
-              borderRadius: BorderRadius.circular(16),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                width: 400,
-                decoration: BoxDecoration(
-                    border: Border.all(color: crKeyColorB1L, width: 1),
-                    color: crKeyColorB1,
-                    borderRadius: BorderRadius.circular(16)),
-                child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 32),
-                      Text('환영합니다.', style: title),
-                      const SizedBox(height: 32),
-                      Text('아이디', style: b1),
-                      const SizedBox(height: 4),
-                      TextField(
-                          style: TextStyle(
-                              color: crKeyColorB1F, fontFamily: 'seqm'),
-                          onChanged: (val) {
-                            setState(() {
-                              inputEmail = val;
-                            });
-                          },
-                          decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: crKeyColorB1F, width: 1)),
-                              focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.white, width: 1)))),
-                      const SizedBox(height: 24),
-                      Text('비밀번호', style: b1),
-                      const SizedBox(height: 4),
-                      TextField(
-                          style: TextStyle(
-                              color: crKeyColorB1F, fontFamily: 'seqm'),
-                          onChanged: (val) {
-                            setState(() {
-                              inputPw = val;
-                            });
-                          },
-                          obscureText: pwLook,
-                          decoration: InputDecoration(
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [crKeyColorB1, crKeyColorB1L])),
+          child: Material(
+            elevation: 10,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              width: 400,
+              decoration: BoxDecoration(
+                  border: Border.all(color: crKeyColorB1L, width: 1),
+                  color: crKeyColorB1,
+                  borderRadius: BorderRadius.circular(16)),
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 32),
+                    Text('환영합니다.', style: title),
+                    const SizedBox(height: 32),
+                    Text('아이디', style: b1),
+                    const SizedBox(height: 4),
+                    TextField(
+                        style: TextStyle(
+                            color: crKeyColorB1F, fontFamily: 'seqm'),
+                        onChanged: (val) {
+                          setState(() {
+                            inputEmail = val;
+                          });
+                        },
+                        decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: crKeyColorB1F, width: 1)),
+                                borderSide: BorderSide(
+                                    color: crKeyColorB1F, width: 1)),
                             focusedBorder: const OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 1)),
-                            suffixIcon: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    pwLook = !pwLook;
-                                  });
-                                },
-                                icon: Icon(pwLook == true
-                                    ? Icons.visibility_off
-                                    : Icons.visibility)),
-                            border: OutlineInputBorder(),
-                          )),
-                      const SizedBox(height: 24),
-                      Container(
-                          width: double.infinity,
-                          height: 60,
-                          decoration: BoxDecoration(
-                              color: ccKeyColorGreen,
-                              borderRadius: BorderRadius.circular(8)),
-                          child: TextButton(
-                              onPressed: () async {
-                                await FirebaseController()
-                                    .loginUser(inputEmail, inputPw)
-                                    .then((value) {
-                                  if (value == null) {
-                                  } else {
-                                    print(value);
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) => PageFeatureMain(
-                                                myUserInfo: value)));
-                                  }
+                                borderSide: BorderSide(
+                                    color: Colors.white, width: 1)))),
+                    const SizedBox(height: 24),
+                    Text('비밀번호', style: b1),
+                    const SizedBox(height: 4),
+                    TextField(
+                        style: TextStyle(
+                            color: crKeyColorB1F, fontFamily: 'seqm'),
+                        onChanged: (val) {
+                          setState(() {
+                            inputPw = val;
+                          });
+                        },
+                        obscureText: pwLook,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: crKeyColorB1F, width: 1)),
+                          focusedBorder: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.white, width: 1)),
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  pwLook = !pwLook;
                                 });
                               },
-                              style: TextButton.styleFrom(
-                                primary: Colors.white,
-                                minimumSize: Size(300, 50),
-                              ),
-                              child: Text('로그인', style: button))),
-                      const SizedBox(height: 16),
-                      TextButton(
-                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                        onPressed: () {},
-                        child: Text('아직 회원이 아니신가요?', style: b2),
-                      )
-                    ]),
-              ),
+                              icon: Icon(pwLook == true
+                                  ? Icons.visibility_off
+                                  : Icons.visibility)),
+                          border: OutlineInputBorder(),
+                        )),
+                    const SizedBox(height: 24),
+                    Container(
+                        width: double.infinity,
+                        height: 60,
+                        decoration: BoxDecoration(
+                            color: ccKeyColorGreen,
+                            borderRadius: BorderRadius.circular(8)),
+                        child: TextButton(
+                            onPressed: () async {
+                              await FirebaseController()
+                                  .loginUser(inputEmail, inputPw)
+                                  .then((value) {
+                                if (value == null) {
+                                } else {
+                                  print(value);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => PageFeatureMain(
+                                              myUserInfo: value)));
+                                }
+                              });
+                            },
+                            style: TextButton.styleFrom(
+                              primary: Colors.white,
+                              minimumSize: Size(300, 50),
+                            ),
+                            child: Text('로그인', style: button))),
+                    const SizedBox(height: 16),
+                    TextButton(
+                      style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                      onPressed: () {},
+                      child: Text('아직 회원이 아니신가요?', style: b2),
+                    )
+                  ]),
             ),
           ),
         ),
