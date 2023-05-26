@@ -1,7 +1,6 @@
 package ParkLab.VMap.controller.textrank;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,12 +10,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 @RestController
-public class CorrectionController {
-
-    @GetMapping("/Correction")
+public class SummarizeController {
+    @GetMapping("/summarize")
     @ResponseBody
-    public String correction(@RequestParam String word) {
-        String apiUrl = "http://127.0.0.1:5000/correction?word=" + word;
+    public String summarize() {
+        String apiUrl = "http://127.0.0.1:5000/summarize";
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -32,6 +30,6 @@ public class CorrectionController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "correction get null exception";
+        return "summarize get null exception";
     }
 }
