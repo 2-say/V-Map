@@ -31,10 +31,7 @@ import '../widgets/widgetCommonAppbarM.dart';
 
 class PageFeatureRecord extends StatefulWidget {
   const PageFeatureRecord(
-      {Key? key,
-      required this.meetingInfo,
-      required this.userInfo,
-      required this.meetingId})
+      {Key? key, required this.meetingInfo, required this.userInfo, required this.meetingId})
       : super(key: key);
   final Map<String, dynamic>? meetingInfo;
   final Map<String, dynamic>? userInfo;
@@ -55,6 +52,13 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
   var statuses = BehaviorSubject<String>();
   final TextEditingController _textEditingController = TextEditingController();
   var words = StreamController<SpeechRecognitionResult>();
+  ScrollController contentsScroll = ScrollController();
+
+  bool switchEdit = false;
+  bool switchEdit2 = false;
+
+  final TextEditingController _textEditingControllerEdit = TextEditingController();
+  String textEdit = '';
 
   // speech_to_text 추가 - 임재경
   late stt.SpeechToText _speech;
@@ -178,15 +182,13 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
             _textList.add(_text);
             var dt2 = DateTime.now();
             if (_textList.length >= 2) {
-              List<String> previousElements =
-                  _textList[_textList.length - 2].split(' ');
+              List<String> previousElements = _textList[_textList.length - 2].split(' ');
               List<String> lastElements = _textList.last.split(' ');
 
               List<String> result1 = [];
               for (int i = 0; i < lastElements.length; i++) {
                 String item = lastElements[i];
-                if (i >= previousElements.length ||
-                    item != previousElements[i]) {
+                if (i >= previousElements.length || item != previousElements[i]) {
                   result1.add(item);
                 }
               }
@@ -198,20 +200,16 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                     .patchNotion(dt2.toString(), widget.userInfo!['id'],
                         widget.userInfo!['userName'], result)
                     .then((_) {
-                  FirebaseController().updateMeetingContents(
-                      widget.meetingInfo!['password'],
-                      widget.userInfo!['userName'],
-                      dt2.toString(),
-                      dt2_end.toString(),
-                      result);
+                  FirebaseController().updateMeetingContents(widget.meetingInfo!['password'],
+                      widget.userInfo!['userName'], dt2.toString(), dt2_end.toString(), result);
                 });
               }
             } else {
               print(_textList.first);
               var dt2_end = DateTime.now();
               featuresMeeting
-                  .patchNotion(dt2.toString(), widget.userInfo!['id'],
-                      widget.userInfo!['userName'], _textList.first)
+                  .patchNotion(dt2.toString(), widget.userInfo!['id'], widget.userInfo!['userName'],
+                      _textList.first)
                   .then((_) {
                 FirebaseController().updateMeetingContents(
                     widget.meetingInfo!['password'],
@@ -240,8 +238,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
   Widget build(BuildContext context) {
     return Scaffold(
       //전체를 감싸는 컨테이너, 배경색을 담당
-      appBar: WidgetCommonAppbarM(
-          appBar: AppBar(), currentPage: 'meeting', loginState: true),
+      appBar: WidgetCommonAppbarM(appBar: AppBar(), currentPage: 'meeting', loginState: true),
       body: Container(
         color: Colors.white,
         height: double.infinity,
@@ -256,26 +253,20 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
               children: [
                 //row:현재 회의 상태 표시
                 Row(children: <Widget>[
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('회의명 : ${widget.meetingInfo!['meetingName']}',
-                            style: b1eb),
-                        Text(
-                          '${widget.meetingInfo!['startTime']} · 참여자 ${widget.meetingInfo!['etc'].length + 1}명',
-                          style: const TextStyle(
-                              fontFamily: 'apb', color: Colors.grey),
-                        )
-                      ]),
+                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                    Text('회의명 : ${widget.meetingInfo!['meetingName']}', style: b1eb),
+                    Text(
+                      '${widget.meetingInfo!['startTime']} · 참여자 ${widget.meetingInfo!['etc'].length + 1}명',
+                      style: const TextStyle(fontFamily: 'apb', color: Colors.grey),
+                    )
+                  ]),
                   const Expanded(child: SizedBox()),
                   Text('$currentTime', style: b1eb),
                   const SizedBox(width: 12),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => PageFrameRanding()));
+                          context, MaterialPageRoute(builder: (_) => PageFrameRanding()));
                     },
                     child: Text('HOME', style: TextStyle(fontSize: 15)),
                     style: TextButton.styleFrom(
@@ -285,15 +276,12 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   ),
                   isRecordOn
                       ? const Text('녹음 중',
-                          style: TextStyle(
-                              fontFamily: 'apeb', color: Colors.blueAccent))
+                          style: TextStyle(fontFamily: 'apeb', color: Colors.blueAccent))
                       : const Text('일시 정지 중',
-                          style: TextStyle(
-                              fontFamily: 'apeb', color: Colors.redAccent)),
+                          style: TextStyle(fontFamily: 'apeb', color: Colors.redAccent)),
                   const SizedBox(width: 8),
                   Row(
-                    children: List<Widget>.generate(
-                        widget.meetingInfo!['etc'].length, (index) {
+                    children: List<Widget>.generate(widget.meetingInfo!['etc'].length, (index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: CircleAvatar(
@@ -303,8 +291,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                               padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
                               child: Text(
                                 '${talk[index][1][0]}',
-                                style: const TextStyle(
-                                    fontFamily: 'apl', fontSize: 12),
+                                style: const TextStyle(fontFamily: 'apl', fontSize: 12),
                               ),
                             )),
                       );
@@ -315,9 +302,8 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                 Container(
                   width: double.infinity,
                   height: 80,
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(8)),
+                  decoration:
+                      BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(8)),
                   child: Image.asset('assets/wave.png'),
                 ),
                 const SizedBox(height: 16),
@@ -326,9 +312,8 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   height: 48,
                   width: double.infinity,
                   decoration: const BoxDecoration(
-                      border: Border.symmetric(
-                          horizontal:
-                              BorderSide(width: 1, color: Colors.grey))),
+                      border:
+                          Border.symmetric(horizontal: BorderSide(width: 1, color: Colors.grey))),
                   child: Text('자동 요약 안건', style: b1eb),
                 ),
                 Container(
@@ -344,16 +329,13 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                             children: List<Widget>.generate(5, (index) {
                               return ListTile(
                                   dense: true,
-                                  visualDensity:
-                                      const VisualDensity(vertical: -3),
+                                  visualDensity: const VisualDensity(vertical: -3),
                                   title: Text(
                                     '',
-                                    style: const TextStyle(
-                                        fontFamily: 'apm', color: Colors.grey),
+                                    style: const TextStyle(fontFamily: 'apm', color: Colors.grey),
                                   ),
-                                  trailing: IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.close)));
+                                  trailing:
+                                      IconButton(onPressed: () {}, icon: const Icon(Icons.close)));
                             }),
                           )),
                     )),
@@ -363,9 +345,8 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   height: 48,
                   width: double.infinity,
                   decoration: const BoxDecoration(
-                      border: Border.symmetric(
-                          horizontal:
-                              BorderSide(width: 1, color: Colors.grey))),
+                      border:
+                          Border.symmetric(horizontal: BorderSide(width: 1, color: Colors.grey))),
                   child: Text('회의 내용', style: b1eb),
                 ),
                 Container(
@@ -373,15 +354,13 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   height: 32,
                   width: double.infinity,
                   decoration: const BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(width: 1, color: Colors.grey))),
+                      border: Border(bottom: BorderSide(width: 1, color: Colors.grey))),
                   child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         const Text('편집 도구',
-                            style: TextStyle(
-                                fontFamily: 'apeb', color: Colors.grey)),
+                            style: TextStyle(fontFamily: 'apeb', color: Colors.grey)),
                         Expanded(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -399,16 +378,18 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                                 padding: EdgeInsets.zero,
                               ),
                               IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.edit,
-                                    color: Colors.blueAccent),
+                                onPressed: () {
+                                  setState(() {
+                                    switchEdit = !switchEdit;
+                                  });
+                                },
+                                icon: const Icon(Icons.edit, color: Colors.blueAccent),
                                 constraints: const BoxConstraints(),
                                 padding: EdgeInsets.zero,
                               ),
                               IconButton(
                                 onPressed: () {},
-                                icon: const Icon(Icons.error,
-                                    color: Colors.redAccent),
+                                icon: const Icon(Icons.cancel, color: Colors.redAccent),
                                 constraints: const BoxConstraints(),
                                 padding: EdgeInsets.zero,
                               ),
@@ -425,60 +406,63 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                 ),
                 Expanded(
                     child: Container(
-                        child: StreamBuilder<
-                                QuerySnapshot<Map<String, dynamic>>>(
+                        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                             stream: streamConnectContents,
                             builder: (context, snapshot) {
                               //에러 없이 데이터가 성공적으로 수신되었다면
                               if (snapshot.hasData && snapshot.data != null) {
-                                var docs = snapshot.data?.docs.first.data();
+                                Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
+                                var contentsData = docs?['contents'];
                                 return SingleChildScrollView(
+                                    reverse: true,
                                     child: Column(
-                                        children: List.generate(
-                                            docs?['contents'].length, (index) {
-                                  return ListTile(
-                                      title: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 6),
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: <Widget>[
-                                                Text(
-                                                    docs?['contents'][index]
-                                                        ['startTime'],
-                                                    style: const TextStyle(
-                                                        fontSize: 14,
-                                                        fontFamily: 'apm',
-                                                        color: Colors.grey)),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                    docs?['contents'][index]
-                                                        ['user'],
-                                                    style: const TextStyle(
-                                                        fontSize: 16,
-                                                        fontFamily: 'apeb')),
-                                                const SizedBox(width: 8),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              4),
-                                                      color:
-                                                          Colors.grey.shade300),
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                      docs?['contents'][index]
-                                                          ['text'],
-                                                      style: const TextStyle(
-                                                          fontSize: 14,
-                                                          fontFamily: 'apm')),
-                                                )
-                                              ])));
-                                })));
+                                        children: List.generate(docs?['contents'].length, (index) {
+                                      return ListTile(
+                                          title: Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 6),
+                                              child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Text(docs?['contents'][index]['startTime'],
+                                                        style: const TextStyle(
+                                                            fontSize: 14,
+                                                            fontFamily: 'apm',
+                                                            color: Colors.grey)),
+                                                    const SizedBox(width: 8),
+                                                    Text(docs?['contents'][index]['user'],
+                                                        style: const TextStyle(
+                                                            fontSize: 16, fontFamily: 'apeb')),
+                                                    const SizedBox(width: 8),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(4),
+                                                          color: switchEdit == true
+                                                              ? Colors.orange
+                                                              : Colors.grey.shade300),
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: TextButton(
+                                                          onPressed: switchEdit == true
+                                                              ? () {
+                                                                  setState(() {
+                                                                    _textEditingControllerEdit
+                                                                            .text =
+                                                                        docs?['contents'][index]
+                                                                            ['text'];
+                                                                    textEdit = docs?['contents']
+                                                                        [index]['text'];
+                                                                    switchEdit2 = true;
+                                                                  });
+                                                                }
+                                                              : null,
+                                                          child: Text(
+                                                              docs?['contents'][index]['text'],
+                                                              style: const TextStyle(
+                                                                  fontSize: 14,
+                                                                  fontFamily: 'apm'))),
+                                                    )
+                                                  ])));
+                                    })));
                               } else if (snapshot.hasError) {
                                 return const Text('Error');
                                 // 기타 경우 ( 불러오는 중 )
@@ -496,10 +480,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                         height: 60,
                         decoration: BoxDecoration(
                             gradient: LinearGradient(
-                                colors: [
-                              isRecordOn ? ccKeyColorGreen : Colors.red,
-                              ccKeyColorCyan
-                            ],
+                                colors: [isRecordOn ? ccKeyColorGreen : Colors.red, ccKeyColorCyan],
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight)),
                         child: IconButton(
@@ -515,9 +496,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                               });
                             },
                             icon: Icon(
-                                isRecordOn
-                                    ? Icons.pause_circle_outline
-                                    : Icons.play_circle_outline,
+                                isRecordOn ? Icons.pause_circle_outline : Icons.play_circle_outline,
                                 size: 36,
                                 color: Colors.white)),
                       ),
@@ -548,9 +527,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                           child: Text(
                             '회의 종료',
                             style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
+                                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
