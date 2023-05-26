@@ -27,21 +27,14 @@ class ZoomMeetingCreator {
   Future<Map<String, dynamic?>> createZoomMeeting() async {
     final payload = {
       'iss': apiKey,
-      'exp': DateTime.now()
-              .toUtc()
-              .add(Duration(hours: 2))
-              .millisecondsSinceEpoch ~/
-          1000,
+      'exp': DateTime.now().toUtc().add(Duration(hours: 2)).millisecondsSinceEpoch ~/ 1000,
     };
 
-    final base64UrlHeader = base64Url
-        .encode(utf8.encode(json.encode({'alg': 'HS256', 'typ': 'JWT'})));
-    final base64UrlPayload =
-        base64Url.encode(utf8.encode(json.encode(payload)));
+    final base64UrlHeader = base64Url.encode(utf8.encode(json.encode({'alg': 'HS256', 'typ': 'JWT'})));
+    final base64UrlPayload = base64Url.encode(utf8.encode(json.encode(payload)));
     final signingInput = '$base64UrlHeader.$base64UrlPayload';
     final hmacSha256 = Hmac(sha256, utf8.encode(apiSecret));
-    final base64UrlSignature =
-        base64Url.encode(hmacSha256.convert(utf8.encode(signingInput)).bytes);
+    final base64UrlSignature = base64Url.encode(hmacSha256.convert(utf8.encode(signingInput)).bytes);
     final token = '$signingInput.$base64UrlSignature';
 
     final url = 'https://api.zoom.us/v2/users/me/meetings';
@@ -58,8 +51,7 @@ class ZoomMeetingCreator {
       'agenda': 'This is a test meeting'
     };
 
-    final response = await http.post(Uri.parse(url),
-        headers: headers, body: json.encode(data));
+    final response = await http.post(Uri.parse(url), headers: headers, body: json.encode(data));
 
     if (response.statusCode == 201) {
       print("******************successe**********************");
@@ -83,8 +75,7 @@ class ZoomMeetingCreator {
         'meetingId': meetingId,
       };
     } else {
-      print(
-          'Failed to create Zoom meeting. Status code: ${response.statusCode}');
+      print('Failed to create Zoom meeting. Status code: ${response.statusCode}');
       return {
         'startUrl': null,
         'joinUrl': null,
@@ -117,31 +108,24 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: WidgetCommonAppbar(
-            appBar: AppBar(), currentPage: 'meeting', loginState: true),
+        appBar: WidgetCommonAppbar(appBar: AppBar(), currentPage: 'meeting', loginState: true),
         body: Padding(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('반갑습니다. ${widget.myUserInfo!['userName']}님!',
-                    style: TextStyle(fontSize: 48, fontFamily: 'apeb')),
-                Text('회의명. ${widget.meetingInfo!['meetingName']}',
-                    style: TextStyle(fontSize: 48, fontFamily: 'apeb')),
+                Text('반갑습니다. ${widget.myUserInfo!['userName']}님!', style: TextStyle(fontSize: 48, fontFamily: 'apeb')),
+                Text('회의명. ${widget.meetingInfo!['meetingName']}', style: TextStyle(fontSize: 48, fontFamily: 'apeb')),
                 const SizedBox(height: 8),
                 const Expanded(child: SizedBox()),
                 Column(children: [
-                  const Text('접속 목록',
-                      style: TextStyle(fontSize: 20, fontFamily: 'apeb')),
+                  const Text('접속 목록', style: TextStyle(fontSize: 20, fontFamily: 'apeb')),
                   const SizedBox(height: 8),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: List<Widget>.generate(
-                          4,
-                          (index) =>
-                              WidgetCircleAvatar(userName: dummyUsers[index]))),
+                      children: List<Widget>.generate(4, (index) => WidgetCircleAvatar(userName: dummyUsers[index]))),
                 ]),
                 const SizedBox(height: 8),
                 if (ClickCheckOn == false) ...[
@@ -159,9 +143,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                       ),
                       child: TextButton(
                         onPressed: () async {
-                          await ZoomMeetingCreator()
-                              .createZoomMeeting()
-                              .then((value) {
+                          await ZoomMeetingCreator().createZoomMeeting().then((value) {
                             if (value != null) {
                               zoomInfo = value['meetingId'];
                               StartUrlInfo = value['startUrl'];
@@ -173,8 +155,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                               print("버튼을 다시 눌러주세요..");
                             }
                           });
-                          print(
-                              '==================Invite==============================');
+                          print('==================Invite==============================');
                           print('meeting ID: ${zoomInfo}');
                           print('start: ${StartUrlInfo}');
                           print('join: ${JoinUrlInfo}');
@@ -186,33 +167,23 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                         ),
                         child: Text(
                           'Zoom 회의 방 개설',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                   ),
                 ] else ...[
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Expanded(
-                          child: WidgetCardRedirectionCode(
-                              code: StartUrlInfo, boardType: '줌 바로가기 ( 서기용 )'),
-                        ),
-                        Expanded(
-                          child: WidgetCardRedirectionCode(
-                              code: JoinUrlInfo,
-                              boardType: '줌 바로가기 ( 일반 참가자 )'),
-                        )
-                      ]),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                    Expanded(
+                      child: WidgetCardRedirectionCode(code: StartUrlInfo, boardType: '줌 바로가기 ( 서기용 )'),
+                    ),
+                    Expanded(
+                      child: WidgetCardRedirectionCode(code: JoinUrlInfo, boardType: '줌 바로가기 ( 일반 참가자 )'),
+                    )
+                  ]),
                 ],
                 const SizedBox(height: 8),
-                WidgetCardRedirectionCode(
-                    code: widget.meetingInfo!['password'],
-                    boardType: '회의 초대코드'),
+                WidgetCardRedirectionCode(code: widget.meetingInfo!['password'], boardType: '회의 초대코드'),
                 SizedBox(height: 24),
                 Container(
                   alignment: Alignment.center,
@@ -228,31 +199,19 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                   child: TextButton(
                       onPressed: () async {
                         print('check :zoomInfo-$zoomInfo');
-                        HttpOverrides.global =
-                            NoCheckCertificateHttpOverrides();
+                        HttpOverrides.global = NoCheckCertificateHttpOverrides();
                         FeaturesMeeting()
-                            .postNotion(widget.myUserInfo!['id'],
-                                widget.meetingInfo!['meetingName'], dummyUsers)
+                            .postNotion(widget.myUserInfo!['id'], widget.meetingInfo!['meetingName'], dummyUsers)
                             .then((value) {
                           print('debug kk');
                           print(value);
                           String pageId = value;
                           FirebaseController()
-                              .getUser(widget.myUserInfo!['userName'],
-                                  widget.myUserInfo!['email'])
-                              .then((result) {
-                            FirebaseController().updateUser(
-                                result!['email'],
-                                result!['accessToken'],
-                                result!['dataBaseId'],
-                                pageId);
-                          });
-                          FirebaseController()
-                              .getUser(widget.myUserInfo!['userName'],
-                                  widget.myUserInfo!['email'])
-                              .then((value) {
-                            FirebaseController().updateMeetingClerk(
-                                value, widget.meetingInfo!['password']);
+                              .getUser(widget.myUserInfo!['userName'], widget.myUserInfo!['email'])
+                              .then((value) async {
+                            await FirebaseController()
+                                .updateUser(value!['email'], value!['accessToken'], value!['dataBaseId'], pageId);
+                            FirebaseController().updateMeetingClerk(value, widget.meetingInfo!['password']);
                           });
                         });
                         Navigator.push(
@@ -264,10 +223,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                                     meetingId: zoomInfo)));
                       },
                       child: const Text('Start Meeting!',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold))),
+                          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold))),
                 )
               ]),
         ));
@@ -287,9 +243,7 @@ class WidgetCircleAvatar extends StatelessWidget {
       children: <Widget>[
         CircleAvatar(
           backgroundColor: Colors.blueAccent,
-          child: Text(userName[0],
-              style: const TextStyle(
-                  fontFamily: 'apeb', fontSize: 16, color: Colors.white)),
+          child: Text(userName[0], style: const TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.white)),
         ),
         Text(
           userName,
@@ -301,9 +255,7 @@ class WidgetCircleAvatar extends StatelessWidget {
 }
 
 class WidgetCardRedirectionCode extends StatelessWidget {
-  const WidgetCardRedirectionCode(
-      {Key? key, required this.boardType, required this.code})
-      : super(key: key);
+  const WidgetCardRedirectionCode({Key? key, required this.boardType, required this.code}) : super(key: key);
   final String boardType;
   final String code;
 
@@ -322,9 +274,7 @@ class WidgetCardRedirectionCode extends StatelessWidget {
         ),
         // 기초 정의가 끝나면 child 정의
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text(boardType,
-              textAlign: TextAlign.start,
-              style: TextStyle(fontSize: 16, fontFamily: 'apeb')),
+          Text(boardType, textAlign: TextAlign.start, style: TextStyle(fontSize: 16, fontFamily: 'apeb')),
           TextButton(
               onPressed: () async {
                 final url = Uri.parse(code);
@@ -332,11 +282,7 @@ class WidgetCardRedirectionCode extends StatelessWidget {
                   await launch(url.toString(), forceSafariVC: false);
                 }
               },
-              child: const Text('바로가기',
-                  style: TextStyle(
-                      fontFamily: 'apeb',
-                      fontSize: 16,
-                      color: Colors.blueAccent)))
+              child: const Text('바로가기', style: TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.blueAccent)))
         ]));
   }
 }
