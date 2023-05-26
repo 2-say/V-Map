@@ -283,8 +283,8 @@ class WidgetFloatingButton extends StatelessWidget {
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
-                      colors: [ccKeyColorGreen, ccKeyColorCyan])),
-              child: Icon(buttonIcon, color: Colors.white),
+                      colors: [crKeyColorB1L, crKeyColorB1MenuL])),
+              child: Icon(buttonIcon, color: crKeyColorB1F),
             )),
       ],
     );
