@@ -48,14 +48,14 @@ public class NotionWriterServiceImpl {
         String pageIdString = responseMap.get("pageId");
 
         //txt파일 생성
-        createTxtFile(pageIdString);
+        createTxtFile(documentId);
 
         return pageIdString;
     }
 
-    private void createTxtFile(String pageId) throws IOException {
+    private void createTxtFile(String documentId) throws IOException {
         String directoryPath = "/home/lab329/VMap/data/";
-        String fileName = pageId + ".txt";
+        String fileName = documentId + ".txt";
         File directory = new File(directoryPath);
         File file = new File(directoryPath + fileName);
 

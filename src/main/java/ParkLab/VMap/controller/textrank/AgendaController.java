@@ -1,6 +1,7 @@
 package ParkLab.VMap.controller.textrank;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +14,8 @@ import java.net.http.HttpResponse;
 public class AgendaController {
     @GetMapping("/agenda")
     @ResponseBody
-    public String agenda() {
+    public String agenda(@RequestParam ("documentId") String documentId) {
+
         String apiUrl = "http://127.0.0.1:5000/agenda";
 
         HttpClient client = HttpClient.newHttpClient();
