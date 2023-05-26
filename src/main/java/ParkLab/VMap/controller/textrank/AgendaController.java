@@ -15,7 +15,7 @@ public class AgendaController {
     @GetMapping("/agenda")
     @ResponseBody
     public String agenda(@RequestParam ("documentId") String documentId) {
-        String apiUrl = "http://127.0.0.1:5000/agenda" + documentId;
+        String apiUrl = "http://127.0.0.1:5000/agenda?documentId=" + documentId;
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()

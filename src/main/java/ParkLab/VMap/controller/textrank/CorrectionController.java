@@ -12,7 +12,6 @@ import java.net.http.HttpResponse;
 
 @RestController
 public class CorrectionController {
-
     @GetMapping("/Correction")
     @ResponseBody
     public String correction(@RequestParam String word) {
