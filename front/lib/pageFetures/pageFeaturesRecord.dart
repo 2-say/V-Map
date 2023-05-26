@@ -54,6 +54,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
   late int currentTime;
   late List<String> agendaList = [];
   late List<dynamic> talk = [];
+
   var statuses = BehaviorSubject<String>();
   final TextEditingController _textEditingController = TextEditingController();
   var words = StreamController<SpeechRecognitionResult>();
@@ -61,6 +62,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
 
   bool switchEdit = false;
   bool switchEdit2 = false;
+  bool stopsign = false;
 
   final TextEditingController _textEditingControllerEdit = TextEditingController();
   String textEdit = '';
@@ -167,20 +169,35 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
     _textEditingController.dispose();
   }
 
+  void _startsign(){
+    print("_startsign");
+    stopsign=false;
+  }
+
+
+  void _stopsign(){
+    print("_stopsign");
+    stopsign=true;
+  }
+
   void _onTextChanged() {
-    print(_textEditingController.text);
-    try {
-      if (_textEditingController.text != "listening") {
-        print("start");
-        _startListening();
-      } else if (_textEditingController.text == "done") {
+    // print(_textEditingController.text);
+    if(stopsign){stopListening();}
+    else {
+      try {
+        if (_textEditingController.text != "listening") {
+          print("start");
+          _startListening();
+        } else if (_textEditingController.text == "done") {
+          _startListening();
+        }
+      } catch (e) {
+        print("catch(3)");
+        stopListening();
         _startListening();
       }
-    } catch (e) {
-      print("catch(3)");
-      stopListening();
-      _startListening();
     }
+
   }
 
   void handleValue(bool value) {
@@ -264,10 +281,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
               });
             }
           }
-          // print(result.toString());
-          // user 정보 가져오고, time 값,
-          // 여기에 firebase 에 meeting data 추가하는 method 추가 후에,
-          // firebase 에서 회의 data를 갱신 받아서 출력
+
         });
       },
       cancelOnError: false,
@@ -480,7 +494,9 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                                 isRecordOn = !isRecordOn;
                                 if (isRecordOn) {
                                   _startListening();
+                                  _startsign();
                                 } else {
+                                  _stopsign();
                                   stopListening();
                                 }
                               });
