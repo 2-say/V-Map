@@ -198,6 +198,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                           colors: [Colors.indigo, Colors.green])),
                   child: TextButton(
                       onPressed: () async {
+                        Map<String, dynamic> myUserInfoUpdate;
                         print('check :zoomInfo-$zoomInfo');
                         HttpOverrides.global = NoCheckCertificateHttpOverrides();
                         FeaturesMeeting()
@@ -211,16 +212,18 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                               .then((value) async {
                             await FirebaseController()
                                 .updateUser(value!['email'], value!['accessToken'], value!['dataBaseId'], pageId);
-                            FirebaseController().updateMeetingClerk(value, widget.meetingInfo!['password']);
+                            myUserInfoUpdate = value;
+                            FirebaseController().updateMeetingClerk(value, widget.meetingInfo!['password']).then((_) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => PageFeatureRecord(
+                                          meetingInfo: widget.meetingInfo,
+                                          userInfo: myUserInfoUpdate,
+                                          meetingId: zoomInfo)));
+                            });
                           });
                         });
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => PageFeatureRecord(
-                                    meetingInfo: widget.meetingInfo,
-                                    userInfo: widget.myUserInfo,
-                                    meetingId: zoomInfo)));
                       },
                       child: const Text('Start Meeting!',
                           style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold))),
