@@ -26,6 +26,31 @@ public class NotionEditServiceImpl {
     private String extractedContents;
     private String time;
 
+    public void deleteNotionBlock(String blockId) {
+        String NOTION_API_URL = "https://api.notion.com/v1/blocks/" + blockId;
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(NOTION_API_URL)
+                .addHeader("Authorization", "Bearer " + accessToken)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Notion-Version", "2021-08-16")
+                .delete()
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                System.out.println("DELETE 요청이 성공적으로 전송되었습니다.");
+            } else {
+                System.out.println("DELETE 요청이 실패하였습니다. 응답 코드: " + response.code());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void updateNotionBlock(String blockId) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         String NOTION_API_URL = "https://api.notion.com/v1/blocks/" + blockId;
@@ -165,7 +190,13 @@ public class NotionEditServiceImpl {
 
         System.out.println("accessToken = " + accessToken);
         System.out.println("pageId = " + pageId);
+    }
 
+    public void editNotion() {
         updateNotionBlock(retrieveNotionBlock());
+    }
+
+    public void deleteNotion() {
+        deleteNotionBlock(retrieveNotionBlock());
     }
 }

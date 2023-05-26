@@ -19,5 +19,6 @@ public class NotionEditController {
     @PostMapping("/editNotion")
     public void editNotion (@RequestParam("documentId") String documentId, @RequestBody String requestBody) throws Exception {
         notionEditServiceImpl.setDocumentId(documentId, requestBody);
+        notionEditServiceImpl.editNotion();
     }
 }
