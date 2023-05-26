@@ -80,6 +80,29 @@ class FeaturesMeeting {
     return response.body.toString();
   }
 
+  Future<String> editNotion(String time, String id, String content) async {
+    var url = Uri.parse('https://218.150.182.202:32929/editNotion?documentId='+id);
+    Map<String, Object> data = {
+      "time": time,
+      "contents": content,
+    };
+    DebugMessage(
+      isItPostType: true,
+      featureName: 'patchNotion',
+      dataType: 'json',
+      data: data,
+    ).messagePost();
+    var body = json.encode(data);
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+    final http.Response response = await http.post(url, body: body, headers: headers);
+    print('post!');
+    print(response.body);
+    return response.body.toString();
+  }
+
 }
 
 //

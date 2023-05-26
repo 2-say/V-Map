@@ -113,6 +113,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
               TextButton(
                   onPressed: () async {
                     FirebaseController().editMeetingContents(widget.meetingInfo!['password'], contentPrev, index);
+                    FeaturesMeeting().editNotion(contentPrev['startTime'], widget.meetingInfo!['documentId'], contentPrev['text']);
                     Navigator.pop(context);
                   },
                   child: Text(
