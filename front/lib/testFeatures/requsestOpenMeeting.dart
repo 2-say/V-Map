@@ -11,7 +11,7 @@ class FeaturesMeeting {
 
   Future<String> postNotion(String id, String meetingName, List<String> meetingParticipants) async {
 
-    final url = Uri.parse('https://218.150.182.202:32929/postNotion?documentId='+id);
+    final url = Uri.parse('https://vmap.me/postNotion?documentId='+id);
     DateTime dt = DateTime.now();
     // JSON body
     final body = {
@@ -42,7 +42,7 @@ class FeaturesMeeting {
 
 
   Future<String> patchNotion(String dt, String id, String user, String content) async {
-    var url = Uri.parse('https://218.150.182.202:32929/patchNotion?documentId='+id);
+    var url = Uri.parse('https://vmap.me/patchNotion?documentId='+id);
     Map<String, Object> data = {
       "user": user,
       "time": dt,
@@ -67,7 +67,7 @@ class FeaturesMeeting {
 
   Future<String> authNotion() async {
     DateTime dt = DateTime.now();
-    var url = Uri.parse('https://218.150.182.202:32929/notionAuth');
+    var url = Uri.parse('https://vmap.me/notionAuth');
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -81,7 +81,7 @@ class FeaturesMeeting {
   }
 
   Future<String> editNotion(String time, String id, String content) async {
-    var url = Uri.parse('https://218.150.182.202:32929/editNotion?documentId='+id);
+    var url = Uri.parse('https://vmap.me/editNotion?documentId='+id);
     Map<String, Object> data = {
       "time": time,
       "contents": content,

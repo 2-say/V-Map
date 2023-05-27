@@ -431,7 +431,7 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
                       shadowColor: Colors.transparent),
                   onPressed: () async {
                     final url = Uri.parse(
-                        'https://218.150.182.202:32929/notionAuth?documentId=' +
+                        'https://vmap.me/notionAuth?documentId=' +
                             widget.myUserInfo!['id']);
                     if (await canLaunch(url.toString())) {
                       await launch(url.toString(), forceSafariVC: false);
