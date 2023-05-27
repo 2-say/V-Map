@@ -17,10 +17,6 @@ import java.util.Date;
 @CrossOrigin(origins = "*")
 public class TranscriptionController {
 
-    @GetMapping("/index")
-    public void index() {
-    }
-
     @GetMapping("/transcribe.html")
     public String transcribe(Model model) throws Exception {
         TranscribeSample transcribeSample = new TranscribeSample();
