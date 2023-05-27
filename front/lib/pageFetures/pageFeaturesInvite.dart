@@ -100,7 +100,7 @@ class PageFeatureInvite extends StatefulWidget {
 
 class _PageFeatureInviteState extends State<PageFeatureInvite> {
   final List<String> dummyUsers = ['이세희', '조원희', '임재경', '이상현'];
-  late int zoomInfo;
+  late int zoomInfo=111;
   late String StartUrlInfo;
   late String JoinUrlInfo;
   bool ClickCheckOn = false;

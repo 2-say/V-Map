@@ -6,12 +6,8 @@ import 'package:http/http.dart' as http;
 import 'NoCheckCertificateHttpOverrides.dart';
 
 class FeaturesMeeting {
-
-
-
   Future<String> postNotion(String id, String meetingName, List<String> meetingParticipants) async {
-
-    final url = Uri.parse('https://vmap.me/postNotion?documentId='+id);
+    final url = Uri.parse('https://vmap.me/postNotion?documentId=' + id);
     DateTime dt = DateTime.now();
     // JSON body
     final body = {
@@ -22,7 +18,7 @@ class FeaturesMeeting {
     HttpOverrides.global = NoCheckCertificateHttpOverrides();
     final response = await http.post(
       url,
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
       body: jsonEncode(body),
     );
 
@@ -30,7 +26,7 @@ class FeaturesMeeting {
       // 요청이 성공적으로 완료됨
       print('GET request successful');
       print('Response body: ${response.body}');
-      Map<String,dynamic> jsonData = jsonDecode(response.body);
+      Map<String, dynamic> jsonData = jsonDecode(response.body);
       return jsonData['pageId'];
     } else {
       // 요청이 실패함
@@ -39,10 +35,8 @@ class FeaturesMeeting {
     }
   }
 
-
-
   Future<String> patchNotion(String dt, String id, String user, String content) async {
-    var url = Uri.parse('https://vmap.me/patchNotion?documentId='+id);
+    var url = Uri.parse('https://vmap.me/patchNotion?documentId=' + id);
     Map<String, Object> data = {
       "user": user,
       "time": dt,
@@ -58,6 +52,7 @@ class FeaturesMeeting {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
+      'Access-Control-Allow-Origin': '*'
     };
     final http.Response response = await http.post(url, body: body, headers: headers);
     print('post!');
@@ -66,13 +61,13 @@ class FeaturesMeeting {
   }
 
   Future<String> authNotion() async {
-    DateTime dt = DateTime.now();
     var url = Uri.parse('https://vmap.me/notionAuth');
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
+      'Access-Control-Allow-Origin': '*'
     };
-    final http.Response response = await http.get(url);
+    final http.Response response = await http.get(url,headers: headers);
     final token = Uri.parse(response.body).queryParameters['token'];
     print(token);
     print('post!');
@@ -81,7 +76,7 @@ class FeaturesMeeting {
   }
 
   Future<String> editNotion(String time, String id, String content) async {
-    var url = Uri.parse('https://vmap.me/editNotion?documentId='+id);
+    var url = Uri.parse('https://vmap.me/editNotion?documentId=' + id);
     Map<String, Object> data = {
       "time": time,
       "contents": content,
@@ -96,13 +91,13 @@ class FeaturesMeeting {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
+      'Access-Control-Allow-Origin': '*'
     };
     final http.Response response = await http.post(url, body: body, headers: headers);
     print('post!');
     print(response.body);
     return response.body.toString();
   }
-
 }
 
 //
