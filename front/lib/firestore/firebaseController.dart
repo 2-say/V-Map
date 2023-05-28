@@ -104,10 +104,10 @@ class FirebaseController {
 
     String password = randomHexString(12);
     Map<String, dynamic> testContents = {
-      'user': '2sangH',
+      'user': '안내',
       'startTime': '00:00',
       'endTime': '00:00',
-      'text': '여기에 map 형태로 데이터 추가해줘'
+      'text': '반갑습니다. 왼쪽하단 버튼을 통해 녹음 기능을 이용하세요.'
     };
 
     bool duplicationChecker = false;
@@ -138,9 +138,17 @@ class FirebaseController {
       }
     });
     if (duplicationChecker == false) {
+      Map<String, dynamic> copy;
       String messageSuccess = '중복 없음을 확인, 회의록 추가';
       DebugMessage(isItPostType: true, featureName: 'addMeeting', dataType: '', data: messageSuccess).firebaseMessage();
-      db.collection('meetings').add(map);
+      await db.collection('meetings').add(map);
+      await db.collection('meetings').where('password', isEqualTo: password).get().then((value) {
+        copy = value.docs.first.data();
+        copy['id'] = value.docs.first.id;
+        for (var doc in value.docs) {
+          doc.reference.update(copy);
+        }
+      });
       return password;
     } else {
       String messageFail = '중복 확인, 회의록 추가 거부';
@@ -155,7 +163,6 @@ class FirebaseController {
     await db.collection('meetings').where('password', isEqualTo: meetingCode).get().then((value) {
       if (value.size > 0) {
         result = value.docs.first.data();
-        result!['Id'] = value.docs.first.id;
         print(result!['meetingName']);
       }
       DebugMessage(isItPostType: true, featureName: 'updateMeetingParticipants', dataType: '', data: result)
@@ -186,7 +193,6 @@ class FirebaseController {
         });
         if (value.size > 0) {
           result = value.docs.first.data();
-          result!['Id'] = value.docs.first.id;
           print(result!['meetingName']);
         }
       }

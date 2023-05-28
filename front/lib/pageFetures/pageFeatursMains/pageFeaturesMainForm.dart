@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:front/dataSets/dataSetColors.dart';
 
 import '../../firestore/firebaseController.dart';
+import '../pageFeaturesRecordReview.dart';
 
 class PageFeaturesMainForm extends StatefulWidget {
   const PageFeaturesMainForm({Key? key, required this.myUserInfo}) : super(key: key);
@@ -52,6 +53,13 @@ class _PageFeaturesMainFormState extends State<PageFeaturesMainForm> {
                                   child: Card(
                                       elevation: 10,
                                       child: ListTile(
+                                        onTap: (){
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => PageFeatureRecordReView(meetingInfo: docs, userInfo: widget.myUserInfo
+                                                  )));
+                                        },
                                         title: Text(docs!['meetingName']),
                                         subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [

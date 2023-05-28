@@ -138,29 +138,31 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
               //이 부분에 zoom 관련 코드 받아서 바로 리턴받을 수 있도록 !
               TextButton(
                   onPressed: () async {
-                    String meetingCode = '';
                     DateTime dt = DateTime.now();
                     print(widget.myUserInfo);
                     final startUrl = '';
                     final joinUrl = '';
-                    Map<String, dynamic>? result;
                     print(widget.myUserInfo);
                     //zoom 회의방 열기 어쩌구저쩌구,
-                    await FirebaseController()
+                    FirebaseController()
                         .addMeeting(widget.myUserInfo!, startUrl!, joinUrl!, meetingName, dt.toString())
-                        .then((value) => meetingCode = value);
-                    await FirebaseController().getMeetingInfo(meetingCode).then((value) {
-                      result = value;
-                      FirebaseController().editPrevMeetingUser(widget.myUserInfo!['email'], value['password']);
-                      FeaturesMeeting().createMeeting(result?['Id']);
+                        .then((value) {
+                          print('미팅코드 출력');
+                      print(value);
+                      FirebaseController().getMeetingInfo(value).then((meetingInfo){
+                        print('미팅 정보 출력');
+                        print(meetingInfo);
+                        if (meetingInfo != null) {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PageFeatureInvite(
+                                    meetingInfo: meetingInfo,
+                                    myUserInfo: widget.myUserInfo,
+                                  )));
+                        }
+                      });
                     });
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PageFeatureInvite(
-                                  meetingInfo: result,
-                                  myUserInfo: widget.myUserInfo,
-                                )));
                   },
                   child: Text(
                     '시작',
