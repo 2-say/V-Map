@@ -37,14 +37,13 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
   late int currentTime;
   late List<String> agendaList = [];
   late List<dynamic> talk = [];
+  TextEditingController manualTextController = TextEditingController();
+  String manualText = '';
 
   var statuses = BehaviorSubject<String>();
   final TextEditingController _textEditingController = TextEditingController();
   var words = StreamController<SpeechRecognitionResult>();
   ScrollController contentsScroll = ScrollController();
-
-  bool switchEdit = false;
-  bool switchEdit2 = false;
   bool stopsign = false;
 
   final TextEditingController _textEditingControllerEdit = TextEditingController();
@@ -253,195 +252,392 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
     return Scaffold(
       //전체를 감싸는 컨테이너, 배경색을 담당
       body: Container(
-        color: crKeyColorB1L,
+        color: crKeyColorB1Talk,
         height: double.infinity,
         //자식들을 담을 column
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-              //세로 정렬 : start( 시작점 부터 )
-              mainAxisAlignment: MainAxisAlignment.start,
-              //가로 정렬 : start ( 시작점 부터 )
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //row:현재 회의 상태 표시
-                Container(
-                  color: crKeyColorB1Menu,
-                  child: Row(children: <Widget>[
-                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                      Text('${widget.meetingInfo!['meetingName']}', style: h1C),
-                      Text(
-                        '${widget.meetingInfo!['startTime']} · 참여자 ${widget.meetingInfo!['etc'].length + 1}명',
-                        style: const TextStyle(fontFamily: 'apb', color: Colors.grey),
-                      )
-                    ]),
-                    const Expanded(child: SizedBox()),
-                    Text('$currentTime', style: b1eb),
-                    const SizedBox(width: 12),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => PageFrameRanding()));
-                      },
-                      child: Text('HOME', style: TextStyle(fontSize: 15)),
-                      style: TextButton.styleFrom(
-                        primary: Colors.green,
-                        minimumSize: Size(100, 50),
-                      ),
-                    ),
-                    isRecordOn
-                        ? const Text('녹음 중', style: TextStyle(fontFamily: 'apeb', color: Colors.blueAccent))
-                        : const Text('일시 정지 중', style: TextStyle(fontFamily: 'apeb', color: Colors.redAccent)),
-                    const SizedBox(width: 8),
-                    Row(
-                      children: List<Widget>.generate(widget.meetingInfo!['etc'].length, (index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: CircleAvatar(
-                              backgroundColor: Colors.blue,
-                              radius: 16,
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
-                                child: Text(
-                                  '${talk[index][1][0]}',
-                                  style: const TextStyle(fontFamily: 'apl', fontSize: 12),
-                                ),
-                              )),
-                        );
-                      }),
+        child: Column(
+            //세로 정렬 : start( 시작점 부터 )
+            mainAxisAlignment: MainAxisAlignment.start,
+            //가로 정렬 : start ( 시작점 부터 )
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //row:현재 회의 상태 표시
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                    color: crKeyColorB1Menu,
+                    borderRadius:
+                        const BorderRadius.only(bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24))),
+                child: Row(children: <Widget>[
+                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                    Text('${widget.meetingInfo!['meetingName']}', style: h1C),
+                    Text(
+                      '${widget.meetingInfo!['startTime']} · 참여자 ${widget.meetingInfo!['etc'].length + 1}명',
+                      style: const TextStyle(fontFamily: 'apb', color: Colors.grey),
                     )
                   ]),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  height: 48,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                      border: Border.symmetric(horizontal: BorderSide(width: 1, color: Colors.grey))),
-                  child: Text('회의 내용', style: b1eb),
-                ),
-                Expanded(
-                    child: Container(
-                        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                            stream: streamConnectContents,
-                            builder: (context, snapshot) {
-                              //에러 없이 데이터가 성공적으로 수신되었다면
-                              if (snapshot.hasData && snapshot.data != null) {
-                                Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
-                                var contentsData = docs?['contents'];
-                                return SingleChildScrollView(
-                                    reverse: true,
-                                    child: Column(
-                                        children: List.generate(docs?['contents'].length, (index) {
-                                      return ListTile(
-                                          title: Padding(
-                                              padding: const EdgeInsets.symmetric(vertical: 6),
-                                              child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Text(docs?['contents'][index]['startTime'],
-                                                        style: const TextStyle(
-                                                            fontSize: 14, fontFamily: 'apm', color: Colors.grey)),
-                                                    const SizedBox(width: 8),
-                                                    Text(docs?['contents'][index]['user'],
-                                                        style: const TextStyle(fontSize: 16, fontFamily: 'apeb')),
-                                                    const SizedBox(width: 8),
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(4),
-                                                          color: switchEdit == true
-                                                              ? Colors.orange
-                                                              : Colors.grey.shade300),
-                                                      padding: const EdgeInsets.all(8.0),
-                                                      child: Text(docs?['contents'][index]['text'],
-                                                          style: const TextStyle(fontSize: 14, fontFamily: 'apm')),
-                                                    ),
-                                                    PopupMenuButton<MenuType>(onSelected: (MenuType result) {
-                                                      result.toString().split('.')[1] == 'edit'
-                                                          ? setterGoPageFeatureInvite(docs?['contents'][index], index)
-                                                          : result.toString().split('.')[1] == 'change'
-                                                              ? print('kk')
-                                                              : FirebaseController()
-                                                                  .deleteMeetingContents(
-                                                                      widget.meetingInfo!['password'],
-                                                                      docs?['contents'][index],
-                                                                      index)
-                                                                  .then((_) {
-                                                                  // FeaturesMeeting().deleteNotion(
-                                                                  //     docs?['contents'][index]['startTime'],
-                                                                  //     widget.meetingInfo!['Id'],
-                                                                  //     docs?['contents'][index]['text']);
-                                                                });
-                                                    }, itemBuilder: (BuildContext buildContext) {
-                                                      return [
-                                                        for (final value in MenuType.values)
-                                                          PopupMenuItem(
-                                                            value: value,
-                                                            child: Row(
-                                                              mainAxisSize: MainAxisSize.min,
-                                                              children: [
-                                                                value.toString().split('.')[1] == 'edit'
-                                                                    ? const Icon(Icons.edit, color: Colors.blueAccent)
-                                                                    : value.toString().split('.')[1] == 'change'
-                                                                        ? const Icon(Icons.change_circle,
-                                                                            color: Colors.green)
-                                                                        : const Icon(Icons.delete,
-                                                                            color: Colors.redAccent),
-                                                                const SizedBox(width: 4),
-                                                                Text(value.toString().split('.')[1]),
-                                                              ],
-                                                            ),
-                                                          )
-                                                      ];
-                                                    }),
-                                                  ])));
-                                    })));
-                              } else if (snapshot.hasError) {
-                                return const Text('Error');
-                                // 기타 경우 ( 불러오는 중 )
-                              } else {
-                                return const CircularProgressIndicator();
-                              }
-                            }))),
+                  const Expanded(child: SizedBox()),
+                  Text('$currentTime', style: b1eb),
+                  const SizedBox(width: 12),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => PageFrameRanding()));
+                    },
+                    child: Text('HOME', style: TextStyle(fontSize: 15)),
+                    style: TextButton.styleFrom(
+                      primary: Colors.green,
+                      minimumSize: Size(100, 50),
+                    ),
+                  ),
+                  isRecordOn
+                      ? const Text('녹음 중', style: TextStyle(fontFamily: 'apeb', color: Colors.blueAccent))
+                      : const Text('일시 정지 중', style: TextStyle(fontFamily: 'apeb', color: Colors.redAccent)),
+                  const SizedBox(width: 8),
+                  Row(
+                    children: List<Widget>.generate(widget.meetingInfo!['etc'].length, (index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: CircleAvatar(
+                            backgroundColor: Colors.blue,
+                            radius: 16,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
+                              child: Text(
+                                '${talk[index][1][0]}',
+                                style: const TextStyle(fontFamily: 'apl', fontSize: 12),
+                              ),
+                            )),
+                      );
+                    }),
+                  )
+                ]),
+              ),
+              Expanded(
+                  child: Container(
+                      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                          stream: streamConnectContents,
+                          builder: (context, snapshot) {
+                            //에러 없이 데이터가 성공적으로 수신되었다면
+                            if (snapshot.hasData && snapshot.data != null) {
+                              Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
+                              return SingleChildScrollView(
+                                  reverse: true,
+                                  child: Column(
+                                      children: List.generate(docs?['contents'].length, (index) {
+                                    return docs?['contents'][index]['user'] == widget.userInfo!['userName']
+                                        ? Container(
+                                            width: double.infinity,
+                                            child: ListTile(
+                                                title: Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 6),
+                                                    child: Container(
+                                                      child: Row(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            const SizedBox(width: 8),
+                                                            //프로필
+                                                            CircleAvatar(
+                                                                backgroundColor: Colors.white,
+                                                                child: Text(docs?['contents'][index]['user'][0],
+                                                                    style: TextStyle(
+                                                                        fontSize: 16,
+                                                                        fontFamily: 'apeb',
+                                                                        color: crKeyColorB1F))),
+                                                            const SizedBox(width: 8),
+                                                            //말풍선
+                                                            Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Padding(
+                                                                    padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                                                    child: Text(docs?['contents'][index]['user'],
+                                                                        style: TextStyle(
+                                                                            fontSize: 16,
+                                                                            fontFamily: 'apeb',
+                                                                            color: crKeyColorB1F)),
+                                                                  ),
+                                                                  const SizedBox(height: 8),
+                                                                  Container(
+                                                                      alignment: Alignment.centerLeft,
+                                                                      constraints: const BoxConstraints(
+                                                                          minWidth: 100, maxWidth: 240),
+                                                                      width: 240,
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius: const BorderRadius.only(
+                                                                              bottomRight: Radius.circular(12),
+                                                                              bottomLeft: Radius.circular(12),
+                                                                              topRight: Radius.circular(12)),
+                                                                          color: Colors.white),
+                                                                      padding: const EdgeInsets.all(8),
+                                                                      child: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                                          children: [
+                                                                            Text(docs?['contents'][index]['text'],
+                                                                                style: const TextStyle(
+                                                                                    fontSize: 14, fontFamily: 'apm')),
+                                                                            Row(children: [
+                                                                              Expanded(child: SizedBox()),
+                                                                              Text(
+                                                                                  docs?['contents'][index]['startTime'],
+                                                                                  style: const TextStyle(
+                                                                                      fontSize: 10,
+                                                                                      fontFamily: 'apl',
+                                                                                      color: Colors.grey)),
+                                                                            ])
+                                                                          ]))
+                                                                ]),
+                                                            PopupMenuButton<MenuType>(
+                                                                color: crKeyColorB1F,
+                                                                onSelected: (MenuType result) {
+                                                                  result.toString().split('.')[1] == 'edit'
+                                                                      ? setterGoPageFeatureInvite(
+                                                                          docs?['contents'][index], index)
+                                                                      : result.toString().split('.')[1] == 'change'
+                                                                          ? print('kk')
+                                                                          : FirebaseController()
+                                                                              .deleteMeetingContents(
+                                                                                  widget.meetingInfo!['password'],
+                                                                                  docs?['contents'][index],
+                                                                                  index)
+                                                                              .then((_) {
+                                                                              // FeaturesMeeting().deleteNotion(
+                                                                              //     docs?['contents'][index]['startTime'],
+                                                                              //     widget.meetingInfo!['Id'],
+                                                                              //     docs?['contents'][index]['text']);
+                                                                            });
+                                                                },
+                                                                itemBuilder: (BuildContext buildContext) {
+                                                                  return [
+                                                                    for (final value in MenuType.values)
+                                                                      PopupMenuItem(
+                                                                        value: value,
+                                                                        child: Row(
+                                                                          mainAxisSize: MainAxisSize.min,
+                                                                          children: [
+                                                                            value.toString().split('.')[1] == 'edit'
+                                                                                ? const Icon(Icons.edit,
+                                                                                    color: Colors.blueAccent)
+                                                                                : value.toString().split('.')[1] ==
+                                                                                        'change'
+                                                                                    ? const Icon(Icons.change_circle,
+                                                                                        color: Colors.green)
+                                                                                    : const Icon(Icons.delete,
+                                                                                        color: Colors.redAccent),
+                                                                            const SizedBox(width: 4),
+                                                                            Text(value.toString().split('.')[1]),
+                                                                          ],
+                                                                        ),
+                                                                      )
+                                                                  ];
+                                                                })
+                                                          ]),
+                                                    ))),
+                                          )
+                                        : ListTile(
+                                            title: Padding(
+                                                padding: const EdgeInsets.symmetric(vertical: 6),
+                                                child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      const SizedBox(width: 8),
+                                                      //프로필
+                                                      CircleAvatar(
+                                                          backgroundColor: Colors.white,
+                                                          child: Text(docs?['contents'][index]['user'][0],
+                                                              style: TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontFamily: 'apeb',
+                                                                  color: crKeyColorB1F))),
+                                                      const SizedBox(width: 8),
+                                                      //말풍선
+                                                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                                          child: Text(docs?['contents'][index]['user'],
+                                                              style: TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontFamily: 'apeb',
+                                                                  color: crKeyColorB1F)),
+                                                        ),
+                                                        const SizedBox(height: 8),
+                                                        Container(
+                                                            alignment: Alignment.centerLeft,
+                                                            constraints:
+                                                                const BoxConstraints(minWidth: 100, maxWidth: 240),
+                                                            width: 240,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius: const BorderRadius.only(
+                                                                    bottomRight: Radius.circular(12),
+                                                                    bottomLeft: Radius.circular(12),
+                                                                    topRight: Radius.circular(12)),
+                                                                color: Colors.grey.shade300),
+                                                            padding: const EdgeInsets.all(8),
+                                                            child: Column(
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                children: [
+                                                                  Text(docs?['contents'][index]['text'],
+                                                                      style: const TextStyle(
+                                                                          fontSize: 14, fontFamily: 'apm')),
+                                                                  Row(children: [
+                                                                    Expanded(child: SizedBox()),
+                                                                    Text(docs?['contents'][index]['startTime'],
+                                                                        style: const TextStyle(
+                                                                            fontSize: 10,
+                                                                            fontFamily: 'apl',
+                                                                            color: Colors.grey)),
+                                                                  ])
+                                                                ]))
+                                                      ]),
+                                                      PopupMenuButton<MenuType>(
+                                                          color: crKeyColorB1F,
+                                                          onSelected: (MenuType result) {
+                                                            result.toString().split('.')[1] == 'edit'
+                                                                ? setterGoPageFeatureInvite(
+                                                                    docs?['contents'][index], index)
+                                                                : result.toString().split('.')[1] == 'change'
+                                                                    ? print('kk')
+                                                                    : FirebaseController()
+                                                                        .deleteMeetingContents(
+                                                                            widget.meetingInfo!['password'],
+                                                                            docs?['contents'][index],
+                                                                            index)
+                                                                        .then((_) {
+                                                                        // FeaturesMeeting().deleteNotion(
+                                                                        //     docs?['contents'][index]['startTime'],
+                                                                        //     widget.meetingInfo!['Id'],
+                                                                        //     docs?['contents'][index]['text']);
+                                                                      });
+                                                          },
+                                                          itemBuilder: (BuildContext buildContext) {
+                                                            return [
+                                                              for (final value in MenuType.values)
+                                                                PopupMenuItem(
+                                                                  value: value,
+                                                                  child: Row(
+                                                                    mainAxisSize: MainAxisSize.min,
+                                                                    children: [
+                                                                      value.toString().split('.')[1] == 'edit'
+                                                                          ? const Icon(Icons.edit,
+                                                                              color: Colors.blueAccent)
+                                                                          : value.toString().split('.')[1] == 'change'
+                                                                              ? const Icon(Icons.change_circle,
+                                                                                  color: Colors.green)
+                                                                              : const Icon(Icons.delete,
+                                                                                  color: Colors.redAccent),
+                                                                      const SizedBox(width: 4),
+                                                                      Text(value.toString().split('.')[1]),
+                                                                    ],
+                                                                  ),
+                                                                )
+                                                            ];
+                                                          })
+                                                    ])));
+                                  })));
+                            } else if (snapshot.hasError) {
+                              return const Text('Error');
+                              // 기타 경우 ( 불러오는 중 )
+                            } else {
+                              return const CircularProgressIndicator();
+                            }
+                          }))),
 
-                Row(
-                  children: [
-                    Flexible(
-                      flex: 9,
+              Row(
+                children: [
+                  Flexible(
+                    flex: 9,
+                    child: Container(
+                      width: double.infinity,
+                      height: 60,
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(12),
                       child: Container(
-                        width: double.infinity,
-                        height: 60,
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.all(12),
-                        child: Container(decoration: BoxDecoration(color: crKeyColorB1L,borderRadius: BorderRadius.circular(32)),height: 48,),
+                        decoration: BoxDecoration(color: crKeyColorB1L, borderRadius: BorderRadius.circular(32)),
+                        height: 48,
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                                width: 32,
+                                height: 32,
+                                alignment: Alignment.center,
+                                decoration:
+                                    BoxDecoration(color: crKeyColorB1F, borderRadius: BorderRadius.circular(100)),
+                                child: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        //isRecordOn이 true일때 녹음 기능이 작동하도록 하면 될듯!
+                                        isRecordOn = !isRecordOn;
+                                        if (isRecordOn) {
+                                          _startListening();
+                                          _startsign();
+                                        } else {
+                                          _stopsign();
+                                          stopListening();
+                                        }
+                                      });
+                                    },
+                                    icon: Icon(isRecordOn ? Icons.pause_circle_outline : Icons.play_circle_outline,
+                                        size: 16, color: crKeyColorB1L))),
+                            const SizedBox(width: 8),
+                            Expanded(
+                                child: Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0, 16, 4),
+                              child: TextField(
+                                style: TextStyle(fontFamily: 'apeb',color: crKeyColorB1F),
+                                controller: manualTextController,
+                                onChanged: (val) {
+                                  manualText = val;
+                                },
+                                decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    hintText: '수동 기록할 내용 입력',
+                                    hintStyle: TextStyle(color: Colors.white)),
+                              ),
+                            )),
+                            IconButton(
+                                onPressed: () {
+                                  FirebaseController().updateMeetingContents(
+                                      widget.meetingInfo!['password'],
+                                      widget.userInfo!['userName'],
+                                      DateTime.now().toString(),
+                                      DateTime.now().toString(),
+                                      manualText);
+                                  manualTextController.text = '';
+                                  manualText = '';
+                                },
+                                icon: const Icon(Icons.send, size: 16, color: Colors.green))
+                          ],
+                        ),
                       ),
                     ),
-                    Flexible(
-                      flex: 1,
-                      child: Container(
-                        width: double.infinity,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Colors.orange, Colors.deepOrange],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          ),
-                          borderRadius: BorderRadius.circular(50),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                      width: double.infinity,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.orange, Colors.deepOrange],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
                         ),
-                        child: TextButton(
-                          onPressed: () {},
-                          style: TextButton.styleFrom(primary: Colors.transparent, elevation: 0),
-                          child: Text('회의 종료',
-                              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                        ),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: TextButton(
+                        onPressed: () {},
+                        style: TextButton.styleFrom(primary: Colors.transparent, elevation: 0),
+                        child: Text('회의 종료',
+                            style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                       ),
                     ),
-                  ],
-                ),
-              ]),
-        ),
+                  ),
+                ],
+              ),
+            ]),
       ),
     );
   }

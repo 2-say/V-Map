@@ -23,3 +23,4 @@ Color crKeyColorB1L = HexColor("1b2533");
 Color crKeyColorB1Menu = HexColor("191e26");
 Color crKeyColorB1MenuL = HexColor("282f3b");
 Color crKeyColorB1MenuBtn = HexColor("363e4d");
+Color crKeyColorB1Talk = HexColor("272E38");
