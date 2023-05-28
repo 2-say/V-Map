@@ -6,6 +6,7 @@ TextStyle h1 =
 TextStyle h1W =
 const TextStyle(fontSize: 32, fontFamily: 'apeb', color: Colors.white);
 TextStyle h1C = TextStyle(fontSize: 32, fontFamily: 'apeb', color: crKeyColorB1F);
+TextStyle h1CM = TextStyle(fontSize: 20, fontFamily: 'apeb', color: crKeyColorB1F);
 TextStyle h2 =
     const TextStyle(fontSize: 24, fontFamily: 'apeb', color: Colors.black);
 TextStyle h3 =

@@ -28,18 +28,13 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle title =
-        TextStyle(fontFamily: 'apeb', fontSize: 24, color: crKeyColorB1F);
-    TextStyle button =
-    TextStyle(fontFamily: 'apeb', fontSize: 24, color: Colors.white);
-    TextStyle b1 =
-        TextStyle(fontFamily: 'apl', fontSize: 16, color: crKeyColorB1F);
-    TextStyle b2 =
-        TextStyle(fontFamily: 'apl', fontSize: 14, color: crKeyColorB1F);
+    TextStyle title = TextStyle(fontFamily: 'apeb', fontSize: 24, color: crKeyColorB1F);
+    TextStyle button = TextStyle(fontFamily: 'apeb', fontSize: 24, color: Colors.white);
+    TextStyle b1 = TextStyle(fontFamily: 'apl', fontSize: 16, color: crKeyColorB1F);
+    TextStyle b2 = TextStyle(fontFamily: 'apl', fontSize: 14, color: crKeyColorB1F);
     return Scaffold(
       //전체를 감싸는 컨테이너, 배경색을 담당
-      appBar: WidgetCommonAppbar(
-          appBar: AppBar(), currentPage: 'about', loginState: false),
+      appBar: WidgetCommonAppbar(appBar: AppBar(), currentPage: 'about', loginState: false),
       body: Center(
         child: Container(
           width: double.infinity,
@@ -47,9 +42,7 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
           alignment: Alignment.center,
           decoration: BoxDecoration(
               gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [crKeyColorB1, crKeyColorB1L])),
+                  begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [crKeyColorB1, crKeyColorB1L])),
           child: Material(
             elevation: 10,
             borderRadius: BorderRadius.circular(16),
@@ -71,26 +64,31 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
                     Text('아이디', style: b1),
                     const SizedBox(height: 4),
                     TextField(
-                        style: TextStyle(
-                            color: crKeyColorB1F, fontFamily: 'seqm'),
+                        style: TextStyle(color: crKeyColorB1F, fontFamily: 'seqm'),
                         onChanged: (val) {
                           setState(() {
                             inputEmail = val;
                           });
                         },
                         decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: crKeyColorB1F, width: 1)),
-                            focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.white, width: 1)))),
+                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: crKeyColorB1F, width: 1)),
+                            focusedBorder:
+                                const OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 1)))),
                     const SizedBox(height: 24),
                     Text('비밀번호', style: b1),
                     const SizedBox(height: 4),
                     TextField(
-                        style: TextStyle(
-                            color: crKeyColorB1F, fontFamily: 'seqm'),
+                        onSubmitted: (val) async {
+                          await FirebaseController().loginUser(inputEmail, inputPw).then((value) {
+                            if (value == null) {
+                            } else {
+                              print(value);
+                              Navigator.push(
+                                  context, MaterialPageRoute(builder: (_) => PageFeatureMain(myUserInfo: value)));
+                            }
+                          });
+                        },
+                        style: TextStyle(color: crKeyColorB1F, fontFamily: 'seqm'),
                         onChanged: (val) {
                           setState(() {
                             inputPw = val;
@@ -98,43 +96,31 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
                         },
                         obscureText: pwLook,
                         decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: crKeyColorB1F, width: 1)),
-                          focusedBorder: const OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 1)),
+                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: crKeyColorB1F, width: 1)),
+                          focusedBorder:
+                              const OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 1)),
                           suffixIcon: IconButton(
                               onPressed: () {
                                 setState(() {
                                   pwLook = !pwLook;
                                 });
                               },
-                              icon: Icon(pwLook == true
-                                  ? Icons.visibility_off
-                                  : Icons.visibility)),
+                              icon: Icon(pwLook == true ? Icons.visibility_off : Icons.visibility)),
                           border: OutlineInputBorder(),
                         )),
                     const SizedBox(height: 24),
                     Container(
                         width: double.infinity,
                         height: 60,
-                        decoration: BoxDecoration(
-                            color: ccKeyColorGreen,
-                            borderRadius: BorderRadius.circular(8)),
+                        decoration: BoxDecoration(color: ccKeyColorGreen, borderRadius: BorderRadius.circular(8)),
                         child: TextButton(
                             onPressed: () async {
-                              await FirebaseController()
-                                  .loginUser(inputEmail, inputPw)
-                                  .then((value) {
+                              await FirebaseController().loginUser(inputEmail, inputPw).then((value) {
                                 if (value == null) {
                                 } else {
                                   print(value);
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) => PageFeatureMain(
-                                              myUserInfo: value)));
+                                      context, MaterialPageRoute(builder: (_) => PageFeatureMain(myUserInfo: value)));
                                 }
                               });
                             },

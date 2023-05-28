@@ -25,18 +25,24 @@ class FirebaseController {
   //유저 로그인용
   loginUser(String email, String pw) async {
     Map<String, dynamic>? result;
-    await db
-        .collection('users')
-        .where("email", isEqualTo: email)
-        .where('pw', isEqualTo: pw)
-        .get()
-        .then((value) {
+    await db.collection('users').where("email", isEqualTo: email).where('pw', isEqualTo: pw).get().then((value) {
       if (value.size > 0) {
         result = value.docs.first.data();
         result!['id'] = value.docs.first.id;
       }
     });
     return result;
+  }
+
+  editPrevMeetingUser(String email, String prevMeeting) async {
+    db.collection('users').where('email', isEqualTo: email).get().then((value) {
+      for (var doc in value.docs) {
+        doc.reference.update({
+          'prevMeeting': FieldValue.arrayUnion([prevMeeting])
+        });
+        DebugMessage(isItPostType: true, featureName: 'updateUser', dataType: '', data: prevMeeting).firebaseMessage();
+      }
+    });
   }
 
   //유저 추가
@@ -51,11 +57,7 @@ class FirebaseController {
       'pageId': ''
     };
 
-    await db
-        .collection('users')
-        .where('email', isEqualTo: email)
-        .get()
-        .then((value) {
+    await db.collection('users').where('email', isEqualTo: email).get().then((value) {
       for (var doc in value.docs) {
         print(doc.data());
         duplicationChecker = true;
@@ -63,53 +65,33 @@ class FirebaseController {
     });
     if (duplicationChecker == false) {
       String messageSuccess = '중복 없음을 확인, 학생 추가';
-      DebugMessage(
-              isItPostType: true,
-              featureName: 'addUser',
-              dataType: '',
-              data: messageSuccess)
-          .firebaseMessage();
+      DebugMessage(isItPostType: true, featureName: 'addUser', dataType: '', data: messageSuccess).firebaseMessage();
       db.collection('users').add(map);
       return true;
     } else {
       String messageFail = '중복 확인, 학생 추가 거부';
-      DebugMessage(
-              isItPostType: true,
-              featureName: 'addUser',
-              dataType: '',
-              data: messageFail)
-          .firebaseMessage();
+      DebugMessage(isItPostType: true, featureName: 'addUser', dataType: '', data: messageFail).firebaseMessage();
       return false;
     }
   }
 
   //유저 정보 업데이트
-  updateUser(String email, String accessToken, String dataBaseId,
-      String pageId) async {
-    Map<String, dynamic> map = {
-      'accessToken': accessToken,
-      'dataBaseId': dataBaseId,
-      'pageId': pageId
-    };
+  updateUser(String email, String accessToken, String dataBaseId, String pageId) async {
+    Map<String, dynamic> map = {'accessToken': accessToken, 'dataBaseId': dataBaseId, 'pageId': pageId};
 
     db.collection('users').where('email', isEqualTo: email).get().then((value) {
       for (var doc in value.docs) {
         doc.reference.update(map);
       }
-      DebugMessage(
-              isItPostType: true,
-              featureName: 'updateUser',
-              dataType: '',
-              data: map.toString())
-          .firebaseMessage();
+      DebugMessage(isItPostType: true, featureName: 'updateUser', dataType: '', data: map.toString()).firebaseMessage();
     });
   }
 
   //----------------------------------------------------------------------- 이하 meeting 컬렉션 관련 함수
 
   //미팅 추가
-  addMeeting(Map<String, dynamic> clerk, String zoomUrlClerk, String zoomUrlEtc,
-      String meetingName, String startTime) async {
+  addMeeting(
+      Map<String, dynamic> clerk, String zoomUrlClerk, String zoomUrlEtc, String meetingName, String startTime) async {
     Random _random = Random();
 
     String randomHexString(int length) {
@@ -132,7 +114,7 @@ class FirebaseController {
     Map<String, dynamic> map = {
       'password': password,
       'clerk': clerk,
-      'etc': [],
+      'etc': [clerk],
       'meetingName': meetingName,
       'zoomUrlClerk': zoomUrlClerk,
       'zoomUrlEtc': zoomUrlEtc,
@@ -141,6 +123,7 @@ class FirebaseController {
       'contents': [testContents],
       'abridge': [],
       'agenda': [],
+      'zoomMeetingId': ''.toString(),
     };
 
     await db
@@ -156,22 +139,12 @@ class FirebaseController {
     });
     if (duplicationChecker == false) {
       String messageSuccess = '중복 없음을 확인, 회의록 추가';
-      DebugMessage(
-              isItPostType: true,
-              featureName: 'addMeeting',
-              dataType: '',
-              data: messageSuccess)
-          .firebaseMessage();
+      DebugMessage(isItPostType: true, featureName: 'addMeeting', dataType: '', data: messageSuccess).firebaseMessage();
       db.collection('meetings').add(map);
       return password;
     } else {
       String messageFail = '중복 확인, 회의록 추가 거부';
-      DebugMessage(
-              isItPostType: true,
-              featureName: 'addMeeting',
-              dataType: '',
-              data: messageFail)
-          .firebaseMessage();
+      DebugMessage(isItPostType: true, featureName: 'addMeeting', dataType: '', data: messageFail).firebaseMessage();
       return false;
     }
   }
@@ -179,20 +152,13 @@ class FirebaseController {
   // 회의 정보 get
   getMeetingInfo(String meetingCode) async {
     Map<String, dynamic>? result;
-    await db
-        .collection('meetings')
-        .where('password', isEqualTo: meetingCode)
-        .get()
-        .then((value) {
+    await db.collection('meetings').where('password', isEqualTo: meetingCode).get().then((value) {
       if (value.size > 0) {
         result = value.docs.first.data();
+        result!['Id'] = value.docs.first.id;
         print(result!['meetingName']);
       }
-      DebugMessage(
-              isItPostType: true,
-              featureName: 'updateMeetingParticipants',
-              dataType: '',
-              data: result)
+      DebugMessage(isItPostType: true, featureName: 'updateMeetingParticipants', dataType: '', data: result)
           .firebaseMessage();
     });
     print(result!['meetingName']);
@@ -203,11 +169,7 @@ class FirebaseController {
     Map<String, dynamic> map = {
       'clerk': clerkInfo,
     };
-    await db
-        .collection('meetings')
-        .where('password', isEqualTo: meetingCode)
-        .get()
-        .then((value) {
+    await db.collection('meetings').where('password', isEqualTo: meetingCode).get().then((value) {
       for (var doc in value.docs) {
         doc.reference.update(map);
       }
@@ -215,72 +177,46 @@ class FirebaseController {
   }
 
   // 회의 업데이트 함수
-  updateMeetingParticipants(
-      Map<String, dynamic> participants, String meetingCode) async {
+  updateMeetingParticipants(Map<String, dynamic> participants, String meetingCode) async {
     Map<String, dynamic>? result;
-    await db
-        .collection('meetings')
-        .where('password', isEqualTo: meetingCode)
-        .get()
-        .then((value) {
+    await db.collection('meetings').where('password', isEqualTo: meetingCode).get().then((value) {
       for (var doc in value.docs) {
         doc.reference.update({
           'etc': FieldValue.arrayUnion([participants])
         });
         if (value.size > 0) {
           result = value.docs.first.data();
+          result!['Id'] = value.docs.first.id;
           print(result!['meetingName']);
         }
       }
       DebugMessage(
-              isItPostType: true,
-              featureName: 'updateMeetingParticipants',
-              dataType: '',
-              data: participants.toString())
+              isItPostType: true, featureName: 'updateMeetingParticipants', dataType: '', data: participants.toString())
           .firebaseMessage();
     });
     print(result!['meetingName']);
     return result;
   }
 
-  updateMeetingContents(String meetingCode, String user, String startTime,
-      String endTime, String text) async {
-    Map<String, dynamic>? content = {
-      'startTime': startTime,
-      'endTime': endTime,
-      'user': user,
-      'text': text
-    };
-    await db
-        .collection('meetings')
-        .where('password', isEqualTo: meetingCode)
-        .get()
-        .then((value) {
+  updateMeetingContents(String meetingCode, String user, String startTime, String endTime, String text) async {
+    Map<String, dynamic>? content = {'startTime': startTime, 'endTime': endTime, 'user': user, 'text': text};
+    await db.collection('meetings').where('password', isEqualTo: meetingCode).get().then((value) {
       for (var doc in value.docs) {
         doc.reference.update({
           'contents': FieldValue.arrayUnion([content])
         });
       }
-      DebugMessage(
-              isItPostType: true,
-              featureName: 'updateMeetingContents',
-              dataType: '',
-              data: content.toString())
+      DebugMessage(isItPostType: true, featureName: 'updateMeetingContents', dataType: '', data: content.toString())
           .firebaseMessage();
     });
   }
 
-  editMeetingContents(String meetingCode,Map<String, dynamic> content, int index) async {
-    await db
-        .collection('meetings')
-        .where('password', isEqualTo: meetingCode)
-        .get()
-        .then((value) {
+  editMeetingContents(String meetingCode, Map<String, dynamic> content, int index) async {
+    await db.collection('meetings').where('password', isEqualTo: meetingCode).get().then((value) {
       //찾은 문서의 id 추출
       String id = value.docs.first.id;
       //해당 id의 문서 레퍼런스 추출
-      DocumentReference docRef =
-          FirebaseFirestore.instance.collection('meetings').doc(id);
+      DocumentReference docRef = FirebaseFirestore.instance.collection('meetings').doc(id);
       //회의내용 추출
       var origin = value.docs.first.data()['contents'];
       // 회의내용 갈아끼우기
@@ -293,26 +229,17 @@ class FirebaseController {
         }
         docRef.update({"contents": origin});
       });
-      DebugMessage(
-              isItPostType: true,
-              featureName: 'updateMeetingParticipants',
-              dataType: '',
-              data: content.toString())
+      DebugMessage(isItPostType: true, featureName: 'updateMeetingParticipants', dataType: '', data: content.toString())
           .firebaseMessage();
     });
   }
 
-  deleteMeetingContents(String meetingCode,Map<String, dynamic> content, int index) async {
-    await db
-        .collection('meetings')
-        .where('password', isEqualTo: meetingCode)
-        .get()
-        .then((value) {
+  deleteMeetingContents(String meetingCode, Map<String, dynamic> content, int index) async {
+    await db.collection('meetings').where('password', isEqualTo: meetingCode).get().then((value) {
       //찾은 문서의 id 추출
       String id = value.docs.first.id;
       //해당 id의 문서 레퍼런스 추출
-      DocumentReference docRef =
-      FirebaseFirestore.instance.collection('meetings').doc(id);
+      DocumentReference docRef = FirebaseFirestore.instance.collection('meetings').doc(id);
       //회의내용 추출
       var origin = value.docs.first.data()['contents'];
       // 회의내용 갈아끼우기
@@ -326,11 +253,7 @@ class FirebaseController {
         }
         docRef.update({"contents": origin});
       });
-      DebugMessage(
-          isItPostType: true,
-          featureName: 'updateMeetingParticipants',
-          dataType: '',
-          data: content.toString())
+      DebugMessage(isItPostType: true, featureName: 'updateMeetingParticipants', dataType: '', data: content.toString())
           .firebaseMessage();
     });
   }
@@ -346,15 +269,8 @@ class FirebaseController {
     return caseSearchList;
   }
 
-  updateStudent(
-      String instName,
-      String orgName,
-      String orgBirth,
-      List<dynamic> group,
-      String name,
-      String birth,
-      String phone,
-      String examConfig) async {
+  updateStudent(String instName, String orgName, String orgBirth, List<dynamic> group, String name, String birth,
+      String phone, String examConfig) async {
     Map<String, dynamic> map = {
       'group': group,
       'name': name,
@@ -377,8 +293,7 @@ class FirebaseController {
     });
   }
 
-  updateStudentStepAndChapters(String inst, String name, String birth,
-      String step, List<String> chapters) {
+  updateStudentStepAndChapters(String inst, String name, String birth, String step, List<String> chapters) {
     Map<String, dynamic> map = {
       "step": step,
       "chapters": chapters,
@@ -421,8 +336,7 @@ class FirebaseController {
     });
   }
 
-  setStudentTestable(
-      String instName, String name, String birth, bool testable) {
+  setStudentTestable(String instName, String name, String birth, bool testable) {
     db
         .collection('student')
         .where('inst', isEqualTo: instName)
@@ -438,11 +352,7 @@ class FirebaseController {
 
   getGroups(String instName) async {
     var result = [];
-    await db
-        .collection('group')
-        .where('inst', isEqualTo: instName)
-        .get()
-        .then((value) {
+    await db.collection('group').where('inst', isEqualTo: instName).get().then((value) {
       for (var doc in value.docs) {
         result.add(doc.data()['name']);
       }
@@ -451,30 +361,17 @@ class FirebaseController {
   }
 
   addGroup(String instName, String name) {
-    Map<String, dynamic> map = {
-      "inst": instName,
-      "name": name,
-      "isDefault": false
-    };
+    Map<String, dynamic> map = {"inst": instName, "name": name, "isDefault": false};
     db.collection('group').add(map);
   }
 
   removeGroup(String instName, String name) {
-    db
-        .collection('group')
-        .where('inst', isEqualTo: instName)
-        .where("name", isEqualTo: name)
-        .get()
-        .then((value) {
+    db.collection('group').where('inst', isEqualTo: instName).where("name", isEqualTo: name).get().then((value) {
       for (var doc in value.docs) {
         doc.reference.delete();
       }
     });
-    db
-        .collection('student')
-        .where("inst", isEqualTo: instName)
-        .get()
-        .then((value) {
+    db.collection('student').where("inst", isEqualTo: instName).get().then((value) {
       for (var doc in value.docs) {
         List<dynamic> group = doc.data()["group"] as List<dynamic>;
         group.remove(name);
@@ -494,16 +391,8 @@ class FirebaseController {
     return result;
   }
 
-  addTestResult(
-      String instName,
-      String name,
-      String birth,
-      String title,
-      List<bool> scores,
-      List<dynamic> answers,
-      List<dynamic> exams,
-      DateTime datetime,
-      String grade) {
+  addTestResult(String instName, String name, String birth, String title, List<bool> scores, List<dynamic> answers,
+      List<dynamic> exams, DateTime datetime, String grade) {
     List<String> answers_ = answers.map((item) => '$item').toList();
     List<Map> exams_ = [];
     for (List<dynamic> r in exams) {
@@ -548,8 +437,7 @@ class FirebaseController {
     return result;
   }
 
-  getTestResult(
-      String instName, String name, String birth, String title) async {
+  getTestResult(String instName, String name, String birth, String title) async {
     dynamic data;
     await db
         .collection('testResult')
@@ -565,8 +453,7 @@ class FirebaseController {
     return data;
   }
 
-  updateStudentRecentResult(
-      String instName, String name, String birth, String recent) {
+  updateStudentRecentResult(String instName, String name, String birth, String recent) {
     Map<String, dynamic> map = {
       // 'testable': false, // 기존 값을 따라야 한다.
       'recent': recent
@@ -587,8 +474,7 @@ class FirebaseController {
 
   /* ExamConfig */
 
-  setStudentExamConfig(
-      String instName, String name, String birth, String examConfig) {
+  setStudentExamConfig(String instName, String name, String birth, String examConfig) {
     db
         .collection('student')
         .where('inst', isEqualTo: instName)
@@ -602,8 +488,7 @@ class FirebaseController {
     });
   }
 
-  Future<void> addExamConfig(String inst, String name, int total, int cutLine,
-      int examMultiple) async {
+  Future<void> addExamConfig(String inst, String name, int total, int cutLine, int examMultiple) async {
     Map<String, dynamic> map = {
       "inst": inst,
       "name": name,
@@ -630,14 +515,8 @@ class FirebaseController {
     return examConfig;
   }
 
-  Future<QueryDocumentSnapshot?> _getExamConfig(
-      String inst, String name) async {
-    await db
-        .collection('examConfig')
-        .where("inst", isEqualTo: inst)
-        .where("name", isEqualTo: name)
-        .get()
-        .then((value) {
+  Future<QueryDocumentSnapshot?> _getExamConfig(String inst, String name) async {
+    await db.collection('examConfig').where("inst", isEqualTo: inst).where("name", isEqualTo: name).get().then((value) {
       for (QueryDocumentSnapshot qds in value.docs) {
         print(qds['total']);
         return qds.data();
@@ -646,19 +525,9 @@ class FirebaseController {
     return null;
   }
 
-  Future<void> updateExamConfig(String inst, String name, int total,
-      int cutLine, int examMultiple) async {
-    Map<String, dynamic> map = {
-      "total": total,
-      "cutLine": cutLine,
-      "examMultiple": examMultiple
-    };
-    await db
-        .collection('examConfig')
-        .where("inst", isEqualTo: inst)
-        .where("name", isEqualTo: name)
-        .get()
-        .then((value) {
+  Future<void> updateExamConfig(String inst, String name, int total, int cutLine, int examMultiple) async {
+    Map<String, dynamic> map = {"total": total, "cutLine": cutLine, "examMultiple": examMultiple};
+    await db.collection('examConfig').where("inst", isEqualTo: inst).where("name", isEqualTo: name).get().then((value) {
       for (QueryDocumentSnapshot qds in value.docs) {
         qds.reference.update(map);
       }
@@ -666,12 +535,7 @@ class FirebaseController {
   }
 
   Future<void> removeExamConfig(String inst, String name) async {
-    await db
-        .collection('examConfig')
-        .where("inst", isEqualTo: inst)
-        .where("name", isEqualTo: name)
-        .get()
-        .then((value) {
+    await db.collection('examConfig').where("inst", isEqualTo: inst).where("name", isEqualTo: name).get().then((value) {
       for (QueryDocumentSnapshot qds in value.docs) {
         qds.reference.delete();
       }

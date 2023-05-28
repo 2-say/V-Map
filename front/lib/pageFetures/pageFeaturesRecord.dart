@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:front/dataSets/dataSetColors.dart';
+import 'package:front/pageFetures/pageFeaturesInvite.dart';
 import 'package:rxdart/rxdart.dart';
 import '../dataSets/dataSetTextStyles.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
@@ -39,14 +40,13 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
   late List<dynamic> talk = [];
   TextEditingController manualTextController = TextEditingController();
   String manualText = '';
+  FocusNode myFocusNode = FocusNode();
 
   var statuses = BehaviorSubject<String>();
   final TextEditingController _textEditingController = TextEditingController();
   var words = StreamController<SpeechRecognitionResult>();
   ScrollController contentsScroll = ScrollController();
   bool stopsign = false;
-
-  final TextEditingController _textEditingControllerEdit = TextEditingController();
   String textEdit = '';
 
   // speech_to_text 추가 - 임재경
@@ -91,11 +91,11 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                     },
                     child: const Text('취소', style: TextStyle(fontFamily: 'apeb'))),
                 TextButton(
-                    onPressed: () async {
+                    onPressed: () {
+                      Navigator.pop(context);
                       FirebaseController().editMeetingContents(widget.meetingInfo!['password'], contentPrev, index);
                       FeaturesMeeting()
                           .editNotion(contentPrev['startTime'], widget.meetingInfo!['Id'], contentPrev['text']);
-                      Navigator.pop(context);
                     },
                     child: Text('수정', style: TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen)))
               ]);
@@ -220,7 +220,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
               if (result.isNotEmpty) {
                 var dt2_end = DateTime.now();
                 featuresMeeting
-                    .patchNotion(dt2.toString(), widget.userInfo!['id'], widget.userInfo!['userName'], result)
+                    .patchNotion(dt2.toString(), widget.meetingInfo!['Id'], widget.userInfo!['userName'], result)
                     .then((_) {
                   FirebaseController().updateMeetingContents(widget.meetingInfo!['password'],
                       widget.userInfo!['userName'], dt2.toString(), dt2_end.toString(), result);
@@ -230,7 +230,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
               print(_textList.first);
               var dt2_end = DateTime.now();
               featuresMeeting
-                  .patchNotion(dt2.toString(), widget.userInfo!['id'], widget.userInfo!['userName'], _textList.first)
+                  .patchNotion(dt2.toString(), widget.meetingInfo!['Id'], widget.userInfo!['userName'], _textList.first)
                   .then((_) {
                 FirebaseController().updateMeetingContents(widget.meetingInfo!['password'],
                     widget.userInfo!['userName'], dt2.toString(), dt2_end.toString(), _textList.first);
@@ -272,46 +272,41 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                     Text('${widget.meetingInfo!['meetingName']}', style: h1C),
                     Text(
-                      '${widget.meetingInfo!['startTime']} · 참여자 ${widget.meetingInfo!['etc'].length + 1}명',
+                      '${widget.meetingInfo!['startTime']} · 참여자 ${widget.meetingInfo!['etc'].length}명',
                       style: const TextStyle(fontFamily: 'apb', color: Colors.grey),
                     )
                   ]),
                   const Expanded(child: SizedBox()),
                   Text('$currentTime', style: b1eb),
                   const SizedBox(width: 12),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => PageFrameRanding()));
-                    },
-                    child: Text('HOME', style: TextStyle(fontSize: 15)),
-                    style: TextButton.styleFrom(
-                      primary: Colors.green,
-                      minimumSize: Size(100, 50),
-                    ),
-                  ),
                   isRecordOn
-                      ? const Text('녹음 중', style: TextStyle(fontFamily: 'apeb', color: Colors.blueAccent))
-                      : const Text('일시 정지 중', style: TextStyle(fontFamily: 'apeb', color: Colors.redAccent)),
+                      ? const Text('녹음 중', style: TextStyle(fontFamily: 'apeb', color: Colors.blueAccent, fontSize: 20))
+                      : const Text('일시 정지 중',
+                          style: TextStyle(fontFamily: 'apeb', color: Colors.redAccent, fontSize: 20)),
                   const SizedBox(width: 8),
-                  Row(
-                    children: List<Widget>.generate(widget.meetingInfo!['etc'].length, (index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            radius: 16,
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
-                              child: Text(
-                                '${talk[index][1][0]}',
-                                style: const TextStyle(fontFamily: 'apl', fontSize: 12),
-                              ),
-                            )),
-                      );
-                    }),
-                  )
                 ]),
               ),
+              Container(
+                  padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+                  child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                      stream: streamConnectContents,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData && snapshot.data != null) {
+                          Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
+                          return Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: List<Widget>.generate(
+                                  docs?['etc'].length,
+                                  (index) => WidgetCircleAvatarRecord(
+                                      userName: docs?['etc'][index]['userName'], isClerk: index == 0 ? true : false)));
+                        } else if (snapshot.hasError) {
+                          return const Text('Error');
+                          // 기타 경우 ( 불러오는 중 )
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      })),
               Expanded(
                   child: Container(
                       child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -585,10 +580,23 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                                 child: Padding(
                               padding: EdgeInsets.fromLTRB(0, 0, 16, 4),
                               child: TextField(
-                                style: TextStyle(fontFamily: 'apeb',color: crKeyColorB1F),
+                                autofocus: true,
+                                style: TextStyle(fontFamily: 'apeb', color: crKeyColorB1F),
                                 controller: manualTextController,
                                 onChanged: (val) {
                                   manualText = val;
+                                },
+                                focusNode: myFocusNode,
+                                onSubmitted: (val) {
+                                  FirebaseController().updateMeetingContents(
+                                      widget.meetingInfo!['password'],
+                                      widget.userInfo!['userName'],
+                                      DateTime.now().toString(),
+                                      DateTime.now().toString(),
+                                      manualText);
+                                  manualTextController.clear();
+                                  manualText = '';
+                                  myFocusNode.requestFocus();
                                 },
                                 decoration: const InputDecoration(
                                     border: InputBorder.none,
@@ -618,7 +626,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                     flex: 1,
                     child: Container(
                       width: double.infinity,
-                      height: 60,
+                      height: 32,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [Colors.orange, Colors.deepOrange],
@@ -630,8 +638,8 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                       child: TextButton(
                         onPressed: () {},
                         style: TextButton.styleFrom(primary: Colors.transparent, elevation: 0),
-                        child: Text('회의 종료',
-                            style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                        child: const Text('회의 종료',
+                            style: TextStyle(color: Colors.white, fontSize: 16, fontFamily: 'apeb')),
                       ),
                     ),
                   ),
@@ -640,5 +648,51 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
             ]),
       ),
     );
+  }
+}
+
+class WidgetCircleAvatarRecord extends StatelessWidget {
+  WidgetCircleAvatarRecord({
+    Key? key,
+    required this.userName,
+    required this.isClerk,
+  }) : super(key: key);
+  final String userName;
+  final bool isClerk;
+
+  @override
+  Widget build(BuildContext context) {
+    return isClerk == true
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                  decoration: BoxDecoration(color: Colors.redAccent, borderRadius: BorderRadius.circular(4.0)),
+                  height: 20,
+                  width: 24,
+                  child: Text('서기', style: TextStyle(fontSize: 12, fontFamily: 'aepb', color: crKeyColorB1F))),
+              const SizedBox(width: 4.0),
+              Text(
+                userName,
+                style: const TextStyle(fontFamily: 'apm', fontSize: 12, color: Colors.white),
+              ),
+              const SizedBox(width: 8.0)
+            ],
+          )
+        : Row(
+            children: <Widget>[
+              CircleAvatar(
+                radius: 12,
+                backgroundColor: Colors.blueAccent,
+                child: Text(userName[0], style: const TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.white)),
+              ),
+              const SizedBox(width: 4.0),
+              Text(
+                userName,
+                style: const TextStyle(fontFamily: 'apm', fontSize: 12, color: Colors.white),
+              ),
+              const SizedBox(width: 8.0)
+            ],
+          );
   }
 }

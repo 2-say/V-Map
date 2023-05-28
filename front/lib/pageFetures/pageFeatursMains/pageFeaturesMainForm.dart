@@ -1,125 +1,74 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:front/dataSets/dataSetColors.dart';
 
 import '../../firestore/firebaseController.dart';
 
 class PageFeaturesMainForm extends StatefulWidget {
-  const PageFeaturesMainForm({Key? key}) : super(key: key);
+  const PageFeaturesMainForm({Key? key, required this.myUserInfo}) : super(key: key);
+  final Map<String, dynamic>? myUserInfo;
 
   @override
   State<PageFeaturesMainForm> createState() => _PageFeaturesMainFormState();
 }
 
 class _PageFeaturesMainFormState extends State<PageFeaturesMainForm> {
-  TextEditingController controllerUserName = TextEditingController();
-  String inputTextUserName = '';
-  TextEditingController controllerEmail = TextEditingController();
-  String inputTextEmail = '';
-  TextEditingController controllerToken = TextEditingController();
-  String inputTextToken = '';
-  TextEditingController controllerDbId = TextEditingController();
-  String inputTextDbId = '';
-  TextEditingController controllerPageId = TextEditingController();
-  String inputTextPageId = '';
-  TextEditingController controllerEmail2 = TextEditingController();
-  String inputTextEmail2 = '';
+  late Stream<QuerySnapshot<Map<String, dynamic>>> streamMeetingPrev;
+  late Stream<QuerySnapshot<Map<String, dynamic>>> streamMeetings;
+
+  @override
+  void initState() {
+    streamMeetingPrev = FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: widget.myUserInfo!['email'])
+        .snapshots();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      height: double.infinity,
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.all(12),
-              width: 320,
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(16)),
-              child: Column(
-                children: [
-                  TextField(
-                      decoration: const InputDecoration(labelText: 'userName'),
-                      controller: controllerUserName,
-                      onChanged: (text) {
-                        setState(() {
-                          inputTextUserName = text;
-                        });
-                      }),
-                  TextField(
-                      decoration: const InputDecoration(labelText: 'email'),
-                      controller: controllerEmail,
-                      onChanged: (text) {
-                        setState(() {
-                          inputTextEmail = text;
-                        });
-                      }),
-                ],
-              ),
-            ),
-            TextButton(
-                onPressed: () {
-                  // FirebaseController().addUser(inputTextUserName, inputTextEmail);
-                },
-                child: const Text('학생 추가 테스트',
-                    style: TextStyle(color: Colors.white))),
-            Padding(
-                padding: const EdgeInsets.all(12),
-                child: Container(
-                    width: double.infinity,
-                    height: 1,
-                    decoration: const BoxDecoration(color: Colors.black))),
-            Container(
-              padding: const EdgeInsets.all(12),
-              width: 320,
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(16)),
-              child: Column(
-                children: [
-                  TextField(
-                      decoration: const InputDecoration(labelText: '대상 email'),
-                      controller: controllerEmail2,
-                      onChanged: (text) {
-                        setState(() {
-                          inputTextEmail2 = text;
-                        });
-                      }),
-                  TextField(
-                      decoration: const InputDecoration(labelText: '토큰'),
-                      controller: controllerToken,
-                      onChanged: (text) {
-                        setState(() {
-                          inputTextToken = text;
-                        });
-                      }),
-                  TextField(
-                      decoration: const InputDecoration(labelText: 'DbId'),
-                      controller: controllerDbId,
-                      onChanged: (text) {
-                        setState(() {
-                          inputTextDbId = text;
-                        });
-                      }),
-                  TextField(
-                      decoration: const InputDecoration(labelText: 'pageId'),
-                      controller: controllerPageId,
-                      onChanged: (text) {
-                        setState(() {
-                          inputTextPageId = text;
-                        });
-                      }),
-                ],
-              ),
-            ),
-            TextButton(
-                onPressed: () {
-                  FirebaseController().updateUser(inputTextEmail2,
-                      inputTextToken, inputTextDbId, inputTextPageId);
-                },
-                child: const Text('학생 정보 업데이트',
-                    style: TextStyle(color: Colors.white)))
-          ]),
-    );
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: streamMeetingPrev,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data != null) {
+            Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
+            if(docs!['prevMeeting'].length!=0){
+              return Column(children: List<Widget>.generate(docs!['prevMeeting'].length, (index) {
+                streamMeetings = FirebaseFirestore.instance
+                    .collection('meetings')
+                    .where('password', isEqualTo: widget.myUserInfo!['id'])
+                    .snapshots();
+                return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                    stream: streamMeetingPrev,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && snapshot.data != null) {
+                        Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
+                        if(docs!['prevMeeting'].length!=0){
+                          return Column(children: List<Widget>.generate(docs!['prevMeeting'].length, (index) {
+                            return Container();
+                          }));
+                        }
+                        else {
+                          return Text('error');
+                        }
+                      } else if (snapshot.hasError) {
+                        return const Text('Error');
+                        // 기타 경우 ( 불러오는 중 )
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    });
+              }));
+            }
+            else {
+              return Text('error');
+            }
+          } else if (snapshot.hasError) {
+            return const Text('Error');
+            // 기타 경우 ( 불러오는 중 )
+          } else {
+            return const CircularProgressIndicator();
+          }
+        });
   }
 }

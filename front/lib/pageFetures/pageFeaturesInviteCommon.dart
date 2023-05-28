@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:front/firestore/firebaseController.dart';
 import 'package:front/pageFetures/pageFeaturesRecord.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
@@ -87,8 +86,8 @@ class ZoomMeetingCreator {
   }
 }
 
-class PageFeatureInvite extends StatefulWidget {
-  const PageFeatureInvite({
+class PageFeatureInviteCommon extends StatefulWidget {
+  const PageFeatureInviteCommon({
     Key? key,
     required this.myUserInfo,
     required this.meetingInfo,
@@ -97,10 +96,10 @@ class PageFeatureInvite extends StatefulWidget {
   final Map<String, dynamic>? meetingInfo;
 
   @override
-  State<PageFeatureInvite> createState() => _PageFeatureInviteState();
+  State<PageFeatureInviteCommon> createState() => _PageFeatureInviteCommonState();
 }
 
-class _PageFeatureInviteState extends State<PageFeatureInvite> {
+class _PageFeatureInviteCommonState extends State<PageFeatureInviteCommon> {
   final List<String> dummyUsers = ['이세희', '조원희', '임재경', '이상현'];
   late int zoomInfo = 111;
   late String StartUrlInfo;
@@ -134,7 +133,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                   decoration: BoxDecoration(
                       color: crKeyColorB1Menu,
                       borderRadius:
-                          const BorderRadius.only(bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24))),
+                      const BorderRadius.only(bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24))),
                   child: Row(children: <Widget>[
                     Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                       Text('${widget.meetingInfo!['meetingName']}', style: h1C),
@@ -145,15 +144,6 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                     ]),
                     Expanded(child: SizedBox()),
                     Text('초대코드 : ${widget.meetingInfo!['password']}', style: h1CM),
-                    IconButton(
-                        onPressed: () {
-                          Clipboard.setData(ClipboardData(text: widget.meetingInfo!['password']));
-                          final snackBar = SnackBar(
-                            content: Text("초대코드 복사가 완료되었습니다."),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        },
-                        icon: const Icon(Icons.copy, color: Colors.orange))
                   ]),
                 ),
                 Container(
@@ -168,7 +158,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: List<Widget>.generate(
                                     docs?['etc'].length,
-                                    (index) => WidgetCircleAvatar(
+                                        (index) => WidgetCircleAvatar(
                                         userName: docs?['etc'][index]['userName'],
                                         isClerk: index == 0 ? true : false)));
                           } else if (snapshot.hasError) {
@@ -199,23 +189,23 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                                   if (snapshot.hasData && snapshot.data != null) {
                                     Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
                                     return Column(children: <Widget>[
-                                      Text('Zoom 회의방 바로가기 ( 서기용 )',
+                                      Text('Zoom 회의방 바로가기 ( 참여자용 )',
                                           style: TextStyle(fontFamily: 'apeb', fontSize: 20, color: crKeyColorB1F)),
                                       docs!['zoomUrlClerk'] == ''
                                           ? const Text(
-                                              '아직 개설되지 않았습니다.',
-                                              style: TextStyle(color: Colors.white),
-                                            )
+                                        '아직 개설되지 않았습니다.',
+                                        style: TextStyle(color: Colors.white),
+                                      )
                                           : TextButton(
-                                              onPressed: () async {
-                                                final url = Uri.parse(docs!['zoomUrlClerk']);
-                                                if (await canLaunch(url.toString())) {
-                                                  await launch(url.toString(), forceSafariVC: false);
-                                                }
-                                              },
-                                              child: const Text('바로가기',
-                                                  style: TextStyle(
-                                                      fontFamily: 'apeb', fontSize: 16, color: Colors.blueAccent)))
+                                          onPressed: () async {
+                                            final url = Uri.parse(docs!['zoomUrlEtc']);
+                                            if (await canLaunch(url.toString())) {
+                                              await launch(url.toString(), forceSafariVC: false);
+                                            }
+                                          },
+                                          child: const Text('바로가기',
+                                              style: TextStyle(
+                                                  fontFamily: 'apeb', fontSize: 16, color: Colors.blueAccent)))
                                     ]);
                                   } else if (snapshot.hasError) {
                                     return const Text('Error');
@@ -244,7 +234,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                                       HttpOverrides.global = NoCheckCertificateHttpOverrides();
                                       FeaturesMeeting()
                                           .postNotion(
-                                              widget.myUserInfo!['id'], widget.meetingInfo!['meetingName'], dummyUsers)
+                                          widget.myUserInfo!['id'], widget.meetingInfo!['meetingName'], dummyUsers)
                                           .then((value) {
                                         print('debug kk');
                                         print(value);
@@ -271,7 +261,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                                     },
                                     child: const Text('Start Meeting!',
                                         style:
-                                            TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold))),
+                                        TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold))),
                               ),
                             )
                           ]),
@@ -297,40 +287,40 @@ class WidgetCircleAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return isClerk == true
         ? Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                  decoration: BoxDecoration(color: Colors.redAccent, borderRadius: BorderRadius.circular(4.0)),
-                  height: 24,
-                  width: 30,
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
-                    child: Text('서기', style: TextStyle(fontSize: 12, fontFamily: 'apeb', color: crKeyColorB1F)),
-                  )),
-              const SizedBox(width: 4.0),
-              Text(
-                userName,
-                style: const TextStyle(fontFamily: 'apm', fontSize: 12, color: Colors.white),
-              ),
-              const SizedBox(width: 8.0)
-            ],
-          )
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(
+            decoration: BoxDecoration(color: Colors.redAccent, borderRadius: BorderRadius.circular(4.0)),
+            height: 24,
+            width: 30,
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
+              child: Text('서기', style: TextStyle(fontSize: 12, fontFamily: 'apeb', color: crKeyColorB1F)),
+            )),
+        const SizedBox(width: 4.0),
+        Text(
+          userName,
+          style: const TextStyle(fontFamily: 'apm', fontSize: 12, color: Colors.white),
+        ),
+        const SizedBox(width: 8.0)
+      ],
+    )
         : Row(
-            children: <Widget>[
-              CircleAvatar(
-                radius: 12,
-                backgroundColor: Colors.blueAccent,
-                child: Text(userName[0], style: const TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.white)),
-              ),
-              const SizedBox(width: 4.0),
-              Text(
-                userName,
-                style: const TextStyle(fontFamily: 'apm', fontSize: 12, color: Colors.white),
-              ),
-              const SizedBox(width: 8.0)
-            ],
-          );
+      children: <Widget>[
+        CircleAvatar(
+          radius: 12,
+          backgroundColor: Colors.blueAccent,
+          child: Text(userName[0], style: const TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.white)),
+        ),
+        const SizedBox(width: 4.0),
+        Text(
+          userName,
+          style: const TextStyle(fontFamily: 'apm', fontSize: 12, color: Colors.white),
+        ),
+        const SizedBox(width: 8.0)
+      ],
+    );
   }
 }
 
@@ -342,7 +332,7 @@ class WidgetCardRedirectionCode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        //크기 정의 먼저
+      //크기 정의 먼저
         height: 68,
         // 그 다음 정렬 여부 , padding or margin
         alignment: Alignment.center,
