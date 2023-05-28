@@ -219,7 +219,7 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
               if (result.isNotEmpty) {
                 var dt2_end = DateTime.now();
                 featuresMeeting
-                    .patchNotion(dt2.toString(), widget.meetingInfo!['Id'], widget.userInfo!['userName'], result)
+                    .patchNotion(dt2.toString(), widget.meetingInfo!['id'], widget.userInfo!['userName'], result)
                     .then((_) {
                   FirebaseController().updateMeetingContents(widget.meetingInfo!['password'],
                       widget.userInfo!['userName'], dt2.toString(), dt2_end.toString(), result);
@@ -229,7 +229,7 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
               print(_textList.first);
               var dt2_end = DateTime.now();
               featuresMeeting
-                  .patchNotion(dt2.toString(), widget.meetingInfo!['Id'], widget.userInfo!['userName'], _textList.first)
+                  .patchNotion(dt2.toString(), widget.meetingInfo!['id'], widget.userInfo!['userName'], _textList.first)
                   .then((_) {
                 FirebaseController().updateMeetingContents(widget.meetingInfo!['password'],
                     widget.userInfo!['userName'], dt2.toString(), dt2_end.toString(), _textList.first);
