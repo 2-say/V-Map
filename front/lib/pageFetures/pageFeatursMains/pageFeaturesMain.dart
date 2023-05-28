@@ -152,6 +152,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                       FirebaseController().getMeetingInfo(value).then((meetingInfo){
                         print('미팅 정보 출력');
                         print(meetingInfo);
+                        FeaturesMeeting().createMeeting(meetingInfo['id']);
                         if (meetingInfo != null) {
                           FirebaseController().editPrevMeetingUser(widget.myUserInfo!['email'], meetingInfo['password']);
                           Navigator.pushReplacement(
