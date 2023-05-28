@@ -252,7 +252,7 @@ public class NotionEditServiceImpl {
 
         String contents = decodeJsonService.getContents();
         String time = decodeJsonService.getTime();
-        String user = decodeJsonService.getUser();
+        String user = decodeJsonService.getUserName();
 
         System.out.println("contents = " + contents);
         System.out.println("time = " + time);
