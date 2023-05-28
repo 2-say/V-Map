@@ -18,13 +18,13 @@ class FeaturesMeeting {
     HttpOverrides.global = NoCheckCertificateHttpOverrides();
     final response = await http.post(
       url,
-      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+      headers: {'Content-Type': 'application/json'},
       body: jsonEncode(body),
     );
 
     if (response.statusCode == 200) {
       // 요청이 성공적으로 완료됨
-      print('GET request successful');
+      print('Post request successful');
       print('Response body: ${response.body}');
       Map<String, dynamic> jsonData = jsonDecode(response.body);
       return jsonData['pageId'];

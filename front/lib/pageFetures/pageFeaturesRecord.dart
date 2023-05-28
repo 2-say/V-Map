@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:front/dataSets/dataSetColors.dart';
@@ -7,26 +5,11 @@ import 'package:rxdart/rxdart.dart';
 import '../dataSets/dataSetTextStyles.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'dart:async';
-
 import '../firestore/firebaseController.dart';
 import '../testFeatures/requsestOpenMeeting.dart';
-import '../widgets/widgetCommonAppbar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' as http;
-import '../dataSets/dataSetTextStyles.dart';
-import 'package:front/PageFrame/PageFrameRanding.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
-import 'package:speech_to_text/speech_recognition_error.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
-
-import '../firestore/firebaseController.dart';
-import '../testFeatures/NoCheckCertificateHttpOverrides.dart';
-import '../testFeatures/requsestOpenMeeting.dart';
-import '../widgets/widgetCommonAppbar.dart';
-import '../pageFetures/pageFeaturesInvite.dart';
 import '../widgets/widgetCommonAppbarM.dart';
 
 class PageFeatureRecord extends StatefulWidget {
@@ -86,43 +69,37 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-            title: const Text('수정할 정보 입력', style: TextStyle(fontSize: 20, fontFamily: 'apeb')),
-            content: Container(
-              height: 30,
-              child: TextField(
-                controller: tt,
-                onChanged: (val) {
-                  setState(() {
-                    contentPrev['text'] = val;
-                  });
-                },
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                    hintText: '회의명 입력'),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+              title: const Text('수정할 정보 입력', style: TextStyle(fontSize: 20, fontFamily: 'apeb')),
+              content: Container(
+                height: 30,
+                child: TextField(
+                    controller: tt,
+                    onChanged: (val) {
+                      setState(() {
+                        contentPrev['text'] = val;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        hintText: '회의명 입력')),
               ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('취소', style: TextStyle(fontFamily: 'apeb'))),
-              //이 부분에 zoom 관련 코드 받아서 바로 리턴받을 수 있도록 !
-              TextButton(
-                  onPressed: () async {
-                    FirebaseController().editMeetingContents(widget.meetingInfo!['password'], contentPrev, index);
-                    FeaturesMeeting()
-                        .editNotion(contentPrev['startTime'], widget.meetingInfo!['Id'], contentPrev['text']);
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    '수정',
-                    style: TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen),
-                  ))
-            ],
-          );
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('취소', style: TextStyle(fontFamily: 'apeb'))),
+                TextButton(
+                    onPressed: () async {
+                      FirebaseController().editMeetingContents(widget.meetingInfo!['password'], contentPrev, index);
+                      FeaturesMeeting()
+                          .editNotion(contentPrev['startTime'], widget.meetingInfo!['Id'], contentPrev['text']);
+                      Navigator.pop(context);
+                    },
+                    child: Text('수정', style: TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen)))
+              ]);
         });
   }
 
@@ -143,26 +120,6 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
     _speech = stt.SpeechToText();
     super.initState();
     _textEditingController.addListener(_onTextChanged);
-  }
-
-  Future<void> endZoomMeeting(int? meetingId) async {
-    var url = Uri.parse('https://api.zoom.us/v2/meetings/$meetingId/status');
-
-    var headers = {
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6InJ1MXllX2xnVE1XSElpUGlZNkc3U1EiLCJleHAiOjE3MDM4NjE5NDAsImlhdCI6MTY4NDk0MTU1Nn0.M03nmML-4E_UVC1AYPWX2e3gYIuzL7RlVTAjzF2vaa4',
-      'Content-Type': 'application/json'
-    };
-
-    var body = jsonEncode({'action': 'end'});
-
-    var response = await http.put(url, headers: headers, body: body);
-
-    if (response.statusCode == 204) {
-      print('Zoom meeting ended successfully.');
-    } else {
-      print('Failed to end Zoom meeting. Status code: ${response.statusCode}');
-    }
   }
 
   @override
@@ -220,7 +177,6 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
         _textEditingController.text = status;
       });
     });
-
     print('start meeting');
     _isListening = true;
     _listen();
@@ -296,13 +252,12 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
   Widget build(BuildContext context) {
     return Scaffold(
       //전체를 감싸는 컨테이너, 배경색을 담당
-      appBar: WidgetCommonAppbarM(appBar: AppBar(), currentPage: 'meeting', loginState: true),
       body: Container(
-        color: Colors.white,
+        color: crKeyColorB1L,
         height: double.infinity,
         //자식들을 담을 column
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(12.0),
           child: Column(
               //세로 정렬 : start( 시작점 부터 )
               mainAxisAlignment: MainAxisAlignment.start,
@@ -310,79 +265,52 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //row:현재 회의 상태 표시
-                Row(children: <Widget>[
-                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                    Text('회의명 : ${widget.meetingInfo!['meetingName']}', style: b1eb),
-                    Text(
-                      '${widget.meetingInfo!['startTime']} · 참여자 ${widget.meetingInfo!['etc'].length + 1}명',
-                      style: const TextStyle(fontFamily: 'apb', color: Colors.grey),
+                Container(
+                  color: crKeyColorB1Menu,
+                  child: Row(children: <Widget>[
+                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                      Text('${widget.meetingInfo!['meetingName']}', style: h1C),
+                      Text(
+                        '${widget.meetingInfo!['startTime']} · 참여자 ${widget.meetingInfo!['etc'].length + 1}명',
+                        style: const TextStyle(fontFamily: 'apb', color: Colors.grey),
+                      )
+                    ]),
+                    const Expanded(child: SizedBox()),
+                    Text('$currentTime', style: b1eb),
+                    const SizedBox(width: 12),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => PageFrameRanding()));
+                      },
+                      child: Text('HOME', style: TextStyle(fontSize: 15)),
+                      style: TextButton.styleFrom(
+                        primary: Colors.green,
+                        minimumSize: Size(100, 50),
+                      ),
+                    ),
+                    isRecordOn
+                        ? const Text('녹음 중', style: TextStyle(fontFamily: 'apeb', color: Colors.blueAccent))
+                        : const Text('일시 정지 중', style: TextStyle(fontFamily: 'apeb', color: Colors.redAccent)),
+                    const SizedBox(width: 8),
+                    Row(
+                      children: List<Widget>.generate(widget.meetingInfo!['etc'].length, (index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: CircleAvatar(
+                              backgroundColor: Colors.blue,
+                              radius: 16,
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
+                                child: Text(
+                                  '${talk[index][1][0]}',
+                                  style: const TextStyle(fontFamily: 'apl', fontSize: 12),
+                                ),
+                              )),
+                        );
+                      }),
                     )
                   ]),
-                  const Expanded(child: SizedBox()),
-                  Text('$currentTime', style: b1eb),
-                  const SizedBox(width: 12),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => PageFrameRanding()));
-                    },
-                    child: Text('HOME', style: TextStyle(fontSize: 15)),
-                    style: TextButton.styleFrom(
-                      primary: Colors.green,
-                      minimumSize: Size(100, 50),
-                    ),
-                  ),
-                  isRecordOn
-                      ? const Text('녹음 중', style: TextStyle(fontFamily: 'apeb', color: Colors.blueAccent))
-                      : const Text('일시 정지 중', style: TextStyle(fontFamily: 'apeb', color: Colors.redAccent)),
-                  const SizedBox(width: 8),
-                  Row(
-                    children: List<Widget>.generate(widget.meetingInfo!['etc'].length, (index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            radius: 16,
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
-                              child: Text(
-                                '${talk[index][1][0]}',
-                                style: const TextStyle(fontFamily: 'apl', fontSize: 12),
-                              ),
-                            )),
-                      );
-                    }),
-                  )
-                ]),
-                const SizedBox(height: 16),
-                Container(
-                  width: double.infinity,
-                  height: 80,
-                  decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(8)),
-                  child: Image.asset('assets/wave.png'),
                 ),
-                const SizedBox(height: 16),
-                Container(
-                    padding: const EdgeInsets.all(4.0),
-                    height: 136,
-                    child: Scrollbar(
-                      controller: agendaListViewScroller,
-                      thumbVisibility: true,
-                      //스크롤 위젯
-                      child: SingleChildScrollView(
-                          controller: agendaListViewScroller,
-                          child: Column(
-                            children: List<Widget>.generate(5, (index) {
-                              return ListTile(
-                                  dense: true,
-                                  visualDensity: const VisualDensity(vertical: -3),
-                                  title: Text(
-                                    '',
-                                    style: const TextStyle(fontFamily: 'apm', color: Colors.grey),
-                                  ),
-                                  trailing: IconButton(onPressed: () {}, icon: const Icon(Icons.close)));
-                            }),
-                          )),
-                    )),
                 const SizedBox(height: 16),
                 Container(
                   alignment: Alignment.centerLeft,
@@ -484,27 +412,9 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                       child: Container(
                         width: double.infinity,
                         height: 60,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                colors: [isRecordOn ? ccKeyColorGreen : Colors.red, ccKeyColorCyan],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight)),
-                        child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                //isRecordOn이 true일때 녹음 기능이 작동하도록 하면 될듯!
-                                isRecordOn = !isRecordOn;
-                                if (isRecordOn) {
-                                  _startListening();
-                                  _startsign();
-                                } else {
-                                  _stopsign();
-                                  stopListening();
-                                }
-                              });
-                            },
-                            icon: Icon(isRecordOn ? Icons.pause_circle_outline : Icons.play_circle_outline,
-                                size: 36, color: Colors.white)),
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(12),
+                        child: Container(decoration: BoxDecoration(color: crKeyColorB1L,borderRadius: BorderRadius.circular(32)),height: 48,),
                       ),
                     ),
                     Flexible(
@@ -521,19 +431,10 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                           borderRadius: BorderRadius.circular(50),
                         ),
                         child: TextButton(
-                          onPressed: () {
-                            //HttpOverrides.global = NoCheckCertificateHttpOverrides();
-                            print('meeting ID: ${widget.meetingId}');
-                            endZoomMeeting(widget.meetingId);
-                          },
-                          style: TextButton.styleFrom(
-                            primary: Colors.transparent,
-                            elevation: 0,
-                          ),
-                          child: Text(
-                            '회의 종료',
-                            style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
+                          onPressed: () {},
+                          style: TextButton.styleFrom(primary: Colors.transparent, elevation: 0),
+                          child: Text('회의 종료',
+                              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                         ),
                       ),
                     ),
