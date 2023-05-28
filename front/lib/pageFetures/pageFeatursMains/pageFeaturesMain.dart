@@ -147,21 +147,22 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                     FirebaseController()
                         .addMeeting(widget.myUserInfo!, startUrl!, joinUrl!, meetingName, dt.toString())
                         .then((value) {
-                          print('미팅코드 출력');
+                      print('미팅코드 출력');
                       print(value);
-                      FirebaseController().getMeetingInfo(value).then((meetingInfo){
+                      FirebaseController().getMeetingInfo(value).then((meetingInfo) {
                         print('미팅 정보 출력');
                         print(meetingInfo);
                         FeaturesMeeting().createMeeting(meetingInfo['id']);
                         if (meetingInfo != null) {
-                          FirebaseController().editPrevMeetingUser(widget.myUserInfo!['email'], meetingInfo['password']);
+                          FirebaseController()
+                              .editPrevMeetingUser(widget.myUserInfo!['email'], meetingInfo['password']);
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => PageFeatureInvite(
-                                    meetingInfo: meetingInfo,
-                                    myUserInfo: widget.myUserInfo,
-                                  )));
+                                        meetingInfo: meetingInfo,
+                                        myUserInfo: widget.myUserInfo,
+                                      )));
                         }
                       });
                     });
@@ -353,22 +354,6 @@ class _WidgetMenuBarState extends State<WidgetMenuBar> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text('연동 상태', style: h2),
               ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                      backgroundColor: crKeyColorB1MenuBtn,
-                      shadowColor: Colors.transparent),
-                  onPressed: () {},
-                  child: Row(
-                    children: <Widget>[
-                      Text('Zoom 연동', style: h3),
-                      const SizedBox(width: 4),
-                      const Icon(Icons.circle, size: 12, color: Colors.green),
-                      const Expanded(child: SizedBox()),
-                      const Icon(Icons.arrow_forward_ios_rounded, size: 16)
-                    ],
-                  )),
-              const SizedBox(height: 4),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),

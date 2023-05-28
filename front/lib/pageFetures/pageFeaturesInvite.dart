@@ -258,13 +258,12 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                                           FirebaseController()
                                               .updateMeetingClerk(value, widget.meetingInfo!['password'])
                                               .then((_) {
-                                            Navigator.push(
+                                            Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (_) => PageFeatureRecord(
                                                         meetingInfo: widget.meetingInfo,
-                                                        userInfo: myUserInfoUpdate,
-                                                        meetingId: zoomInfo)));
+                                                        userInfo: myUserInfoUpdate,)));
                                           });
                                         });
                                       });

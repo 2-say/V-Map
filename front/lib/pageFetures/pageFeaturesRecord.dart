@@ -14,11 +14,10 @@ import 'package:flutter/cupertino.dart';
 import '../widgets/widgetCommonAppbarM.dart';
 
 class PageFeatureRecord extends StatefulWidget {
-  const PageFeatureRecord({Key? key, required this.meetingInfo, required this.userInfo, required this.meetingId})
+  const PageFeatureRecord({Key? key, required this.meetingInfo, required this.userInfo})
       : super(key: key);
   final Map<String, dynamic>? meetingInfo;
   final Map<String, dynamic>? userInfo;
-  final int meetingId;
 
   @override
   State<PageFeatureRecord> createState() => _PageFeatureRecordState();
@@ -636,7 +635,10 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          FeaturesMeeting().createMeeting(widget.meetingInfo!['id']);
+                          Navigator.pop(context);
+                        },
                         style: TextButton.styleFrom(primary: Colors.transparent, elevation: 0),
                         child: const Text('회의 종료',
                             style: TextStyle(color: Colors.white, fontSize: 16, fontFamily: 'apeb')),

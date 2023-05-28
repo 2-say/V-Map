@@ -53,23 +53,34 @@ class _PageFeaturesMainFormState extends State<PageFeaturesMainForm> {
                                   child: Card(
                                       elevation: 10,
                                       child: ListTile(
-                                        onTap: (){
+                                        onTap: () {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => PageFeatureRecordReView(meetingInfo: docs, userInfo: widget.myUserInfo
-                                                  )));
+                                                  builder: (context) => PageFeatureRecordReView(
+                                                      meetingInfo: docs, userInfo: widget.myUserInfo)));
                                         },
                                         title: Text(docs!['meetingName']),
-                                        subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        subtitle: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(docs!['startTime']),
-                                            Text('${docs!['etc'][0]['userName']} 외 ${docs!['etc'].length-1}명'),
+                                            Text('${docs!['etc'][0]['userName']} 외 ${docs!['etc'].length - 1}명'),
                                           ],
                                         ),
                                       )));
                             } else if (snapshot.hasError) {
-                              return const Text('Error');
+                              return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text('불러오기 오류.',
+                                        style: TextStyle(fontSize: 32, fontFamily: 'apeb', color: crKeyColorB1F)),
+                                    Text(
+                                      '오른쪽 하단 버튼을 통해 회의를 개설,참여하세요.',
+                                      style: TextStyle(fontSize: 16, fontFamily: 'apm', color: Colors.grey.shade300),
+                                    )
+                                  ]);
                               // 기타 경우 ( 불러오는 중 )
                             } else {
                               return const CircularProgressIndicator();
@@ -78,10 +89,28 @@ class _PageFeaturesMainFormState extends State<PageFeaturesMainForm> {
                     })),
               );
             } else {
-              return Text('error');
+              return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text('아직 작성된 회의록이 없습니다.', style: TextStyle(fontSize: 32, fontFamily: 'apeb', color: crKeyColorB1F)),
+                    Text(
+                      '오른쪽 하단 버튼을 통해 회의를 개설,참여하세요.',
+                      style: TextStyle(fontSize: 16, fontFamily: 'apm', color: Colors.grey),
+                    )
+                  ]);
             }
           } else if (snapshot.hasError) {
-            return const Text('Error');
+            return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text('불러오기 오류.', style: TextStyle(fontSize: 32, fontFamily: 'apeb', color: crKeyColorB1F)),
+                  Text(
+                    '오른쪽 하단 버튼을 통해 회의를 개설,참여하세요.',
+                    style: TextStyle(fontSize: 16, fontFamily: 'apm', color: Colors.grey.shade300),
+                  )
+                ]);
             // 기타 경우 ( 불러오는 중 )
           } else {
             return const CircularProgressIndicator();

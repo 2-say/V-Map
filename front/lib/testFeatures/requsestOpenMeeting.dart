@@ -116,6 +116,24 @@ class FeaturesMeeting {
     print(response.body);
     return response.body.toString();
   }
+
+  Future<String> endMeeting(String id) async {
+    var url = Uri.parse('https://vmap.me/endMeeting?documentId=' + id);
+    DebugMessage(
+      isItPostType: true,
+      featureName: 'patchNotion',
+      dataType: 'json',
+      data: '줌 회의 종료.',
+    ).messagePost();
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+    final http.Response response = await http.get(url);
+    print('get!');
+    print(response.body);
+    return response.body.toString();
+  }
 }
 
 //

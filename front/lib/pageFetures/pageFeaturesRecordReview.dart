@@ -14,8 +14,7 @@ import 'package:flutter/cupertino.dart';
 import '../widgets/widgetCommonAppbarM.dart';
 
 class PageFeatureRecordReView extends StatefulWidget {
-  const PageFeatureRecordReView({Key? key, required this.meetingInfo, required this.userInfo})
-      : super(key: key);
+  const PageFeatureRecordReView({Key? key, required this.meetingInfo, required this.userInfo}) : super(key: key);
   final Map<String, dynamic>? meetingInfo;
   final Map<String, dynamic>? userInfo;
 
@@ -255,7 +254,7 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
         height: double.infinity,
         //자식들을 담을 column
         child: Column(
-          //세로 정렬 : start( 시작점 부터 )
+            //세로 정렬 : start( 시작점 부터 )
             mainAxisAlignment: MainAxisAlignment.start,
             //가로 정렬 : start ( 시작점 부터 )
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,7 +265,7 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                 decoration: BoxDecoration(
                     color: crKeyColorB1Menu,
                     borderRadius:
-                    const BorderRadius.only(bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24))),
+                        const BorderRadius.only(bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24))),
                 child: Row(children: <Widget>[
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                     Text('${widget.meetingInfo!['meetingName']}', style: h1C),
@@ -281,7 +280,7 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                   isRecordOn
                       ? const Text('녹음 중', style: TextStyle(fontFamily: 'apeb', color: Colors.blueAccent, fontSize: 20))
                       : const Text('일시 정지 중',
-                      style: TextStyle(fontFamily: 'apeb', color: Colors.redAccent, fontSize: 20)),
+                          style: TextStyle(fontFamily: 'apeb', color: Colors.redAccent, fontSize: 20)),
                   const SizedBox(width: 8),
                 ]),
               ),
@@ -297,7 +296,7 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: List<Widget>.generate(
                                   docs?['etc'].length,
-                                      (index) => WidgetCircleAvatarRecord(
+                                  (index) => WidgetCircleAvatarRecord(
                                       userName: docs?['etc'][index]['userName'], isClerk: index == 0 ? true : false)));
                         } else if (snapshot.hasError) {
                           return const Text('Error');
@@ -318,118 +317,118 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                                   reverse: true,
                                   child: Column(
                                       children: List.generate(docs?['contents'].length, (index) {
-                                        return docs?['contents'][index]['user'] == widget.userInfo!['userName']
-                                            ? Container(
-                                          width: double.infinity,
-                                          child: ListTile(
-                                              title: Padding(
-                                                  padding: const EdgeInsets.symmetric(vertical: 6),
-                                                  child: Container(
-                                                    child: Row(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        mainAxisAlignment: MainAxisAlignment.end,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: <Widget>[
-                                                          const SizedBox(width: 8),
-                                                          //프로필
-                                                          CircleAvatar(
-                                                              backgroundColor: Colors.white,
-                                                              child: Text(docs?['contents'][index]['user'][0],
-                                                                  style: TextStyle(
-                                                                      fontSize: 16,
-                                                                      fontFamily: 'apeb',
-                                                                      color: crKeyColorB1F))),
-                                                          const SizedBox(width: 8),
-                                                          //말풍선
-                                                          Column(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                                                  child: Text(docs?['contents'][index]['user'],
-                                                                      style: TextStyle(
-                                                                          fontSize: 16,
-                                                                          fontFamily: 'apeb',
-                                                                          color: crKeyColorB1F)),
-                                                                ),
-                                                                const SizedBox(height: 8),
-                                                                Container(
-                                                                    alignment: Alignment.centerLeft,
-                                                                    constraints: const BoxConstraints(
-                                                                        minWidth: 100, maxWidth: 240),
-                                                                    width: 240,
-                                                                    decoration: BoxDecoration(
-                                                                        borderRadius: const BorderRadius.only(
-                                                                            bottomRight: Radius.circular(12),
-                                                                            bottomLeft: Radius.circular(12),
-                                                                            topRight: Radius.circular(12)),
-                                                                        color: Colors.white),
-                                                                    padding: const EdgeInsets.all(8),
-                                                                    child: Column(
-                                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                                        children: [
-                                                                          Text(docs?['contents'][index]['text'],
-                                                                              style: const TextStyle(
-                                                                                  fontSize: 14, fontFamily: 'apm')),
-                                                                          Row(children: [
-                                                                            Expanded(child: SizedBox()),
-                                                                            Text(
-                                                                                docs?['contents'][index]['startTime'],
+                                    return docs?['contents'][index]['user'] == widget.userInfo!['userName']
+                                        ? Container(
+                                            width: double.infinity,
+                                            child: ListTile(
+                                                title: Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 6),
+                                                    child: Container(
+                                                      child: Row(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            const SizedBox(width: 8),
+                                                            //프로필
+                                                            CircleAvatar(
+                                                                backgroundColor: Colors.white,
+                                                                child: Text(docs?['contents'][index]['user'][0],
+                                                                    style: TextStyle(
+                                                                        fontSize: 16,
+                                                                        fontFamily: 'apeb',
+                                                                        color: crKeyColorB1F))),
+                                                            const SizedBox(width: 8),
+                                                            //말풍선
+                                                            Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Padding(
+                                                                    padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                                                    child: Text(docs?['contents'][index]['user'],
+                                                                        style: TextStyle(
+                                                                            fontSize: 16,
+                                                                            fontFamily: 'apeb',
+                                                                            color: crKeyColorB1F)),
+                                                                  ),
+                                                                  const SizedBox(height: 8),
+                                                                  Container(
+                                                                      alignment: Alignment.centerLeft,
+                                                                      constraints: const BoxConstraints(
+                                                                          minWidth: 100, maxWidth: 240),
+                                                                      width: 240,
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius: const BorderRadius.only(
+                                                                              bottomRight: Radius.circular(12),
+                                                                              bottomLeft: Radius.circular(12),
+                                                                              topRight: Radius.circular(12)),
+                                                                          color: Colors.white),
+                                                                      padding: const EdgeInsets.all(8),
+                                                                      child: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                                          children: [
+                                                                            Text(docs?['contents'][index]['text'],
                                                                                 style: const TextStyle(
-                                                                                    fontSize: 10,
-                                                                                    fontFamily: 'apl',
-                                                                                    color: Colors.grey)),
-                                                                          ])
-                                                                        ]))
-                                                              ]),
-                                                          PopupMenuButton<MenuType>(
-                                                              color: crKeyColorB1F,
-                                                              onSelected: (MenuType result) {
-                                                                result.toString().split('.')[1] == 'edit'
-                                                                    ? setterGoPageFeatureInvite(
-                                                                    docs?['contents'][index], index)
-                                                                    : result.toString().split('.')[1] == 'change'
-                                                                    ? print('kk')
-                                                                    : FirebaseController()
-                                                                    .deleteMeetingContents(
-                                                                    widget.meetingInfo!['password'],
-                                                                    docs?['contents'][index],
-                                                                    index)
-                                                                    .then((_) {
-                                                                  // FeaturesMeeting().deleteNotion(
-                                                                  //     docs?['contents'][index]['startTime'],
-                                                                  //     widget.meetingInfo!['Id'],
-                                                                  //     docs?['contents'][index]['text']);
-                                                                });
-                                                              },
-                                                              itemBuilder: (BuildContext buildContext) {
-                                                                return [
-                                                                  for (final value in MenuType.values)
-                                                                    PopupMenuItem(
-                                                                      value: value,
-                                                                      child: Row(
-                                                                        mainAxisSize: MainAxisSize.min,
-                                                                        children: [
-                                                                          value.toString().split('.')[1] == 'edit'
-                                                                              ? const Icon(Icons.edit,
-                                                                              color: Colors.blueAccent)
-                                                                              : value.toString().split('.')[1] ==
-                                                                              'change'
-                                                                              ? const Icon(Icons.change_circle,
-                                                                              color: Colors.green)
-                                                                              : const Icon(Icons.delete,
-                                                                              color: Colors.redAccent),
-                                                                          const SizedBox(width: 4),
-                                                                          Text(value.toString().split('.')[1]),
-                                                                        ],
-                                                                      ),
-                                                                    )
-                                                                ];
-                                                              })
-                                                        ]),
-                                                  ))),
-                                        )
-                                            : ListTile(
+                                                                                    fontSize: 14, fontFamily: 'apm')),
+                                                                            Row(children: [
+                                                                              Expanded(child: SizedBox()),
+                                                                              Text(
+                                                                                  docs?['contents'][index]['startTime'],
+                                                                                  style: const TextStyle(
+                                                                                      fontSize: 10,
+                                                                                      fontFamily: 'apl',
+                                                                                      color: Colors.grey)),
+                                                                            ])
+                                                                          ]))
+                                                                ]),
+                                                            PopupMenuButton<MenuType>(
+                                                                color: crKeyColorB1F,
+                                                                onSelected: (MenuType result) {
+                                                                  result.toString().split('.')[1] == 'edit'
+                                                                      ? setterGoPageFeatureInvite(
+                                                                          docs?['contents'][index], index)
+                                                                      : result.toString().split('.')[1] == 'change'
+                                                                          ? print('kk')
+                                                                          : FirebaseController()
+                                                                              .deleteMeetingContents(
+                                                                                  widget.meetingInfo!['password'],
+                                                                                  docs?['contents'][index],
+                                                                                  index)
+                                                                              .then((_) {
+                                                                              // FeaturesMeeting().deleteNotion(
+                                                                              //     docs?['contents'][index]['startTime'],
+                                                                              //     widget.meetingInfo!['Id'],
+                                                                              //     docs?['contents'][index]['text']);
+                                                                            });
+                                                                },
+                                                                itemBuilder: (BuildContext buildContext) {
+                                                                  return [
+                                                                    for (final value in MenuType.values)
+                                                                      PopupMenuItem(
+                                                                        value: value,
+                                                                        child: Row(
+                                                                          mainAxisSize: MainAxisSize.min,
+                                                                          children: [
+                                                                            value.toString().split('.')[1] == 'edit'
+                                                                                ? const Icon(Icons.edit,
+                                                                                    color: Colors.blueAccent)
+                                                                                : value.toString().split('.')[1] ==
+                                                                                        'change'
+                                                                                    ? const Icon(Icons.change_circle,
+                                                                                        color: Colors.green)
+                                                                                    : const Icon(Icons.delete,
+                                                                                        color: Colors.redAccent),
+                                                                            const SizedBox(width: 4),
+                                                                            Text(value.toString().split('.')[1]),
+                                                                          ],
+                                                                        ),
+                                                                      )
+                                                                  ];
+                                                                })
+                                                          ]),
+                                                    ))),
+                                          )
+                                        : ListTile(
                                             title: Padding(
                                                 padding: const EdgeInsets.symmetric(vertical: 6),
                                                 child: Row(
@@ -460,7 +459,7 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                                                         Container(
                                                             alignment: Alignment.centerLeft,
                                                             constraints:
-                                                            const BoxConstraints(minWidth: 100, maxWidth: 240),
+                                                                const BoxConstraints(minWidth: 100, maxWidth: 240),
                                                             width: 240,
                                                             decoration: BoxDecoration(
                                                                 borderRadius: const BorderRadius.only(
@@ -490,20 +489,20 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                                                           onSelected: (MenuType result) {
                                                             result.toString().split('.')[1] == 'edit'
                                                                 ? setterGoPageFeatureInvite(
-                                                                docs?['contents'][index], index)
+                                                                    docs?['contents'][index], index)
                                                                 : result.toString().split('.')[1] == 'change'
-                                                                ? print('kk')
-                                                                : FirebaseController()
-                                                                .deleteMeetingContents(
-                                                                widget.meetingInfo!['password'],
-                                                                docs?['contents'][index],
-                                                                index)
-                                                                .then((_) {
-                                                              // FeaturesMeeting().deleteNotion(
-                                                              //     docs?['contents'][index]['startTime'],
-                                                              //     widget.meetingInfo!['Id'],
-                                                              //     docs?['contents'][index]['text']);
-                                                            });
+                                                                    ? print('kk')
+                                                                    : FirebaseController()
+                                                                        .deleteMeetingContents(
+                                                                            widget.meetingInfo!['password'],
+                                                                            docs?['contents'][index],
+                                                                            index)
+                                                                        .then((_) {
+                                                                        // FeaturesMeeting().deleteNotion(
+                                                                        //     docs?['contents'][index]['startTime'],
+                                                                        //     widget.meetingInfo!['Id'],
+                                                                        //     docs?['contents'][index]['text']);
+                                                                      });
                                                           },
                                                           itemBuilder: (BuildContext buildContext) {
                                                             return [
@@ -515,12 +514,12 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                                                                     children: [
                                                                       value.toString().split('.')[1] == 'edit'
                                                                           ? const Icon(Icons.edit,
-                                                                          color: Colors.blueAccent)
+                                                                              color: Colors.blueAccent)
                                                                           : value.toString().split('.')[1] == 'change'
-                                                                          ? const Icon(Icons.change_circle,
-                                                                          color: Colors.green)
-                                                                          : const Icon(Icons.delete,
-                                                                          color: Colors.redAccent),
+                                                                              ? const Icon(Icons.change_circle,
+                                                                                  color: Colors.green)
+                                                                              : const Icon(Icons.delete,
+                                                                                  color: Colors.redAccent),
                                                                       const SizedBox(width: 4),
                                                                       Text(value.toString().split('.')[1]),
                                                                     ],
@@ -529,7 +528,7 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                                                             ];
                                                           })
                                                     ])));
-                                      })));
+                                  })));
                             } else if (snapshot.hasError) {
                               return const Text('Error');
                               // 기타 경우 ( 불러오는 중 )
@@ -555,33 +554,33 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                             const SizedBox(width: 8),
                             Expanded(
                                 child: Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 16, 4),
-                                  child: TextField(
-                                    autofocus: true,
-                                    style: TextStyle(fontFamily: 'apeb', color: crKeyColorB1F),
-                                    controller: manualTextController,
-                                    onChanged: (val) {
-                                      manualText = val;
-                                    },
-                                    focusNode: myFocusNode,
-                                    onSubmitted: (val) {
-                                      FirebaseController().updateMeetingContents(
-                                          widget.meetingInfo!['password'],
-                                          widget.userInfo!['userName'],
-                                          DateTime.now().toString(),
-                                          DateTime.now().toString(),
-                                          manualText);
-                                      manualTextController.clear();
-                                      manualText = '';
-                                      myFocusNode.requestFocus();
-                                    },
-                                    decoration: const InputDecoration(
-                                        border: InputBorder.none,
-                                        focusedBorder: InputBorder.none,
-                                        hintText: '수동 기록할 내용 입력',
-                                        hintStyle: TextStyle(color: Colors.white)),
-                                  ),
-                                )),
+                              padding: EdgeInsets.fromLTRB(0, 0, 16, 4),
+                              child: TextField(
+                                autofocus: true,
+                                style: TextStyle(fontFamily: 'apeb', color: crKeyColorB1F),
+                                controller: manualTextController,
+                                onChanged: (val) {
+                                  manualText = val;
+                                },
+                                focusNode: myFocusNode,
+                                onSubmitted: (val) {
+                                  FirebaseController().updateMeetingContents(
+                                      widget.meetingInfo!['password'],
+                                      widget.userInfo!['userName'],
+                                      DateTime.now().toString(),
+                                      DateTime.now().toString(),
+                                      manualText);
+                                  manualTextController.clear();
+                                  manualText = '';
+                                  myFocusNode.requestFocus();
+                                },
+                                decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    hintText: '수동 기록할 내용 입력',
+                                    hintStyle: TextStyle(color: Colors.white)),
+                              ),
+                            )),
                             IconButton(
                                 onPressed: () {
                                   FirebaseController().updateMeetingContents(
@@ -613,10 +612,12 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                         style: TextButton.styleFrom(primary: Colors.transparent, elevation: 0),
-                        child: const Text('닫기',
-                            style: TextStyle(color: Colors.white, fontSize: 16, fontFamily: 'apeb')),
+                        child:
+                            const Text('닫기', style: TextStyle(color: Colors.white, fontSize: 16, fontFamily: 'apeb')),
                       ),
                     ),
                   ),
@@ -641,35 +642,35 @@ class WidgetCircleAvatarRecord extends StatelessWidget {
   Widget build(BuildContext context) {
     return isClerk == true
         ? Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Container(
-            decoration: BoxDecoration(color: Colors.redAccent, borderRadius: BorderRadius.circular(4.0)),
-            height: 20,
-            width: 24,
-            child: Text('서기', style: TextStyle(fontSize: 12, fontFamily: 'aepb', color: crKeyColorB1F))),
-        const SizedBox(width: 4.0),
-        Text(
-          userName,
-          style: const TextStyle(fontFamily: 'apm', fontSize: 12, color: Colors.white),
-        ),
-        const SizedBox(width: 8.0)
-      ],
-    )
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                  decoration: BoxDecoration(color: Colors.redAccent, borderRadius: BorderRadius.circular(4.0)),
+                  height: 20,
+                  width: 24,
+                  child: Text('서기', style: TextStyle(fontSize: 12, fontFamily: 'aepb', color: crKeyColorB1F))),
+              const SizedBox(width: 4.0),
+              Text(
+                userName,
+                style: const TextStyle(fontFamily: 'apm', fontSize: 12, color: Colors.white),
+              ),
+              const SizedBox(width: 8.0)
+            ],
+          )
         : Row(
-      children: <Widget>[
-        CircleAvatar(
-          radius: 12,
-          backgroundColor: Colors.blueAccent,
-          child: Text(userName[0], style: const TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.white)),
-        ),
-        const SizedBox(width: 4.0),
-        Text(
-          userName,
-          style: const TextStyle(fontFamily: 'apm', fontSize: 12, color: Colors.white),
-        ),
-        const SizedBox(width: 8.0)
-      ],
-    );
+            children: <Widget>[
+              CircleAvatar(
+                radius: 12,
+                backgroundColor: Colors.blueAccent,
+                child: Text(userName[0], style: const TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.white)),
+              ),
+              const SizedBox(width: 4.0),
+              Text(
+                userName,
+                style: const TextStyle(fontFamily: 'apm', fontSize: 12, color: Colors.white),
+              ),
+              const SizedBox(width: 8.0)
+            ],
+          );
   }
 }

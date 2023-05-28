@@ -234,8 +234,7 @@ class _PageFeatureInviteCommonState extends State<PageFeatureInviteCommon> {
                                           MaterialPageRoute(
                                               builder: (_) => PageFeatureRecord(
                                                   meetingInfo: widget.meetingInfo,
-                                                  userInfo: widget.myUserInfo,
-                                                  meetingId: zoomInfo)));
+                                                  userInfo: widget.myUserInfo)));
                                     },
                                     child: const Text('Start Meeting!',
                                         style:

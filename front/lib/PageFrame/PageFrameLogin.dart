@@ -64,6 +64,7 @@ class _PageFrameLoginState extends State<PageFrameLogin> {
                     Text('아이디', style: b1),
                     const SizedBox(height: 4),
                     TextField(
+                        autofocus: true,
                         style: TextStyle(color: crKeyColorB1F, fontFamily: 'seqm'),
                         onChanged: (val) {
                           setState(() {
