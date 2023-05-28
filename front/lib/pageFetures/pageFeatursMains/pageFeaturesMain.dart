@@ -210,7 +210,8 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                     return WidgetMenuBar(myUserInfo: docs);
                   }
                 }),
-            Expanded(child: PageFeaturesMainForm(myUserInfo: widget.myUserInfo))
+            Expanded(
+                child: SizedBox(height: double.infinity, child: PageFeaturesMainForm(myUserInfo: widget.myUserInfo)))
           ],
         ));
   }

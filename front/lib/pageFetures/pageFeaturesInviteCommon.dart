@@ -133,7 +133,7 @@ class _PageFeatureInviteCommonState extends State<PageFeatureInviteCommon> {
                   decoration: BoxDecoration(
                       color: crKeyColorB1Menu,
                       borderRadius:
-                      const BorderRadius.only(bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24))),
+                          const BorderRadius.only(bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24))),
                   child: Row(children: <Widget>[
                     Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                       Text('${widget.meetingInfo!['meetingName']}', style: h1C),
@@ -158,7 +158,7 @@ class _PageFeatureInviteCommonState extends State<PageFeatureInviteCommon> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: List<Widget>.generate(
                                     docs?['etc'].length,
-                                        (index) => WidgetCircleAvatar(
+                                    (index) => WidgetCircleAvatar(
                                         userName: docs?['etc'][index]['userName'],
                                         isClerk: index == 0 ? true : false)));
                           } else if (snapshot.hasError) {
@@ -193,19 +193,19 @@ class _PageFeatureInviteCommonState extends State<PageFeatureInviteCommon> {
                                           style: TextStyle(fontFamily: 'apeb', fontSize: 20, color: crKeyColorB1F)),
                                       docs!['zoomUrlClerk'] == ''
                                           ? const Text(
-                                        '아직 개설되지 않았습니다.',
-                                        style: TextStyle(color: Colors.white),
-                                      )
+                                              '아직 개설되지 않았습니다.',
+                                              style: TextStyle(color: Colors.white),
+                                            )
                                           : TextButton(
-                                          onPressed: () async {
-                                            final url = Uri.parse(docs!['zoomUrlEtc']);
-                                            if (await canLaunch(url.toString())) {
-                                              await launch(url.toString(), forceSafariVC: false);
-                                            }
-                                          },
-                                          child: const Text('바로가기',
-                                              style: TextStyle(
-                                                  fontFamily: 'apeb', fontSize: 16, color: Colors.blueAccent)))
+                                              onPressed: () async {
+                                                final url = Uri.parse(docs!['zoomUrlEtc']);
+                                                if (await canLaunch(url.toString())) {
+                                                  await launch(url.toString(), forceSafariVC: false);
+                                                }
+                                              },
+                                              child: const Text('바로가기',
+                                                  style: TextStyle(
+                                                      fontFamily: 'apeb', fontSize: 16, color: Colors.blueAccent)))
                                     ]);
                                   } else if (snapshot.hasError) {
                                     return const Text('Error');
@@ -229,39 +229,17 @@ class _PageFeatureInviteCommonState extends State<PageFeatureInviteCommon> {
                                         colors: [Colors.indigo, Colors.green])),
                                 child: TextButton(
                                     onPressed: () async {
-                                      Map<String, dynamic> myUserInfoUpdate;
-                                      print('check :zoomInfo-$zoomInfo');
-                                      HttpOverrides.global = NoCheckCertificateHttpOverrides();
-                                      FeaturesMeeting()
-                                          .postNotion(
-                                          widget.myUserInfo!['id'], widget.meetingInfo!['meetingName'], dummyUsers)
-                                          .then((value) {
-                                        print('debug kk');
-                                        print(value);
-                                        String pageId = value;
-                                        FirebaseController()
-                                            .getUser(widget.myUserInfo!['userName'], widget.myUserInfo!['email'])
-                                            .then((value) async {
-                                          await FirebaseController().updateUser(
-                                              value!['email'], value!['accessToken'], value!['dataBaseId'], pageId);
-                                          myUserInfoUpdate = value;
-                                          FirebaseController()
-                                              .updateMeetingClerk(value, widget.meetingInfo!['password'])
-                                              .then((_) {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (_) => PageFeatureRecord(
-                                                        meetingInfo: widget.meetingInfo,
-                                                        userInfo: myUserInfoUpdate,
-                                                        meetingId: zoomInfo)));
-                                          });
-                                        });
-                                      });
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) => PageFeatureRecord(
+                                                  meetingInfo: widget.meetingInfo,
+                                                  userInfo: widget.myUserInfo,
+                                                  meetingId: zoomInfo)));
                                     },
                                     child: const Text('Start Meeting!',
                                         style:
-                                        TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold))),
+                                            TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold))),
                               ),
                             )
                           ]),
@@ -287,40 +265,40 @@ class WidgetCircleAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return isClerk == true
         ? Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Container(
-            decoration: BoxDecoration(color: Colors.redAccent, borderRadius: BorderRadius.circular(4.0)),
-            height: 24,
-            width: 30,
-            alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
-              child: Text('서기', style: TextStyle(fontSize: 12, fontFamily: 'apeb', color: crKeyColorB1F)),
-            )),
-        const SizedBox(width: 4.0),
-        Text(
-          userName,
-          style: const TextStyle(fontFamily: 'apm', fontSize: 12, color: Colors.white),
-        ),
-        const SizedBox(width: 8.0)
-      ],
-    )
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                  decoration: BoxDecoration(color: Colors.redAccent, borderRadius: BorderRadius.circular(4.0)),
+                  height: 24,
+                  width: 30,
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
+                    child: Text('서기', style: TextStyle(fontSize: 12, fontFamily: 'apeb', color: crKeyColorB1F)),
+                  )),
+              const SizedBox(width: 4.0),
+              Text(
+                userName,
+                style: const TextStyle(fontFamily: 'apm', fontSize: 12, color: Colors.white),
+              ),
+              const SizedBox(width: 8.0)
+            ],
+          )
         : Row(
-      children: <Widget>[
-        CircleAvatar(
-          radius: 12,
-          backgroundColor: Colors.blueAccent,
-          child: Text(userName[0], style: const TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.white)),
-        ),
-        const SizedBox(width: 4.0),
-        Text(
-          userName,
-          style: const TextStyle(fontFamily: 'apm', fontSize: 12, color: Colors.white),
-        ),
-        const SizedBox(width: 8.0)
-      ],
-    );
+            children: <Widget>[
+              CircleAvatar(
+                radius: 12,
+                backgroundColor: Colors.blueAccent,
+                child: Text(userName[0], style: const TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.white)),
+              ),
+              const SizedBox(width: 4.0),
+              Text(
+                userName,
+                style: const TextStyle(fontFamily: 'apm', fontSize: 12, color: Colors.white),
+              ),
+              const SizedBox(width: 8.0)
+            ],
+          );
   }
 }
 
@@ -332,7 +310,7 @@ class WidgetCardRedirectionCode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      //크기 정의 먼저
+        //크기 정의 먼저
         height: 68,
         // 그 다음 정렬 여부 , padding or margin
         alignment: Alignment.center,
