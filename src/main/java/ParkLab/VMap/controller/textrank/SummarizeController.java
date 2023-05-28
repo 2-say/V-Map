@@ -12,8 +12,8 @@ import java.net.http.HttpResponse;
 public class SummarizeController {
     @GetMapping("/summarize")
     @ResponseBody
-    public String summarize(@RequestParam("documentId") String documentId) {
-        String apiUrl = "http://127.0.0.1:5000/summarize?documentId=" + documentId;
+    public String summarize(@RequestParam("pageId") String pageId) {
+        String apiUrl = "http://127.0.0.1:5000/summarize?pageId=" + pageId;
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()

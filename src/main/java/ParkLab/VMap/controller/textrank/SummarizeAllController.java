@@ -9,11 +9,11 @@ import java.net.http.HttpResponse;
 
 @RestController
 @CrossOrigin(origins = "*")
-public class AgendaController {
-    @GetMapping("/agenda")
+public class SummarizeAllController {
+    @GetMapping("/summarizeAll")
     @ResponseBody
     public String agenda(@RequestParam ("pageId") String pageId) {
-        String apiUrl = "http://127.0.0.1:5000/agenda?pageId=" + pageId;
+        String apiUrl = "http://127.0.0.1:5000/summarizeAll?pageId=" + pageId;
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()

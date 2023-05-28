@@ -73,4 +73,26 @@ public class FirebaseMeetingsServiceImpl {
 
         log.info(apiFuture.get().getUpdateTime().toString());
     }
+
+    public String getFirebaseMeetingUrl(String documentId) throws Exception {
+        Firestore db = FirestoreClient.getFirestore();
+
+        // 필드 get
+        DocumentSnapshot documentSnapshot = db.
+                collection(COLLECTION_NAME_MEETINGS).
+                document(documentId).
+                get().
+                get();
+
+        if (documentSnapshot.exists()) {
+            Map<String, Object> data = documentSnapshot.getData();
+            if (data != null) {
+                return ((String) data.get("zoomUrlClerk"));
+            }
+        }
+
+        return null;
+    }
+
+
 }

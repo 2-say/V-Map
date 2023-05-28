@@ -1,6 +1,6 @@
 package ParkLab.VMap.controller.zoom;
 
-import ParkLab.VMap.model.Service.zoom.ZoomMeetingCreatorServiceImpl;
+import ParkLab.VMap.model.Service.zoom.ZoomMeetingServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ZoomMeetingCreateController {
-    private ZoomMeetingCreatorServiceImpl zoomMeetingCreatorService;
+    private ZoomMeetingServiceImpl zoomMeetingCreatorService;
     public ZoomMeetingCreateController() {
-        this.zoomMeetingCreatorService = new ZoomMeetingCreatorServiceImpl();
+        this.zoomMeetingCreatorService = new ZoomMeetingServiceImpl();
     }
     @ResponseBody
     @GetMapping("/createMeeting")

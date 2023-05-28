@@ -26,7 +26,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ZoomMeetingCreatorServiceImpl {
+public class ZoomMeetingServiceImpl {
     private final String apiKey = "OQASXCsHTM-8G9IUVfdNCw";
     private final String apiSecret = "ni28glTXtwdRBz3Kcoeqw2KAgrWMcPJuBXGB";
     private String startUrl;
@@ -97,9 +97,12 @@ public class ZoomMeetingCreatorServiceImpl {
         }
     }
 
-    public void endZoomMeeting() {
-//        String url = "https://api.zoom.us/v2/meetings/" + fullMeetingId + "/status";
-        String url = "https://api.zoom.us/v2/meetings/me/status";
+    public void endZoomMeeting(String documentId) throws Exception {
+        this.documentId = documentId;
+        String fullMeetingId = getMeetingUrl();
+
+        String url = "https://api.zoom.us/v2/meetings/" + fullMeetingId + "/status";
+
         HttpPut request = new HttpPut(url);
         request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ik9RQVNYQ3NIVE0tOEc5SVVWZmROQ3ciLCJleHAiOjE2ODUyNjU3NTAsImlhdCI6MTY4NTI2MDM1MX0.BFPzCYKiDJSOvCZoXiQNsyZ2WXzChy0vlbJyxBFNyFA");
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -135,5 +138,9 @@ public class ZoomMeetingCreatorServiceImpl {
         updates.put("zoomUrlClerk", startUrl);
         updates.put("zoomUrlEtc", joinUrl);
         firebaseMeetingsService.updateFirebaseMeetingUrl(documentId, updates);
+    }
+
+    private String getMeetingUrl() throws Exception {
+        return firebaseMeetingsService.getFirebaseMeetingUrl(documentId);
     }
 }
