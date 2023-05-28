@@ -91,7 +91,7 @@ public class FirebaseMeetingsServiceImpl {
             }
         }
 
-        return null;
+        return 0;
     }
 
 
