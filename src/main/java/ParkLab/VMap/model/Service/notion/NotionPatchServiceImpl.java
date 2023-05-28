@@ -20,9 +20,10 @@ public class NotionPatchServiceImpl {
     private final RestTemplate restTemplate = new RestTemplate();
     FirebaseMeetingsServiceImpl firebaseMeetingsService = new FirebaseMeetingsServiceImpl();
     public void patchToNotion(String documentId, String requestBody) throws Exception {
-
+        System.out.println("documentId = " + documentId);
         // firebase 로 부터 user 의 정보를 받아옴
         ClerkInfo clerkInfo = firebaseMeetingsService.getClerkInfo(documentId);
+        System.out.println("clerkInfo = " + clerkInfo);
         String accessToken = clerkInfo.getAccessToken();
         String pageId = clerkInfo.getPageId();
 
