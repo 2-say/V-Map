@@ -75,11 +75,12 @@ class FeaturesMeeting {
     return response.body.toString();
   }
 
-  Future<String> editNotion(String time, String id, String content) async {
+  Future<String> editNotion(String time, String id, String content,String userName) async {
     var url = Uri.parse('https://vmap.me/editNotion?documentId=' + id);
     Map<String, Object> data = {
       "time": time,
       "contents": content,
+      "userName": userName,
     };
     DebugMessage(
       isItPostType: true,

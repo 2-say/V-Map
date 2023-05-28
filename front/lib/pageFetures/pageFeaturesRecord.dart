@@ -94,7 +94,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                       Navigator.pop(context);
                       FirebaseController().editMeetingContents(widget.meetingInfo!['password'], contentPrev, index);
                       FeaturesMeeting()
-                          .editNotion(contentPrev['startTime'], widget.meetingInfo!['id'], contentPrev['text']);
+                          .editNotion(contentPrev['startTime'], widget.meetingInfo!['id'], contentPrev['text'],widget.userInfo!['userName']);
                     },
                     child: Text('수정', style: TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen)))
               ]);
