@@ -153,6 +153,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                         print('미팅 정보 출력');
                         print(meetingInfo);
                         if (meetingInfo != null) {
+                          FirebaseController().editPrevMeetingUser(widget.myUserInfo!['email'], meetingInfo['password']);
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
