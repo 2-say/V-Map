@@ -54,7 +54,7 @@ public class NotionWriterServiceImpl {
     }
 
     private void createTxtFile(String documentId) throws IOException {
-        String directoryPath = "/home/lab329/VMap/data/";
+        String directoryPath = "/home/VMap/data/";
         String fileName = documentId + ".txt";
         File directory = new File(directoryPath);
         File file = new File(directoryPath + fileName);

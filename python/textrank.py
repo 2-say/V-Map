@@ -57,7 +57,7 @@ def main(argv):
     #         f.write("%s\n" % sent)
 
     # for server
-    with open('home/lab329/VMap/data/result.txt', 'w', encoding='utf-8') as f:
+    with open('home/VMap/data/result.txt', 'w', encoding='utf-8') as f:
         for sent in sents:
             f.write("%s\n" % sent)
 

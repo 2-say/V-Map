@@ -19,8 +19,8 @@ public class TextRankController {
 
         /*server test*/
         command[0] = "/usr/bin/python3";
-        command[1] = "/home/lab329/VMap/python/textrank.py";
-        command[2] = "/home/lab329/VMap/data/test.txt";
+        command[1] = "/home/VMap/data/python/textrank.py";
+        command[2] = "/home/VMap/data/test.txt";
 
         CallTextRank textRank = new CallTextRank(command);
         try {

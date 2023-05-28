@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @Scope("prototype")
-@CrossOrigin(origins = "*")
 public class NotionWriteController {
 
     private NotionWriterServiceImpl notionWriterServiceImpl;
@@ -22,6 +21,7 @@ public class NotionWriteController {
     }
 
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/postNotion")
     @ResponseBody
     public String postNotion(@RequestParam("documentId") String documentId, @RequestBody String requestBody) throws Exception {

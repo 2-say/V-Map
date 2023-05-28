@@ -13,7 +13,7 @@
 
     public class NotionAuthServiceImpl {
         // for server
-        private static final String callBackUrl = "https://218.150.182.202:32929/notionApiTest";//The url defined in WSO2
+        private static final String callBackUrl = "https://vmap.me/notionApiTest";//The url defined in WSO2
 
         // for local
     //    private static final String callBackUrl = "https://localhost:32929/notionApiTest";//The url defined in WSO2
