@@ -3,11 +3,8 @@ package ParkLab.VMap.model.Service.notion;
 import ParkLab.VMap.model.Service.DecodeJson.DecordJsonService;
 import ParkLab.VMap.model.Service.firebase.FirebaseMeetingsServiceImpl;
 import ParkLab.VMap.model.data.ClerkInfo;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import okhttp3.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -15,12 +12,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+
+
 
 public class NotionEditServiceImpl {
     FirebaseMeetingsServiceImpl firebaseMeetingsServiceImpl = new FirebaseMeetingsServiceImpl();
     private String contents;
+    private String user;
     private String accessToken;
     private String pageId;
     private String extractedContents;
@@ -56,15 +54,113 @@ public class NotionEditServiceImpl {
         String NOTION_API_URL = "https://api.notion.com/v1/blocks/" + blockId;
 
         OkHttpClient client = new OkHttpClient();
-        // 변수로 전달되는 값을 대체하여 JSON 객체 생성
-        String content = extractedContents + " : " + contents;
-        JSONObject jsonBody = new JSONObject();
-        JSONObject richText = new JSONObject();
-        richText.put("type", "text");
-        richText.put("text", new JSONObject().put("content", content));
-        jsonBody.put("paragraph", new JSONObject().put("rich_text", new JSONObject[]{richText}));
 
-        RequestBody requestBody = RequestBody.create(JSON, jsonBody.toString());
+
+
+
+
+        String json = "{\n" +
+                "    \"callout\": {\n" +
+                "        \"rich_text\": [\n" +
+                "            {\n" +
+                "                \"type\": \"text\",\n" +
+                "                \"text\": {\n" +
+                "                    \"content\": \"[\",\n" +
+                "                    \"link\": null\n" +
+                "                },\n" +
+                "                \"annotations\": {\n" +
+                "                    \"bold\": false,\n" +
+                "                    \"italic\": false,\n" +
+                "                    \"strikethrough\": false,\n" +
+                "                    \"underline\": false,\n" +
+                "                    \"code\": false,\n" +
+                "                    \"color\": \"default\"\n" +
+                "                },\n" +
+                "                \"plain_text\": \"[\",\n" +
+                "                \"href\": null\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"type\": \"text\",\n" +
+                "                \"text\": {\n" +
+                "                    \"content\": \"  "  + this.time + "\",\n" +
+                "                    \"link\": null\n" +
+                "                },\n" +
+                "                \"annotations\": {\n" +
+                "                    \"bold\": false,\n" +
+                "                    \"italic\": false,\n" +
+                "                    \"strikethrough\": false,\n" +
+                "                    \"underline\": false,\n" +
+                "                    \"code\": false,\n" +
+                "                    \"color\": \"orange_background\"\n" +
+                "                },\n" +
+                "                \"plain_text\": \"  " + this.time   + "\",\n" +
+                "                \"href\": null\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"type\": \"text\",\n" +
+                "                \"text\": {\n" +
+                "                    \"content\": \"] \",\n" +
+                "                    \"link\": null\n" +
+                "                },\n" +
+                "                \"annotations\": {\n" +
+                "                    \"bold\": false,\n" +
+                "                    \"italic\": false,\n" +
+                "                    \"strikethrough\": false,\n" +
+                "                    \"underline\": false,\n" +
+                "                    \"code\": false,\n" +
+                "                    \"color\": \"default\"\n" +
+                "                },\n" +
+                "                \"plain_text\": \"] \",\n" +
+                "                \"href\": null\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"type\": \"text\",\n" +
+                "                \"text\": {\n" +
+                "                    \"content\": \" " +  this.user + " \",\n" +
+                "                    \"link\": null\n" +
+                "                },\n" +
+                "                \"annotations\": {\n" +
+                "                    \"bold\": true,\n" +
+                "                    \"italic\": false,\n" +
+                "                    \"strikethrough\": false,\n" +
+                "                    \"underline\": false,\n" +
+                "                    \"code\": false,\n" +
+                "                    \"color\": \"default\"\n" +
+                "                },\n" +
+                "                \"plain_text\": \" "+ this.user + " \",\n" +
+                "                \"href\": null\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"type\": \"text\",\n" +
+                "                \"text\": {\n" +
+                "                    \"content\": \" : "+ this.contents + " \",\n" +
+                "                    \"link\": null\n" +
+                "                },\n" +
+                "                \"annotations\": {\n" +
+                "                    \"bold\": false,\n" +
+                "                    \"italic\": false,\n" +
+                "                    \"strikethrough\": false,\n" +
+                "                    \"underline\": false,\n" +
+                "                    \"code\": false,\n" +
+                "                    \"color\": \"default\"\n" +
+                "                },\n" +
+                "                \"plain_text\": \" :" + this.contents +" \",\n" +
+                "                \"href\": null\n" +
+                "            }\n" +
+                "        ],\n" +
+                "        \"icon\": {\n" +
+                "            \"type\": \"emoji\",\n" +
+                "            \"emoji\": \"💬\"\n" +
+                "        },\n" +
+                "        \"color\": \"gray_background\"\n" +
+                "    }\n" +
+                "}";
+
+
+
+
+
+        RequestBody requestBody = RequestBody.create(JSON, json);
 
         Request request = new Request.Builder()
                 .url(NOTION_API_URL)
@@ -79,7 +175,7 @@ public class NotionEditServiceImpl {
             if (response.isSuccessful()) {
                 System.out.println("PATCH 요청이 성공적으로 전송되었습니다.");
             } else {
-                System.out.println("PATCH 요청이 실패하였습니다. 응답 코드: " + response.code());
+                System.out.println("PATCH 요청이 실패하였습니다. 응답 코드: " + response.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -89,8 +185,6 @@ public class NotionEditServiceImpl {
 
     public String retrieveNotionBlock() {
 
-        //액세스 토큰
-        //pageid-필요
         String notionVersion = "2021-08-16";
 
         String urlStr = "https://api.notion.com/v1/blocks/" + pageId + "/children";
@@ -110,17 +204,32 @@ public class NotionEditServiceImpl {
                     response.append(inputLine);
                 }
                 in.close();
-                System.out.println(response.toString());
 
-                Map<String,String> blockid = findIdAndContentByTime(response.toString());
-                System.out.print(blockid);
-                String content = blockid.get("content");
-                String[] parts = content.split(" : ");
-                extractedContents = parts[0];
+                JSONObject data = new JSONObject(response.toString());
+                String formattedJsonString = data.toString(4);
+                JSONObject data1 = new JSONObject(formattedJsonString);
 
-                return blockid.get("id");
+                JSONArray results = data1.getJSONArray("results");
 
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject block = results.getJSONObject(i);
+                    String blockType = block.getString("type");
 
+                    if (blockType.equals("callout")) {
+                        JSONArray richText = block.getJSONObject("callout").getJSONArray("text");
+
+                        for (int j = 0; j < richText.length(); j++) {
+                            JSONObject text = richText.getJSONObject(j);
+                            String content = text.getJSONObject("text").getString("content");
+
+                            if (content.contains(this.time)) {  //해당 시간값으로 찾는 부분
+                                String blockId = block.getString("id");
+                                System.out.println("Block ID: " + blockId);
+                                return blockId;
+                            }
+                        }
+                    }
+                }
 
             } else {
 //                System.out.println("Error - Response Code: " + responseCode);
@@ -135,41 +244,6 @@ public class NotionEditServiceImpl {
     }
 
 
-    public Map<String, String> findIdAndContentByTime(String jsonString) {
-        JsonParser parser = new JsonParser();
-        JsonElement jsonElement = parser.parse(jsonString);
-
-        // 전체 JSON에서 results 배열 가져오기
-        JsonArray results = jsonElement.getAsJsonObject().getAsJsonArray("results");
-        System.out.println("results = " + results);
-        // results 배열을 순회하며 content 값이 주어진 시간인 경우 해당 id와 content 반환
-        for (JsonElement resultElement : results) {
-            JsonObject resultObject = resultElement.getAsJsonObject();
-            String id = resultObject.get("id").getAsString();
-            
-            // content 값이 주어진 시간과 동일한 경우 id와 content 반환
-            if (resultObject.has("paragraph")) {
-                JsonObject paragraphObject = resultObject.getAsJsonObject("paragraph");
-                JsonArray textArray = paragraphObject.getAsJsonArray("text");
-                StringBuilder contentBuilder = new StringBuilder();
-                for (JsonElement textElement : textArray) {
-                    JsonObject textObject = textElement.getAsJsonObject();
-                    String content = textObject.get("plain_text").getAsString();
-                    contentBuilder.append(content);
-                }
-                String content = contentBuilder.toString();
-                if (content.contains(time)) {
-                    Map<String, String> result = new HashMap<>();
-                    result.put("id", id);
-                    result.put("content", content);
-                    return result;
-                }
-            }
-        }
-
-        return null; // 해당 시간을 찾지 못한 경우 null 반환
-    }
-
     public void setDocumentId(String documentId, String requestBody) throws Exception {
         System.out.println("documentId = " + documentId);
         ClerkInfo clerkInfo = firebaseMeetingsServiceImpl.getClerkInfo(documentId);
@@ -178,12 +252,13 @@ public class NotionEditServiceImpl {
 
         String contents = decodeJsonService.getContents();
         String time = decodeJsonService.getTime();
+        String user = decodeJsonService.getUser();
 
         System.out.println("contents = " + contents);
         System.out.println("time = " + time);
         
         this.contents = contents;
-
+        this.user = user ;
         this.accessToken = clerkInfo.getAccessToken();
         this.pageId = clerkInfo.getPageId();
         this.time = time;
