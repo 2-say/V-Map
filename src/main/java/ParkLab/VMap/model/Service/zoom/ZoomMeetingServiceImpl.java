@@ -31,7 +31,7 @@ public class ZoomMeetingServiceImpl {
     private final String apiSecret = "ni28glTXtwdRBz3Kcoeqw2KAgrWMcPJuBXGB";
     private String startUrl;
     private String joinUrl;
-    private int meetingId;
+    private String meetingId;
     private String documentId;
     FirebaseMeetingsServiceImpl firebaseMeetingsService = new FirebaseMeetingsServiceImpl();
 
@@ -78,7 +78,7 @@ public class ZoomMeetingServiceImpl {
                 JsonObject responseData = new Gson().fromJson(responseBody, JsonObject.class);
                 startUrl = responseData.get("start_url").getAsString();
                 joinUrl = responseData.get("join_url").getAsString();
-                meetingId = responseData.get("id").getAsInt();
+                meetingId = responseData.get("id").getAsString();
 
                 String startTimeString = responseData.get("start_time").getAsString();
                 LocalDateTime startTime = LocalDateTime.parse(startTimeString, DateTimeFormatter.ISO_DATE_TIME);
@@ -100,7 +100,7 @@ public class ZoomMeetingServiceImpl {
 
     public void endZoomMeeting(String documentId) throws Exception {
         this.documentId = documentId;
-        int endMeetingId = getMeetingId();
+        String endMeetingId = getMeetingId();
 
         String url = "https://api.zoom.us/v2/meetings/" + endMeetingId + "/status";
 
@@ -142,7 +142,7 @@ public class ZoomMeetingServiceImpl {
         firebaseMeetingsService.updateFirebaseMeetingUrl(documentId, updates);
     }
 
-    private int getMeetingId() throws Exception {
+    private String getMeetingId() throws Exception {
         return firebaseMeetingsService.getFirebaseMeetingId(documentId);
     }
 }

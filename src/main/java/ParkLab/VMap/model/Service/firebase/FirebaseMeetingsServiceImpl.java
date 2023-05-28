@@ -74,7 +74,7 @@ public class FirebaseMeetingsServiceImpl {
         log.info(apiFuture.get().getUpdateTime().toString());
     }
 
-    public int getFirebaseMeetingId(String documentId) throws Exception {
+    public String getFirebaseMeetingId(String documentId) throws Exception {
         Firestore db = FirestoreClient.getFirestore();
 
         // 필드 get
@@ -87,11 +87,11 @@ public class FirebaseMeetingsServiceImpl {
         if (documentSnapshot.exists()) {
             Map<String, Object> data = documentSnapshot.getData();
             if (data != null) {
-                return ((int) data.get("zoomMeetingId"));
+                return ((String) data.get("zoomMeetingId"));
             }
         }
 
-        return 0;
+        return null;
     }
 
 
