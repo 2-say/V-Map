@@ -35,17 +35,129 @@ public class NotionPatchServiceImpl {
         System.out.printf("시간은 ? %s",time);
 
         String url = "https://api.notion.com/v1/blocks/"+pageId+"/children/";
+//        String json = "{\n" +
+//                "   \"children\": [\n" +
+//                "      {\n" +
+//                "         \"object\": \"block\",\n" +
+//                "         \"type\": \"paragraph\",\n" +
+//                "         \"paragraph\": {\n" +
+//                "            \"rich_text\": [{ \"type\": \"text\", \"text\": { \"content\": \"["+time+"] "+user+" : "+contents+"\" } }]\n" +
+//                "         }\n" +
+//                "      }" +
+//                "   ]\n" +
+//                "}";
+
+
+
+
         String json = "{\n" +
                 "   \"children\": [\n" +
                 "      {\n" +
                 "         \"object\": \"block\",\n" +
-                "         \"type\": \"paragraph\",\n" +
-                "         \"paragraph\": {\n" +
-                "            \"rich_text\": [{ \"type\": \"text\", \"text\": { \"content\": \"["+time+"] "+user+" : "+contents+"\" } }]\n" +
-                "         }\n" +
-                "      }" +
+                "         \"type\": \"callout\",\n" +
+                "         \"callout\": {\n" +
+                "                \"rich_text\": [\n" +
+                "                    {\n" +
+                "                        \"type\": \"text\",\n" +
+                "                        \"text\": {\n" +
+                "                            \"content\": \"[\",\n" +
+                "                            \"link\": null\n" +
+                "                        },\n" +
+                "                        \"annotations\": {\n" +
+                "                            \"bold\": false,\n" +
+                "                            \"italic\": false,\n" +
+                "                            \"strikethrough\": false,\n" +
+                "                            \"underline\": false,\n" +
+                "                            \"code\": false,\n" +
+                "                            \"color\": \"default\"\n" +
+                "                        },\n" +
+                "                        \"plain_text\": \"[\",\n" +
+                "                        \"href\": null\n" +
+                "                    },\n" +
+                "                    {\n" +
+                "                        \"type\": \"text\",\n" +
+                "                        \"text\": {\n" +
+                "                            \"content\": \"   " + time + " \",\n" +
+                "                            \"link\": null\n" +
+                "                        },\n" +
+                "                        \"annotations\": {\n" +
+                "                            \"bold\": false,\n" +
+                "                            \"italic\": false,\n" +
+                "                            \"strikethrough\": false,\n" +
+                "                            \"underline\": false,\n" +
+                "                            \"code\": false,\n" +
+                "                            \"color\": \"orange_background\"\n" +
+                "                        },\n" +
+                "                        \"plain_text\": \" " + time + " \",\n" +
+                "                        \"href\": null\n" +
+                "                    },\n" +
+                "                    {\n" +
+                "                        \"type\": \"text\",\n" +
+                "                        \"text\": {\n" +
+                "                            \"content\": \"] \",\n" +
+                "                            \"link\": null\n" +
+                "                        },\n" +
+                "                        \"annotations\": {\n" +
+                "                            \"bold\": false,\n" +
+                "                            \"italic\": false,\n" +
+                "                            \"strikethrough\": false,\n" +
+                "                            \"underline\": false,\n" +
+                "                            \"code\": false,\n" +
+                "                            \"color\": \"default\"\n" +
+                "                        },\n" +
+                "                        \"plain_text\": \"] \",\n" +
+                "                        \"href\": null\n" +
+                "                    },\n" +
+                "                    {\n" +
+                "                        \"type\": \"text\",\n" +
+                "                        \"text\": {\n" +
+                "                            \"content\": \" " + user + " \",\n" +
+                "                            \"link\": null\n" +
+                "                        },\n" +
+                "                        \"annotations\": {\n" +
+                "                            \"bold\": true,\n" +
+                "                            \"italic\": false,\n" +
+                "                            \"strikethrough\": false,\n" +
+                "                            \"underline\": false,\n" +
+                "                            \"code\": false,\n" +
+                "                            \"color\": \"default\"\n" +
+                "                        },\n" +
+                "                        \"plain_text\": \" " + user + " \",\n" +
+                "                        \"href\": null\n" +
+                "                    },\n" +
+                "                    {\n" +
+                "                        \"type\": \"text\",\n" +
+                "                        \"text\": {\n" +
+                "                            \"content\": \" : " + contents + " \",\n" +
+                "                            \"link\": null\n" +
+                "                        },\n" +
+                "                        \"annotations\": {\n" +
+                "                            \"bold\": false,\n" +
+                "                            \"italic\": false,\n" +
+                "                            \"strikethrough\": false,\n" +
+                "                            \"underline\": false,\n" +
+                "                            \"code\": false,\n" +
+                "                            \"color\": \"default\"\n" +
+                "                        },\n" +
+                "                        \"plain_text\": \" : " + contents + " \",\n" +
+                "                        \"href\": null\n" +
+                "                    }\n" +
+                "                ],\n" +
+                "                \"icon\": {\n" +
+                "                    \"type\": \"emoji\",\n" +
+                "                    \"emoji\": \"💬\"\n" +
+                "                },\n" +
+                "                \"color\": \"gray_background\"\n" +
+                "            }\n" +
+                "      }\n" +
                 "   ]\n" +
                 "}";
+
+
+
+
+
+
 
         // HTTP 요청 헤더를 설정합니다.
         HttpHeaders headers = new HttpHeaders();
