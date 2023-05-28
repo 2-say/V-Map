@@ -1,8 +1,10 @@
 package ParkLab.VMap.model.Service.firebase;
 
 import ParkLab.VMap.model.data.ClerkInfo;
+import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -58,5 +60,17 @@ public class FirebaseMeetingsServiceImpl {
         }
 
         return null;
+    }
+
+    public void updateFirebaseMeetingUrl(String documentId, Map<String, Object> updates) throws Exception {
+        Firestore db = FirestoreClient.getFirestore();
+
+        // 필드 업데이트
+        ApiFuture<WriteResult> apiFuture
+                = db.collection(COLLECTION_NAME_MEETINGS)
+                .document(documentId)
+                .update(updates);
+
+        log.info(apiFuture.get().getUpdateTime().toString());
     }
 }
