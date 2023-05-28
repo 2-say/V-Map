@@ -87,6 +87,7 @@ public class ZoomMeetingServiceImpl {
                 System.out.println("Start URL: " + startUrl);
                 System.out.println("Join URL: " + joinUrl);
                 System.out.println("Start Time: " + startTime);
+                System.out.println("meetingId = " + meetingId);
 
                 updateMeetingUrl();
             } else {
@@ -99,7 +100,7 @@ public class ZoomMeetingServiceImpl {
 
     public void endZoomMeeting(String documentId) throws Exception {
         this.documentId = documentId;
-        String endMeetingId = getMeetingId();
+        int endMeetingId = getMeetingId();
 
         String url = "https://api.zoom.us/v2/meetings/" + endMeetingId + "/status";
 
@@ -141,7 +142,7 @@ public class ZoomMeetingServiceImpl {
         firebaseMeetingsService.updateFirebaseMeetingUrl(documentId, updates);
     }
 
-    private String getMeetingId() throws Exception {
+    private int getMeetingId() throws Exception {
         return firebaseMeetingsService.getFirebaseMeetingId(documentId);
     }
 }
