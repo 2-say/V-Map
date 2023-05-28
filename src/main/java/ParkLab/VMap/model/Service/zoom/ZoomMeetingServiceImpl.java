@@ -105,8 +105,8 @@ public class ZoomMeetingServiceImpl {
         String url = "https://api.zoom.us/v2/meetings/" + endMeetingId + "/status";
 
         HttpPut request = new HttpPut(url);
-        request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ik9RQVNYQ3NIVE0tOEc5SVVWZmROQ3ciLCJleHAiOjE2ODUyNjU3NTAsImlhdCI6MTY4NTI2MDM1MX0.BFPzCYKiDJSOvCZoXiQNsyZ2WXzChy0vlbJyxBFNyFA");
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ik9RQVNYQ3NIVE0tOEc5SVVWZmROQ3ciLCJleHAiOjE2ODU4NzExMjEsImlhdCI6MTY4NTI2NjMyMn0.Yz6YQoCTF8-kaNgNzzzFygeS7701uHuQ2am033nO5Us");
 
         JsonObject body = new JsonObject();
         body.addProperty("action", "end");
