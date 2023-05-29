@@ -2,6 +2,7 @@ package ParkLab.VMap.controller.textrank;
 
 import ParkLab.VMap.model.Service.EncodeJson.EncodeJsonService;
 import ParkLab.VMap.model.Service.firebase.FirebaseMeetingsServiceImpl;
+import ParkLab.VMap.model.data.ClerkInfo;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -15,6 +16,8 @@ import java.util.List;
 public class TodoListController {
     FirebaseMeetingsServiceImpl firebaseMeetingsService = new FirebaseMeetingsServiceImpl();
     EncodeJsonService encodeJsonService = new EncodeJsonService();
+    String accessToken;
+    String pageId;
     @GetMapping("/todo")
     @ResponseBody
     public void todo(@RequestParam("documentId") String documentId, @RequestParam ("pageId") String pageId) {
@@ -31,8 +34,11 @@ public class TodoListController {
             System.out.println("Response body: " + response.body());
 
             List<String> todoList = encodeJsonService.convertToList(response.body());
-
             firebaseMeetingsService.updateFirebaseMeetingTodo(documentId, todoList);
+            ClerkInfo clerkInfo = firebaseMeetingsService.getClerkInfo(documentId);
+            this.accessToken = clerkInfo.getAccessToken();
+            this.pageId = pageId;
+            // updateAgenda(agendaList);
         } catch (Exception e) {
             e.printStackTrace();
         }

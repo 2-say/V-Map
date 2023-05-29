@@ -46,15 +46,10 @@ public class AgendaController {
             System.out.println("Response body: " + response.body());
 
             List<String> agendaList = encodeJsonService.convertToList(response.body());
-            System.out.println("response.body() = " + response.body());
             firebaseMeetingsService.updateFirebaseMeetingAgenda(documentId, agendaList);
             ClerkInfo clerkInfo = firebaseMeetingsService.getClerkInfo(documentId);
             this.accessToken = clerkInfo.getAccessToken();
             this.pageId = pageId;
-            System.out.println("clerkInfo = " + clerkInfo);
-            System.out.println("accessToken = " + accessToken);
-            System.out.println("pageId = " + pageId);
-            System.out.println("agendaList = " + agendaList);
             updateAgenda(agendaList);
         } catch (Exception e) {
             e.printStackTrace();
