@@ -203,7 +203,7 @@ public class NotionWriterServiceImpl {
                 "          {\n" +
                 "            \"type\": \"text\",\n" +
                 "            \"text\": {\n" +
-                "              \"content\": \"\"\n" +
+                "              \"content\": \" 테스트1 \"\n" +
                 "            }\n" +
                 "          }\n" +
                 "        ]\n" +
@@ -217,7 +217,35 @@ public class NotionWriterServiceImpl {
                 "          {\n" +
                 "            \"type\": \"text\",\n" +
                 "            \"text\": {\n" +
-                "              \"content\": \"1\"\n" +
+                "              \"content\": \"테스트2\"\n" +
+                "            }\n" +
+                "          }\n" +
+                "        ]\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"object\": \"block\",\n" +
+                "      \"type\": \"numbered_list_item\",\n" +
+                "      \"numbered_list_item\": {\n" +
+                "        \"rich_text\": [\n" +
+                "          {\n" +
+                "            \"type\": \"text\",\n" +
+                "            \"text\": {\n" +
+                "              \"content\": \"테스트3\"\n" +
+                "            }\n" +
+                "          }\n" +
+                "        ]\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"object\": \"block\",\n" +
+                "      \"type\": \"numbered_list_item\",\n" +
+                "      \"numbered_list_item\": {\n" +
+                "        \"rich_text\": [\n" +
+                "          {\n" +
+                "            \"type\": \"text\",\n" +
+                "            \"text\": {\n" +
+                "              \"content\": \"테스트4\"\n" +
                 "            }\n" +
                 "          }\n" +
                 "        ]\n" +

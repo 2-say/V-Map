@@ -87,8 +87,10 @@ public class AgendaController {
         String formattedJsonString = data.toString(4);
         JSONObject data1 = new JSONObject(formattedJsonString);
         JSONArray results = data1.getJSONArray("results");
+        System.out.printf("전달받은 안건의 개수",results.length());
 
-        for (int i = 0; i < results.length(); i++) {
+
+        for (int i = 0; i < results.length(); i++) {   //찾아서 넣기
             JSONObject blockObject = results.getJSONObject(i);
             if (blockObject.getString("type").equals("numbered_list_item")) {
                 String blockId = blockObject.getString("id");

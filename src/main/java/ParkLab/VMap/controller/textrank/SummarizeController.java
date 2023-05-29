@@ -32,6 +32,10 @@ public class SummarizeController {
 
             EncodeJsonService encodeJsonService = new EncodeJsonService();
             Map<String, Object> resultMap = encodeJsonService.convertJsonToMap(response.body());
+
+
+
+
             firebaseMeetingsService.updateFirebaseMeetingSummarize(documentId, resultMap);
         } catch (Exception e) {
             e.printStackTrace();
