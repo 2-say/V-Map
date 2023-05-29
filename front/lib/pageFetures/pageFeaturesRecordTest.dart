@@ -13,13 +13,13 @@ import '../testFeatures/requsestOpenMeeting.dart';
 import 'package:flutter/cupertino.dart';
 import '../widgets/widgetCommonAppbarM.dart';
 
-class PageFeatureRecordReView extends StatefulWidget {
-  const PageFeatureRecordReView({Key? key, required this.meetingInfo, required this.userInfo}) : super(key: key);
+class PageFeatureRecordReViewTest extends StatefulWidget {
+  const PageFeatureRecordReViewTest({Key? key, required this.meetingInfo, required this.userInfo}) : super(key: key);
   final Map<String, dynamic>? meetingInfo;
   final Map<String, dynamic>? userInfo;
 
   @override
-  State<PageFeatureRecordReView> createState() => _PageFeatureRecordReViewState();
+  State<PageFeatureRecordReViewTest> createState() => _PageFeatureRecordReViewTestState();
 }
 
 enum MenuType {
@@ -28,7 +28,7 @@ enum MenuType {
   delete,
 }
 
-class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
+class _PageFeatureRecordReViewTestState extends State<PageFeatureRecordReViewTest> {
   //dataSet
   final ScrollController agendaListViewScroller = ScrollController();
   final ScrollController summrizeListViewScroller = ScrollController();
@@ -279,232 +279,6 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                   const SizedBox(width: 12),
                 ]),
               ),
-              Container(
-                  padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
-                  child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                      stream: streamConnectContents,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData && snapshot.data != null) {
-                          Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('참여자', style: TextStyle(fontFamily: 'apeb', fontSize: 20, color: crKeyColorB1F)),
-                              const SizedBox(width: 8),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: List<Widget>.generate(
-                                        docs?['etc'].length,
-                                        (index) => Container(
-                                              decoration: BoxDecoration(
-                                                  color: crKeyColorB1MenuBtn, borderRadius: BorderRadius.circular(4)),
-                                              child: WidgetCircleAvatarRecord(
-                                                  userName: docs?['etc'][index]['userName'],
-                                                  isClerk: index == 0 ? true : false),
-                                            ))),
-                              ),
-                            ],
-                          );
-                        } else if (snapshot.hasError) {
-                          return const Text('Error');
-                          // 기타 경우 ( 불러오는 중 )
-                        } else {
-                          return const CircularProgressIndicator();
-                        }
-                      })),
-              Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Expanded(
-                  child: SizedBox(
-                      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                          stream: streamConnectContents,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData && snapshot.data != null) {
-                              Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
-                              return Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons.description,
-                                              color: Colors.blueAccent,
-                                            ),
-                                            SizedBox(width: 4),
-                                            Text('주요 안건',
-                                                style:
-                                                    TextStyle(fontFamily: 'apeb', fontSize: 20, color: crKeyColorB1F)),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Container(
-                                            height: 80,
-                                            padding: const EdgeInsets.all(8),
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                                color: crKeyColorB1MenuBtn, borderRadius: BorderRadius.circular(8)),
-                                            child: Scrollbar(
-                                                controller: agendaListViewScroller,
-                                                thumbVisibility: true,
-                                                child: SingleChildScrollView(
-                                                    child: Padding(
-                                                        padding: const EdgeInsets.fromLTRB(0, 0, 12, 0),
-                                                        child: Column(
-                                                            mainAxisAlignment: MainAxisAlignment.start,
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: docs!['agenda'].isEmpty
-                                                                ? [
-                                                                    Text('아직 자동 작성된 주요안건이 없습니다.',
-                                                                        style: TextStyle(
-                                                                            fontFamily: 'apm',
-                                                                            fontSize: 14,
-                                                                            color: crKeyColorB1F))
-                                                                  ]
-                                                                : List<Widget>.generate(docs!['agenda'].length,
-                                                                    (index) {
-                                                                    return Padding(
-                                                                        padding: const EdgeInsets.all(2.0),
-                                                                        child: Text(
-                                                                            '${index + 1}.${docs!['agenda'][index]}',
-                                                                            style: TextStyle(
-                                                                                fontFamily: 'apm',
-                                                                                color: crKeyColorB1F,
-                                                                                fontSize: 12)));
-                                                                  }))))))
-                                      ]));
-                            } else if (snapshot.hasError) {
-                              return const Text('Error');
-                              // 기타 경우 ( 불러오는 중 )
-                            } else {
-                              return const CircularProgressIndicator();
-                            }
-                          })),
-                ),
-                Expanded(
-                    child: SizedBox(
-                        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                            stream: streamConnectContents,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData && snapshot.data != null) {
-                                Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
-                                return Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Row(children: [
-                                            Icon(Icons.check, color: Colors.green),
-                                            SizedBox(width: 4),
-                                            Text('To Do',
-                                                style:
-                                                    TextStyle(fontFamily: 'apeb', fontSize: 20, color: crKeyColorB1F))
-                                          ]),
-                                          const SizedBox(height: 8),
-                                          Container(
-                                              height: 80,
-                                              padding: const EdgeInsets.all(8),
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                  color: crKeyColorB1MenuBtn, borderRadius: BorderRadius.circular(8)),
-                                              child: Scrollbar(
-                                                  controller: todoListViewScroller,
-                                                  thumbVisibility: true,
-                                                  child: SingleChildScrollView(
-                                                      child: Padding(
-                                                    padding: const EdgeInsets.fromLTRB(0, 0, 12, 0),
-                                                    child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: docs!['todo'].isEmpty
-                                                            ? [
-                                                                Text('아직 자동 작성된 주요안건이 없습니다.',
-                                                                    style: TextStyle(
-                                                                        fontFamily: 'apm',
-                                                                        fontSize: 14,
-                                                                        color: crKeyColorB1F))
-                                                              ]
-                                                            : List<Widget>.generate(docs!['todo'].length, (index) {
-                                                                return Padding(
-                                                                  padding: const EdgeInsets.all(2.0),
-                                                                  child: Text('${index + 1}.${docs!['todo'][index]}',
-                                                                      style: TextStyle(
-                                                                          fontFamily: 'apm',
-                                                                          color: crKeyColorB1F,
-                                                                          fontSize: 12)),
-                                                                );
-                                                              })),
-                                                  ))))
-                                        ]));
-                              } else if (snapshot.hasError) {
-                                return const Text('Error');
-                                // 기타 경우 ( 불러오는 중 )
-                              } else {
-                                return const CircularProgressIndicator();
-                              }
-                            })))
-              ]),
-              SizedBox(
-                  child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                      stream: streamConnectContents,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData && snapshot.data != null) {
-                          Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
-                          return Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Row(children: [
-                                      const Icon(Icons.filter_list, color: Colors.amberAccent),
-                                      SizedBox(width: 4),
-                                      Text('회의 요약본',
-                                          style: TextStyle(fontFamily: 'apeb', fontSize: 20, color: crKeyColorB1F))
-                                    ]),
-                                    const SizedBox(height: 8),
-                                    Container(
-                                        height: 40,
-                                        padding: const EdgeInsets.all(8),
-                                        width: double.infinity,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            color: crKeyColorB1MenuBtn, borderRadius: BorderRadius.circular(8)),
-                                        child: Scrollbar(
-                                            controller: summrizeListViewScroller,
-                                            thumbVisibility: true,
-                                            child: SingleChildScrollView(
-                                              child: Padding(
-                                                padding: const EdgeInsets.fromLTRB(0, 0, 12, 0),
-                                                child: docs!['summarize'] != ''
-                                                    ? Text('${docs!['summarize']}',
-                                                        style: TextStyle(
-                                                            fontFamily: 'apm', color: crKeyColorB1F, fontSize: 12))
-                                                    : Text('아직 자동 요약이 작성되지 않았습니다.',
-                                                        style: TextStyle(
-                                                            fontFamily: 'apm', color: crKeyColorB1F, fontSize: 14)),
-                                              ),
-                                            )))
-                                  ]));
-                        } else if (snapshot.hasError) {
-                          return const Text('Error');
-                          // 기타 경우 ( 불러오는 중 )
-                        } else {
-                          return const CircularProgressIndicator();
-                        }
-                      })),
-              Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(children: [
-                    const Icon(Icons.speaker_notes, color: Colors.orange),
-                    SizedBox(width: 4),
-                    Text('회의 내용', style: TextStyle(fontFamily: 'apeb', fontSize: 20, color: crKeyColorB1F))
-                  ])),
               Expanded(
                   child: Container(
                       padding: const EdgeInsets.fromLTRB(0, 0, 4, 0),

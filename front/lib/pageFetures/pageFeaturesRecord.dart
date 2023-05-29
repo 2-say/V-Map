@@ -69,14 +69,11 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
               title: const Text('수정할 정보 입력', style: TextStyle(fontSize: 20, fontFamily: 'apeb')),
               content: Container(
-                height: 30,
+                width: 400,
                 child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
                     controller: tt,
-                    onChanged: (val) {
-                      setState(() {
-                        contentPrev['text'] = val;
-                      });
-                    },
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                         focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
@@ -91,9 +88,10 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                 TextButton(
                     onPressed: () {
                       Navigator.pop(context);
+                      contentPrev['text'] = tt.text;
                       FirebaseController().editMeetingContents(widget.meetingInfo!['password'], contentPrev, index);
                       FeaturesMeeting().editNotion(contentPrev['startTime'], widget.meetingInfo!['id'],
-                          contentPrev['text'], widget.userInfo!['userName']);
+                          contentPrev['text'], contentPrev['user']);
                     },
                     child: Text('수정', style: TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen)))
               ]);
@@ -395,10 +393,11 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                                                                                   docs?['contents'][index],
                                                                                   index)
                                                                               .then((_) {
-                                                                              // FeaturesMeeting().deleteNotion(
-                                                                              //     docs?['contents'][index]['startTime'],
-                                                                              //     widget.meetingInfo!['Id'],
-                                                                              //     docs?['contents'][index]['text']);
+                                                                              FeaturesMeeting().deleteNotion(
+                                                                                  docs?['contents'][index]['startTime'],
+                                                                                  widget.meetingInfo!['id'],
+                                                                                  docs?['contents'][index]['text'],
+                                                                                  widget.userInfo!['userName']);
                                                                             });
                                                                 },
                                                                 itemBuilder: (BuildContext buildContext) {
@@ -589,12 +588,8 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                                   var dt2 = DateTime.now();
                                   featuresMeeting.patchNotion(dt2.toString(), widget.meetingInfo!['id'],
                                       widget.userInfo!['userName'], manualText);
-                                  FirebaseController().updateMeetingContents(
-                                      widget.meetingInfo!['password'],
-                                      widget.userInfo!['userName'],
-                                      DateTime.now().toString(),
-                                      DateTime.now().toString(),
-                                      manualText);
+                                  FirebaseController().updateMeetingContents(widget.meetingInfo!['password'],
+                                      widget.userInfo!['userName'], dt2.toString(), dt2.toString(), manualText);
                                   manualTextController.clear();
                                   manualText = '';
                                   myFocusNode.requestFocus();
@@ -611,12 +606,8 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                                   var dt2 = DateTime.now();
                                   featuresMeeting.patchNotion(dt2.toString(), widget.meetingInfo!['id'],
                                       widget.userInfo!['userName'], manualText);
-                                  FirebaseController().updateMeetingContents(
-                                      widget.meetingInfo!['password'],
-                                      widget.userInfo!['userName'],
-                                      DateTime.now().toString(),
-                                      DateTime.now().toString(),
-                                      manualText);
+                                  FirebaseController().updateMeetingContents(widget.meetingInfo!['password'],
+                                      widget.userInfo!['userName'], dt2.toString(), dt2.toString(), manualText);
                                   manualTextController.text = '';
                                   manualText = '';
                                 },
@@ -641,10 +632,29 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          FeaturesMeeting().endMeeting(widget.meetingInfo!['id']);
-                          FeaturesMeeting().agenda(widget.userInfo!['pageId']).then((value) {
-                            print(value);
-                          });
+                          _stopsign();
+                          stopListening();
+                          if (widget.userInfo!['email'] == widget.meetingInfo!['clerk']['email']) {
+                            FeaturesMeeting().endMeeting(widget.meetingInfo!['id']);
+                            FeaturesMeeting()
+                                .agenda(widget.userInfo!['pageId'], widget.meetingInfo!['id'])
+                                .then((value) {
+                              print(value);
+                            });
+                            FeaturesMeeting()
+                                .summarize(widget.userInfo!['pageId'], widget.meetingInfo!['id'])
+                                .then((value) {
+                              print(value);
+                            });
+                            FeaturesMeeting()
+                                .summarizeAll(widget.userInfo!['pageId'], widget.meetingInfo!['id'])
+                                .then((value) {
+                              print(value);
+                            });
+                            FeaturesMeeting().todo(widget.userInfo!['pageId'], widget.meetingInfo!['id']).then((value) {
+                              print(value);
+                            });
+                          }
                           Navigator.pop(context);
                         },
                         style: TextButton.styleFrom(primary: Colors.transparent, elevation: 0),

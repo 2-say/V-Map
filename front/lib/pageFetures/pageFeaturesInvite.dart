@@ -242,28 +242,32 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                                       Map<String, dynamic> myUserInfoUpdate;
                                       print('check :zoomInfo-$zoomInfo');
                                       HttpOverrides.global = NoCheckCertificateHttpOverrides();
+                                      final snackBar = SnackBar(
+                                        content: Text("서버 상태에 따라 회의 생성이 지연중입니다. 잠시만 기다려주세요."),
+                                      );
+                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                       FeaturesMeeting()
                                           .postNotion(
                                               widget.myUserInfo!['id'], widget.meetingInfo!['meetingName'], dummyUsers)
-                                          .then((value) {
-                                        print('debug kk');
-                                        print(value);
-                                        String pageId = value;
+                                          .then((pageId) {
                                         FirebaseController()
                                             .getUser(widget.myUserInfo!['userName'], widget.myUserInfo!['email'])
-                                            .then((value) async {
-                                          await FirebaseController().updateUser(
-                                              value!['email'], value!['accessToken'], value!['dataBaseId'], pageId);
-                                          myUserInfoUpdate = value;
+                                            .then((updateUserInfo) {
+                                          FirebaseController().updateUser(
+                                              updateUserInfo!['email'],
+                                              updateUserInfo!['accessToken'],
+                                              updateUserInfo!['dataBaseId'],
+                                              updateUserInfo!['pageId']);
                                           FirebaseController()
-                                              .updateMeetingClerk(value, widget.meetingInfo!['password'])
+                                              .updateMeetingClerk(updateUserInfo, widget.meetingInfo!['password'])
                                               .then((_) {
                                             Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (_) => PageFeatureRecord(
-                                                        meetingInfo: widget.meetingInfo,
-                                                        userInfo: myUserInfoUpdate,)));
+                                                          meetingInfo: widget.meetingInfo,
+                                                          userInfo: updateUserInfo,
+                                                        )));
                                           });
                                         });
                                       });

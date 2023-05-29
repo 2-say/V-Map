@@ -100,6 +100,31 @@ class FeaturesMeeting {
     return response.body.toString();
   }
 
+  Future<String> deleteNotion(String time, String id, String content,String userName) async {
+    var url = Uri.parse('https://vmap.me/deleteNotion?documentId=' + id);
+    Map<String, Object> data = {
+      "time": time,
+      "contents": content,
+      "userName": userName,
+    };
+    DebugMessage(
+      isItPostType: true,
+      featureName: 'patchNotion',
+      dataType: 'json',
+      data: data,
+    ).messagePost();
+    var body = json.encode(data);
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    };
+    final http.Response response = await http.post(url, body: body, headers: headers);
+    print('post!');
+    print(response.body);
+    return response.body.toString();
+  }
+
   Future<String> createMeeting(String id) async {
     var url = Uri.parse('https://vmap.me/createMeeting?documentId=' + id);
     DebugMessage(
@@ -136,9 +161,9 @@ class FeaturesMeeting {
     return response.body.toString();
   }
 
-  Future<String> agenda(String id) async {
+  Future<String> agenda(String id,String docid) async {
     print(id);
-    var url = Uri.parse('https://vmap.me/agenda?pageId=' + id);
+    var url = Uri.parse('https://vmap.me/agenda?documentId='+docid+"&pageId="+id);
     DebugMessage(
       isItPostType: true,
       featureName: 'patchNotion',
@@ -151,8 +176,8 @@ class FeaturesMeeting {
     return response.body.toString();
   }
 
-  Future<String> summarize(String id) async {
-    var url = Uri.parse('https://vmap.me/summarize?pageId=' + id);
+  Future<String> summarize(String id,String docid) async {
+    var url = Uri.parse('https://vmap.me/summarize?documentId='+docid+"&pageId="+id);
     DebugMessage(
       isItPostType: true,
       featureName: 'patchNotion',
@@ -165,8 +190,8 @@ class FeaturesMeeting {
     return response.body.toString();
   }
 
-  Future<String> summarizeAll(String id) async {
-    var url = Uri.parse('https://vmap.me/summarizeAll?pageId=' + id);
+  Future<String> summarizeAll(String id,String docid) async {
+    var url = Uri.parse('https://vmap.me/summarizeAll?documentId='+docid+"&pageId="+id);
     DebugMessage(
       isItPostType: true,
       featureName: 'patchNotion',
@@ -179,8 +204,8 @@ class FeaturesMeeting {
     return response.body.toString();
   }
 
-  Future<String> todo(String id) async {
-    var url = Uri.parse('https://vmap.me/todo?pageId=' + id);
+  Future<String> todo(String id,String docid) async {
+    var url = Uri.parse('https://vmap.me/todo?documentId='+docid+"&pageId="+id);
     DebugMessage(
       isItPostType: true,
       featureName: 'patchNotion',
