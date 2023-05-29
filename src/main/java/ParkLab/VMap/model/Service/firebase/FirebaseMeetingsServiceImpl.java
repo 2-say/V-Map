@@ -3,6 +3,7 @@ package ParkLab.VMap.model.Service.firebase;
 import ParkLab.VMap.model.data.ClerkInfo;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
@@ -94,5 +95,41 @@ public class FirebaseMeetingsServiceImpl {
         return null;
     }
 
+    public void updateFirebaseMeetingSummarize(String documentId, Map<String, Object> updates) throws Exception {
+        Firestore db = FirestoreClient.getFirestore();
 
+        // 필드 업데이트
+        ApiFuture<WriteResult> apiFuture
+                = db.collection(COLLECTION_NAME_MEETINGS)
+                .document(documentId)
+                .update(updates);
+
+        log.info(apiFuture.get().getUpdateTime().toString());
+    }
+
+    public void updateFirebaseMeetingAgenda(String documentId, List<String> updates) throws Exception {
+        Firestore db = FirestoreClient.getFirestore();
+
+        for(var update : updates) {
+            // 필드 업데이트
+            ApiFuture<WriteResult> apiFuture
+                    = db.collection(COLLECTION_NAME_MEETINGS)
+                    .document(documentId)
+                    .update("agenda", FieldValue.arrayUnion(update));
+            System.out.println("Update time : " + apiFuture.get());
+        }
+    }
+
+    public void updateFirebaseMeetingTodo(String documentId, List<String> updates) throws Exception {
+        Firestore db = FirestoreClient.getFirestore();
+
+        for(var update : updates) {
+            // 필드 업데이트
+            ApiFuture<WriteResult> apiFuture
+                    = db.collection(COLLECTION_NAME_MEETINGS)
+                    .document(documentId)
+                    .update("todo", FieldValue.arrayUnion(update));
+            System.out.println("Update time : " + apiFuture.get());
+        }
+    }
 }
