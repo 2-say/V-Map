@@ -1,6 +1,5 @@
 package ParkLab.VMap.controller.textrank;
 
-import ParkLab.VMap.model.Service.DecodeJson.DecordJsonService;
 import ParkLab.VMap.model.Service.EncodeJson.EncodeJsonService;
 import ParkLab.VMap.model.Service.firebase.FirebaseMeetingsServiceImpl;
 import ParkLab.VMap.model.data.ClerkInfo;
@@ -31,6 +30,8 @@ public class SummarizeAllController {
     FirebaseMeetingsServiceImpl firebaseMeetingsService = new FirebaseMeetingsServiceImpl();
     private String accessToken;
     private String pageId;
+
+
     @GetMapping("/summarizeAll")
     @ResponseBody
     public String agenda(@RequestParam ("documentId") String documentId, @RequestParam ("pageId") String pageId) {
@@ -53,7 +54,7 @@ public class SummarizeAllController {
             Map<String, Object> resultMap = encodeJsonService.convertJsonToMap(response.body());
             firebaseMeetingsService.updateFirebaseMeetingSummarize(documentId, resultMap);
 
-            String summarize = encodeJsonService.extractValueFromJsonString(response.body(), "summarize");
+            String summarize = encodeJsonService.extractValueFromJsonString(response.body(), "summarizeAll");
             updateSummarizeAll(summarize);
             return response.body();
         } catch (Exception e) {
@@ -67,12 +68,6 @@ public class SummarizeAllController {
 
 
     public void updateSummarizeAll(String agendaString) throws IOException {
-
-        List<String> reversedList = new ArrayList<>();  //pop하기 위해서 꺼꾸로 꺼냄
-        for (int i = agendaString.size() - 1; i >= 0; i--) {
-            reversedList.add(agendaString.get(i));
-        }
-
 
         StringBuilder response = new StringBuilder();
         String notionVersion = "2021-08-16";
@@ -93,76 +88,68 @@ public class SummarizeAllController {
         }
 
         List<String> blockIdList = new ArrayList<>();
-
         JSONObject data = new JSONObject(response.toString());
         String formattedJsonString = data.toString(4);
+
         JSONObject data1 = new JSONObject(formattedJsonString);
         JSONArray results = data1.getJSONArray("results");
-        System.out.printf("전달받은 안건의 개수",results.length());
-
 
         for (int i = 0; i < results.length(); i++) {   //찾아서 넣기
             JSONObject blockObject = results.getJSONObject(i);
             if (blockObject.getString("type").equals("callout")) {
                 String blockId = blockObject.getString("id");
-                System.out.println("Numbered List Item ID: " + blockId);
                 blockIdList.add(blockId);
+                System.out.println("(summarizeAll)blockId:");
+                System.out.println(blockId);
             }
         }
 
-            if (!reversedList.isEmpty()) {
-                String poppedElement = reversedList.remove(reversedList.size() - 1);
-                System.out.println("꺼낸 원소: " + poppedElement);
+
+        String json = "{\n" +
+                "    \"type\": \"quote\",\n" +
+                "    \"quote\": {\n" +
+                "        \"rich_text\": [\n" +
+                "            {\n" +
+                "                \"type\": \"text\",\n" +
+                "                \"text\": {\n" +
+                "                    \"content\": \"" + agendaString + " \"\n" +
+                "                }\n" +
+                "            }\n" +
+                "        ]\n" +
+                "    }\n" +
+                "}";
 
 
-                String json = "{\n" +
-                        "    \"type\": \"numbered_list_item\",\n" +
-                        "    \"numbered_list_item\": {\n" +
-                        "        \"rich_text\": [\n" +
-                        "            {\n" +
-                        "                \"type\": \"text\",\n" +
-                        "                \"text\": {\n" +
-                        "                    \"content\": \"" + poppedElement + " \"\n" +
-                        "                }\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    }\n" +
-                        "}";
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        String NOTION_API_URL = "https://api.notion.com/v1/blocks/" + blockIdList.get(0);
 
 
-                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-                String NOTION_API_URL = "https://api.notion.com/v1/blocks/" + blockId;
+        System.out.printf("blockId",blockIdList.get(0));
 
-                OkHttpClient client = new OkHttpClient();
 
-                okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(JSON, json);
+        OkHttpClient client = new OkHttpClient();
 
-                Request request = new Request.Builder()
-                        .url(NOTION_API_URL)
-                        .addHeader("Authorization", "Bearer " + accessToken)
-                        .addHeader("Content-Type", "application/json")
-                        .addHeader("Notion-Version", "2021-08-16")
-                        .patch(requestBody)
-                        .build();
+        okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(JSON, json);
 
-                try {
-                    Response response1 = client.newCall(request).execute();
-                    if (response1.isSuccessful()) {
-                        System.out.println("PATCH 요청이 성공적으로 전송되었습니다.");
-                    } else {
-                        System.out.println("PATCH 요청이 실패하였습니다. 응답 코드: " + response1.toString());
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        Request request = new Request.Builder()
+                .url(NOTION_API_URL)
+                .addHeader("Authorization", "Bearer " + accessToken)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Notion-Version", "2021-08-16")
+                .patch(requestBody)
+                .build();
 
+        try {
+            Response response1 = client.newCall(request).execute();
+            if (response1.isSuccessful()) {
+                System.out.println("SummarizeAll PATCH 요청이 성공적으로 전송되었습니다.");
+            } else {
+                System.out.println("SummarizeAll PATCH 요청이 실패하였습니다. 응답 코드: " + response1.toString());
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
-
-
-
-
-
-
+    }
 }

@@ -164,6 +164,25 @@ public class NotionWriterServiceImpl {
                 "    },\n" +
                 "    {\n" +
                 "      \"object\": \"block\",\n" +
+                "      \"type\": \"divider\",\n" +
+                "      \"divider\": {}\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"object\": \"block\",\n" +
+                "      \"type\": \"quote\",\n" +
+                "      \"quote\": {\n" +
+                "        \"rich_text\": [\n" +
+                "          {\n" +
+                "            \"type\": \"text\",\n" +
+                "            \"text\": {\n" +
+                "              \"content\": \" 테스트1 \"\n" +
+                "            }\n" +
+                "          }\n" +
+                "        ]\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"object\": \"block\",\n" +
                 "      \"type\": \"paragraph\",\n" +
                 "      \"paragraph\": {\n" +
                 "        \"rich_text\": [\n" +
