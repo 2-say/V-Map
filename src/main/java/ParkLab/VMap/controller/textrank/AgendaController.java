@@ -51,6 +51,10 @@ public class AgendaController {
             ClerkInfo clerkInfo = firebaseMeetingsService.getClerkInfo(documentId);
             this.accessToken = clerkInfo.getAccessToken();
             this.pageId = pageId;
+            System.out.println("clerkInfo = " + clerkInfo);
+            System.out.println("accessToken = " + accessToken);
+            System.out.println("pageId = " + pageId);
+            System.out.println("agendaList = " + agendaList);
             updateAgenda(agendaList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,13 +86,15 @@ public class AgendaController {
             in.close();
         }
 
-
         List<String> blockIdList = new ArrayList<>();
-        JSONObject jsonObject = new JSONObject(response.toString());
-        JSONArray resultsArray = jsonObject.getJSONArray("results");
 
-        for (int i = 0; i < resultsArray.length(); i++) {
-            JSONObject blockObject = resultsArray.getJSONObject(i);
+        JSONObject data = new JSONObject(response.toString());
+        String formattedJsonString = data.toString(4);
+        JSONObject data1 = new JSONObject(formattedJsonString);
+        JSONArray results = data1.getJSONArray("results");
+
+        for (int i = 0; i < results.length(); i++) {
+            JSONObject blockObject = results.getJSONObject(i);
             if (blockObject.getString("type").equals("numbered_list_item")) {
                 String blockId = blockObject.getString("id");
                 System.out.println("Numbered List Item ID: " + blockId);
