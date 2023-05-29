@@ -20,16 +20,24 @@ public class EncodeJsonService {
         return resultMap;
     }
 
-    public List<String> convertToList(String agenda) {
-        String[] agendaItems = agenda.split("\\n\\d+\\. ");
+    public List<String> convertToList(String input) {
 
+        // Extract the agenda string from the JSON
+        String agenda = input.substring(input.indexOf(":") + 2, input.length() - 2);
+
+        // Split the agenda string into separate items
+        String[] agendaItems = agenda.split("\\\\n");
+
+        // Remove the numbering from each agenda item
         List<String> agendaList = new ArrayList<>();
         for (String item : agendaItems) {
-            if (!item.isEmpty()) {
-                agendaList.add(item.trim());
+            String[] parts = item.split("\\. ");
+            if (parts.length > 1) {
+                agendaList.add(parts[1]);
             }
         }
 
+        System.out.println(agendaList);
         return agendaList;
     }
 }
