@@ -14,8 +14,7 @@ import 'package:flutter/cupertino.dart';
 import '../widgets/widgetCommonAppbarM.dart';
 
 class PageFeatureRecord extends StatefulWidget {
-  const PageFeatureRecord({Key? key, required this.meetingInfo, required this.userInfo})
-      : super(key: key);
+  const PageFeatureRecord({Key? key, required this.meetingInfo, required this.userInfo}) : super(key: key);
   final Map<String, dynamic>? meetingInfo;
   final Map<String, dynamic>? userInfo;
 
@@ -93,8 +92,8 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                     onPressed: () {
                       Navigator.pop(context);
                       FirebaseController().editMeetingContents(widget.meetingInfo!['password'], contentPrev, index);
-                      FeaturesMeeting()
-                          .editNotion(contentPrev['startTime'], widget.meetingInfo!['id'], contentPrev['text'],widget.userInfo!['userName']);
+                      FeaturesMeeting().editNotion(contentPrev['startTime'], widget.meetingInfo!['id'],
+                          contentPrev['text'], widget.userInfo!['userName']);
                     },
                     child: Text('수정', style: TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen)))
               ]);
@@ -587,6 +586,9 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                                 },
                                 focusNode: myFocusNode,
                                 onSubmitted: (val) {
+                                  var dt2 = DateTime.now();
+                                  featuresMeeting.patchNotion(dt2.toString(), widget.meetingInfo!['id'],
+                                      widget.userInfo!['userName'], manualText);
                                   FirebaseController().updateMeetingContents(
                                       widget.meetingInfo!['password'],
                                       widget.userInfo!['userName'],
@@ -606,6 +608,9 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                             )),
                             IconButton(
                                 onPressed: () {
+                                  var dt2 = DateTime.now();
+                                  featuresMeeting.patchNotion(dt2.toString(), widget.meetingInfo!['id'],
+                                      widget.userInfo!['userName'], manualText);
                                   FirebaseController().updateMeetingContents(
                                       widget.meetingInfo!['password'],
                                       widget.userInfo!['userName'],
@@ -636,7 +641,10 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          FeaturesMeeting().createMeeting(widget.meetingInfo!['id']);
+                          FeaturesMeeting().endMeeting(widget.meetingInfo!['id']);
+                          FeaturesMeeting().agenda(widget.userInfo!['pageId']).then((value) {
+                            print(value);
+                          });
                           Navigator.pop(context);
                         },
                         style: TextButton.styleFrom(primary: Colors.transparent, elevation: 0),

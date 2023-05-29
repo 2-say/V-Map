@@ -92,8 +92,8 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                     onPressed: () {
                       Navigator.pop(context);
                       FirebaseController().editMeetingContents(widget.meetingInfo!['password'], contentPrev, index);
-                      FeaturesMeeting()
-                          .editNotion(contentPrev['startTime'], widget.meetingInfo!['id'], contentPrev['text'],widget.meetingInfo!['userName']);
+                      FeaturesMeeting().editNotion(contentPrev['startTime'], widget.meetingInfo!['id'],
+                          contentPrev['text'], widget.meetingInfo!['userName']);
                     },
                     child: Text('수정', style: TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen)))
               ]);
@@ -292,12 +292,26 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                         if (snapshot.hasData && snapshot.data != null) {
                           Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
                           return Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: List<Widget>.generate(
-                                  docs?['etc'].length,
-                                  (index) => WidgetCircleAvatarRecord(
-                                      userName: docs?['etc'][index]['userName'], isClerk: index == 0 ? true : false)));
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text('참여자', style: TextStyle(fontFamily: 'apeb', fontSize: 20, color: crKeyColorB1F)),
+                              const SizedBox(width: 8),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 2, 0, 0),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: List<Widget>.generate(
+                                        docs?['etc'].length,
+                                        (index) => Container(
+                                          decoration: BoxDecoration(color: crKeyColorB1MenuBtn, borderRadius: BorderRadius.circular(4)),
+                                          child: WidgetCircleAvatarRecord(
+                                              userName: docs?['etc'][index]['userName'],
+                                              isClerk: index == 0 ? true : false),
+                                        ))),
+                              ),
+                            ],
+                          );
                         } else if (snapshot.hasError) {
                           return const Text('Error');
                           // 기타 경우 ( 불러오는 중 )
@@ -305,6 +319,136 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                           return const CircularProgressIndicator();
                         }
                       })),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                            stream: streamConnectContents,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData && snapshot.data != null) {
+                                Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
+                                return Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.description,
+                                                color: Colors.blueAccent,
+                                              ),
+                                              SizedBox(width: 4),
+                                              Text('주요 안건',
+                                                  style: TextStyle(
+                                                      fontFamily: 'apeb', fontSize: 20, color: crKeyColorB1F)),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Container(
+                                              height: 80,
+                                              padding: const EdgeInsets.all(8),
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                  color: crKeyColorB1MenuBtn, borderRadius: BorderRadius.circular(8)),
+                                              child: SingleChildScrollView(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.fromLTRB(0, 0, 12, 0),
+                                                  child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: docs!['agenda'].isEmpty
+                                                          ? [
+                                                              Text('아직 자동 작성된 주요안건이 없습니다.',
+                                                                  style: TextStyle(
+                                                                      fontFamily: 'apeb',
+                                                                      fontSize: 16,
+                                                                      color: crKeyColorB1F))
+                                                            ]
+                                                          : List<Widget>.generate(docs!['agenda'].length, (index) {
+                                                              return Text('${index + 1}.${docs!['agenda'][index]}',
+                                                                  style:
+                                                                      TextStyle(fontFamily: 'apm', color: crKeyColorB1F,fontSize: 12));
+                                                            })),
+                                                ),
+                                              ))
+                                        ]));
+                              } else if (snapshot.hasError) {
+                                return const Text('Error');
+                                // 기타 경우 ( 불러오는 중 )
+                              } else {
+                                return const CircularProgressIndicator();
+                              }
+                            })),
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                            stream: streamConnectContents,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData && snapshot.data != null) {
+                                Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
+                                return Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.check,
+                                                color: Colors.green,
+                                              ),
+                                              SizedBox(width: 4),
+                                              Text('To Do',
+                                                  style: TextStyle(
+                                                      fontFamily: 'apeb', fontSize: 20, color: crKeyColorB1F)),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Container(
+                                              height: 80,
+                                              padding: const EdgeInsets.all(8),
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                  color: crKeyColorB1MenuBtn, borderRadius: BorderRadius.circular(8)),
+                                              child: SingleChildScrollView(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.fromLTRB(0, 0, 12, 0),
+                                                  child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: docs!['todo'].isEmpty
+                                                          ? [
+                                                              Text('아직 자동 작성된 주요안건이 없습니다.',
+                                                                  style: TextStyle(
+                                                                      fontFamily: 'apeb',
+                                                                      fontSize: 16,
+                                                                      color: crKeyColorB1F))
+                                                            ]
+                                                          : List<Widget>.generate(docs!['todo'].length, (index) {
+                                                              return Text('${index + 1}.${docs!['todo'][index]}',
+                                                                  style:
+                                                                      TextStyle(fontFamily: 'apm', color: crKeyColorB1F,fontSize: 12));
+                                                            })),
+                                                ),
+                                              ))
+                                        ]));
+                              } else if (snapshot.hasError) {
+                                return const Text('Error');
+                                // 기타 경우 ( 불러오는 중 )
+                              } else {
+                                return const CircularProgressIndicator();
+                              }
+                            })),
+                  ),
+                ],
+              ),
               Expanded(
                   child: Container(
                       child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -564,6 +708,9 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                                 },
                                 focusNode: myFocusNode,
                                 onSubmitted: (val) {
+                                  var dt2 = DateTime.now();
+                                  featuresMeeting.patchNotion(dt2.toString(), widget.meetingInfo!['id'],
+                                      widget.userInfo!['userName'], manualText);
                                   FirebaseController().updateMeetingContents(
                                       widget.meetingInfo!['password'],
                                       widget.userInfo!['userName'],
@@ -583,6 +730,9 @@ class _PageFeatureRecordReViewState extends State<PageFeatureRecordReView> {
                             )),
                             IconButton(
                                 onPressed: () {
+                                  var dt2 = DateTime.now();
+                                  featuresMeeting.patchNotion(dt2.toString(), widget.meetingInfo!['id'],
+                                      widget.userInfo!['userName'], manualText);
                                   FirebaseController().updateMeetingContents(
                                       widget.meetingInfo!['password'],
                                       widget.userInfo!['userName'],

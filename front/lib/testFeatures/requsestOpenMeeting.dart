@@ -135,6 +135,63 @@ class FeaturesMeeting {
     print(response.body);
     return response.body.toString();
   }
+
+  Future<String> agenda(String id) async {
+    print(id);
+    var url = Uri.parse('https://vmap.me/agenda?pageId=' + id);
+    DebugMessage(
+      isItPostType: true,
+      featureName: 'patchNotion',
+      dataType: 'json',
+      data: '줌 회의 종료.',
+    ).messagePost();
+    final http.Response response = await http.get(url);
+    print('get! 낄낄!! 낄낄낄!!');
+    print(response.body);
+    return response.body.toString();
+  }
+
+  Future<String> summarize(String id) async {
+    var url = Uri.parse('https://vmap.me/summarize?pageId=' + id);
+    DebugMessage(
+      isItPostType: true,
+      featureName: 'patchNotion',
+      dataType: 'json',
+      data: '줌 회의 종료.',
+    ).messagePost();
+    final http.Response response = await http.get(url);
+    print('get!');
+    print(response.body);
+    return response.body.toString();
+  }
+
+  Future<String> summarizeAll(String id) async {
+    var url = Uri.parse('https://vmap.me/summarizeAll?pageId=' + id);
+    DebugMessage(
+      isItPostType: true,
+      featureName: 'patchNotion',
+      dataType: 'json',
+      data: '줌 회의 종료.',
+    ).messagePost();
+    final http.Response response = await http.get(url);
+    print('get!');
+    print(response.body);
+    return response.body.toString();
+  }
+
+  Future<String> todo(String id) async {
+    var url = Uri.parse('https://vmap.me/todo?pageId=' + id);
+    DebugMessage(
+      isItPostType: true,
+      featureName: 'patchNotion',
+      dataType: 'json',
+      data: '줌 회의 종료.',
+    ).messagePost();
+    final http.Response response = await http.get(url);
+    print('get!');
+    print(response.body);
+    return response.body.toString();
+  }
 }
 
 //

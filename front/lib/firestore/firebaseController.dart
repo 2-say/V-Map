@@ -121,8 +121,9 @@ class FirebaseController {
       'startTime': startTime,
       'endTime': '',
       'contents': [testContents],
-      'abridge': [],
+      'summrize': [],
       'agenda': [],
+      'todo': [],
       'zoomMeetingId': ''.toString(),
     };
 
