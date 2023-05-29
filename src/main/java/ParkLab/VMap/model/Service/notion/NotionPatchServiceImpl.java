@@ -158,7 +158,7 @@ public class NotionPatchServiceImpl {
 
         // HTTP POST 요청을 보냅니다.
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.PATCH, requestEntity, String.class);
-        System.out.println("responseEntity = " + responseEntity);
+//        System.out.println("responseEntity = " + responseEntity);
 
         // HTTP 응답 결과를 확인합니다.
         if (responseEntity.getStatusCode() == HttpStatus.OK) {

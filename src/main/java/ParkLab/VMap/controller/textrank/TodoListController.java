@@ -138,6 +138,7 @@ public class TodoListController {
                         .build();
 
                 try {
+                    Thread.sleep(500);
                     Response response1 = client.newCall(request).execute();
                     if (response1.isSuccessful()) {
                         System.out.println("PATCH 요청이 성공적으로 전송되었습니다.");
@@ -145,6 +146,8 @@ public class TodoListController {
                         System.out.println("PATCH 요청이 실패하였습니다. 응답 코드: " + response1.toString());
                     }
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 

@@ -85,7 +85,7 @@ public class NotionWriterServiceImpl {
                 "          {\n" +
                 "            \"type\": \"text\",\n" +
                 "            \"text\": {\n" +
-                "              \"content\": \"요약:\"\n" +
+                "              \"content\": \"한줄 요약:\"\n" +
                 "            }\n" +
                 "          }\n" +
                 "        ],\n" +
@@ -156,11 +156,6 @@ public class NotionWriterServiceImpl {
                 "          }\n" +
                 "        ]\n" +
                 "      }\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"object\": \"block\",\n" +
-                "      \"type\": \"divider\",\n" +
-                "      \"divider\": {}\n" +
                 "    },\n" +
                 "    {\n" +
                 "      \"object\": \"block\",\n" +
@@ -370,34 +365,6 @@ public class NotionWriterServiceImpl {
                 "    },\n" +
                 "    {\n" +
                 "      \"object\": \"block\",\n" +
-                "      \"type\": \"heading_3\",\n" +
-                "      \"heading_3\": {\n" +
-                "        \"rich_text\": [\n" +
-                "          {\n" +
-                "            \"type\": \"text\",\n" +
-                "            \"text\": {\n" +
-                "              \"content\": \"(추가):\"\n" +
-                "            }\n" +
-                "          }\n" +
-                "        ]\n" +
-                "      }\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"object\": \"block\",\n" +
-                "      \"type\": \"quote\",\n" +
-                "      \"quote\": {\n" +
-                "        \"rich_text\": [\n" +
-                "          {\n" +
-                "            \"type\": \"text\",\n" +
-                "            \"text\": {\n" +
-                "              \"content\": \"추가(?)\"\n" +
-                "            }\n" +
-                "          }\n" +
-                "        ]\n" +
-                "      }\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"object\": \"block\",\n" +
                 "      \"type\": \"paragraph\",\n" +
                 "      \"paragraph\": {\n" +
                 "        \"rich_text\": [\n" +
@@ -446,7 +413,7 @@ public class NotionWriterServiceImpl {
 
         // HTTP POST 요청을 보냅니다.
         responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
-        System.out.println("responseEntity = " + responseEntity);
+//        System.out.println("responseEntity = " + responseEntity);
 
         // HTTP 응답 결과를 확인합니다.
         if (responseEntity.getStatusCode() == HttpStatus.OK) {

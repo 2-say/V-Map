@@ -55,6 +55,7 @@ public class SummarizeAllController {
             firebaseMeetingsService.updateFirebaseMeetingSummarize(documentId, resultMap);
 
             String summarize = encodeJsonService.extractValueFromJsonString(response.body(), "summarizeAll");
+
             updateSummarizeAll(summarize);
             return response.body();
         } catch (Exception e) {
@@ -96,11 +97,9 @@ public class SummarizeAllController {
 
         for (int i = 0; i < results.length(); i++) {   //찾아서 넣기
             JSONObject blockObject = results.getJSONObject(i);
-            if (blockObject.getString("type").equals("callout")) {
+            if (blockObject.getString("type").equals("quote")) {
                 String blockId = blockObject.getString("id");
                 blockIdList.add(blockId);
-                System.out.println("(summarizeAll)blockId:");
-                System.out.println(blockId);
             }
         }
 
@@ -112,7 +111,7 @@ public class SummarizeAllController {
                 "            {\n" +
                 "                \"type\": \"text\",\n" +
                 "                \"text\": {\n" +
-                "                    \"content\": \"" + agendaString + " \"\n" +
+                "                    \"content\": \" " + agendaString + " \" \n" +
                 "                }\n" +
                 "            }\n" +
                 "        ]\n" +
@@ -123,9 +122,10 @@ public class SummarizeAllController {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         String NOTION_API_URL = "https://api.notion.com/v1/blocks/" + blockIdList.get(0);
 
-
-        System.out.printf("blockId",blockIdList.get(0));
-
+        System.out.println("============SummarizeAll============");
+        System.out.printf("blockId = %s  \n" , blockIdList.get(0));
+        System.out.printf("accessToken = %s  \n", accessToken);
+        System.out.printf("agenda =  %s \n",agendaString);
 
         OkHttpClient client = new OkHttpClient();
 

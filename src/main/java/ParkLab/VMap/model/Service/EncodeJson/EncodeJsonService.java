@@ -42,14 +42,8 @@ public class EncodeJsonService {
     }
 
     public String extractValueFromJsonString(String jsonString, String key) {
-        int startIndex = jsonString.indexOf("\"" + key + "\":");
-        if (startIndex != -1) {
-            startIndex += key.length() + 3; // ": " 다음 위치
-            int endIndex = jsonString.indexOf("\"", startIndex);
-            if (endIndex != -1) {
-                return jsonString.substring(startIndex, endIndex);
-            }
-        }
-        return null; // key를 찾지 못한 경우
+        JSONObject jsonObject = new JSONObject(jsonString);
+        String result = jsonObject.getString(key);
+        return result;
     }
 }

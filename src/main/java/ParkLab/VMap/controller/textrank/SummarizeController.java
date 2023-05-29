@@ -97,7 +97,7 @@ public class SummarizeController {
 
         for (int i = 0; i < results.length(); i++) {   //찾아서 넣기
             JSONObject blockObject = results.getJSONObject(i);
-            if (blockObject.getString("type").equals("quote")) {
+            if (blockObject.getString("type").equals("callout")) {
                 String blockId = blockObject.getString("id");
                 System.out.println("Numbered List Item ID: " + blockId);
                 blockIdList.add(blockId);
@@ -105,17 +105,21 @@ public class SummarizeController {
         }
 
         String json = "{\n" +
-                "    \"type\": \"quote\",\n" +
-                "    \"quote\": {\n" +
+                "    \"type\": \"callout\",\n" +
+                "    \"callout\": {\n" +
                 "        \"rich_text\": [\n" +
                 "            {\n" +
                 "                \"type\": \"text\",\n" +
                 "                \"text\": {\n" +
-                "                    \"content\": \"요약: " +  agendaString + "\"\n" +
+                "                    \"content\": \"요약:  " + agendaString + " \"\n" +
                 "                }\n" +
                 "            }\n" +
                 "        ],\n" +
-                "        }\n" +
+                "        \"icon\": {\n" +
+                "            \"type\": \"emoji\",\n" +
+                "            \"emoji\": \"💬\"\n" +
+                "        },\n" +
+                "        \"color\": \"yellow_background\"\n" +
                 "    }\n" +
                 "}";
 
