@@ -225,34 +225,6 @@ public class NotionWriterServiceImpl {
                 "    },\n" +
                 "    {\n" +
                 "      \"object\": \"block\",\n" +
-                "      \"type\": \"numbered_list_item\",\n" +
-                "      \"numbered_list_item\": {\n" +
-                "        \"rich_text\": [\n" +
-                "          {\n" +
-                "            \"type\": \"text\",\n" +
-                "            \"text\": {\n" +
-                "              \"content\": \"2\"\n" +
-                "            }\n" +
-                "          }\n" +
-                "        ]\n" +
-                "      }\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"object\": \"block\",\n" +
-                "      \"type\": \"numbered_list_item\",\n" +
-                "      \"numbered_list_item\": {\n" +
-                "        \"rich_text\": [\n" +
-                "          {\n" +
-                "            \"type\": \"text\",\n" +
-                "            \"text\": {\n" +
-                "              \"content\": \"3\"\n" +
-                "            }\n" +
-                "          }\n" +
-                "        ]\n" +
-                "      }\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"object\": \"block\",\n" +
                 "      \"type\": \"paragraph\",\n" +
                 "      \"paragraph\": {\n" +
                 "        \"rich_text\": [\n" +
@@ -302,6 +274,34 @@ public class NotionWriterServiceImpl {
                 "            \"type\": \"text\",\n" +
                 "            \"text\": {\n" +
                 "              \"content\": \"TO DO: 2\"\n" +
+                "            }\n" +
+                "          }\n" +
+                "        ]\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"object\": \"block\",\n" +
+                "      \"type\": \"to_do\",\n" +
+                "      \"to_do\": {\n" +
+                "        \"rich_text\": [\n" +
+                "          {\n" +
+                "            \"type\": \"text\",\n" +
+                "            \"text\": {\n" +
+                "              \"content\": \"TO DO: 3\"\n" +
+                "            }\n" +
+                "          }\n" +
+                "        ]\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"object\": \"block\",\n" +
+                "      \"type\": \"to_do\",\n" +
+                "      \"to_do\": {\n" +
+                "        \"rich_text\": [\n" +
+                "          {\n" +
+                "            \"type\": \"text\",\n" +
+                "            \"text\": {\n" +
+                "              \"content\": \"TO DO: 4\"\n" +
                 "            }\n" +
                 "          }\n" +
                 "        ]\n" +

@@ -171,7 +171,8 @@ public class NotionPatchServiceImpl {
 
     public void appendToFile(String time, String user, String contents, String pageId) throws IOException {
         String filePath = "/home/VMap/data/"+ pageId + ".txt"; // 파일 경로, 사용자 ID를 파일명에 포함
-        String line = "[" + time + "] " + user + " : " + contents; // 파일에 추가할 한 줄 생성
+        //        String line = "[" + time + "] " + user + " : " + contents; // 파일에 추가할 한 줄 생성
+        String line = user + " : " + contents; // 파일에 추가할 한 줄 생성
         List<String> lines = Files.readAllLines(Paths.get(filePath)); // 파일의 모든 라인을 읽어옴
         lines.add(line); // 새로운 한 줄을 리스트에 추가
         List<String> sortedLines = new ArrayList<>(); // 정렬된 라인들을 저장할 리스트 생성
