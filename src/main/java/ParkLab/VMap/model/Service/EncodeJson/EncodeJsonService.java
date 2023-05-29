@@ -21,7 +21,7 @@ public class EncodeJsonService {
     }
 
     public List<String> convertToList(String agenda) {
-        String[] agendaItems = agenda.split("\\n");
+        String[] agendaItems = agenda.split("\\n\\d+\\. ");
 
         List<String> agendaList = new ArrayList<>();
         for (String item : agendaItems) {
