@@ -1,5 +1,6 @@
 package ParkLab.VMap.controller.textrank;
 
+import ParkLab.VMap.model.Service.DecodeJson.DecordJsonService;
 import ParkLab.VMap.model.Service.EncodeJson.EncodeJsonService;
 import ParkLab.VMap.model.Service.firebase.FirebaseMeetingsServiceImpl;
 import ParkLab.VMap.model.data.ClerkInfo;
@@ -51,13 +52,9 @@ public class SummarizeAllController {
             EncodeJsonService encodeJsonService = new EncodeJsonService();
             Map<String, Object> resultMap = encodeJsonService.convertJsonToMap(response.body());
             firebaseMeetingsService.updateFirebaseMeetingSummarize(documentId, resultMap);
-            String summarize = (response.body()).getString("summarize");
 
-
-
-
-            updateSummarizeAll(agendaList);
-
+            String summarize = encodeJsonService.extractValueFromJsonString(response.body(), "summarize");
+            updateSummarizeAll(summarize);
             return response.body();
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,7 +66,7 @@ public class SummarizeAllController {
 
 
 
-    public void updateSummarizeAll(List<String> agendaString) throws IOException {
+    public void updateSummarizeAll(String agendaString) throws IOException {
 
         List<String> reversedList = new ArrayList<>();  //pop하기 위해서 꺼꾸로 꺼냄
         for (int i = agendaString.size() - 1; i >= 0; i--) {

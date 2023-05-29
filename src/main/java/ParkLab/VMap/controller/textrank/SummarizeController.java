@@ -15,6 +15,7 @@ import java.util.Map;
 public class SummarizeController {
 
     FirebaseMeetingsServiceImpl firebaseMeetingsService = new FirebaseMeetingsServiceImpl();
+
     @GetMapping("/summarize")
     @ResponseBody
     public void summarize(@RequestParam("documentId") String documentId, @RequestParam("pageId") String pageId) {
