@@ -125,6 +125,7 @@ class FirebaseController {
       'agenda': [],
       'todo': [],
       'zoomMeetingId': ''.toString(),
+      'isOn': true,
     };
 
     await db
@@ -156,6 +157,18 @@ class FirebaseController {
       DebugMessage(isItPostType: true, featureName: 'addMeeting', dataType: '', data: messageFail).firebaseMessage();
       return false;
     }
+  }
+
+  //유저 정보 업데이트
+  endMeeting(String meetingCode) {
+    Map<String, dynamic> map = {'isOn': false};
+
+    db.collection('meetings').where('password', isEqualTo: meetingCode).get().then((value) {
+      for (var doc in value.docs) {
+        doc.reference.update(map);
+      }
+      DebugMessage(isItPostType: true, featureName: 'endMeeting', dataType: '', data: map.toString()).firebaseMessage();
+    });
   }
 
   // 회의 정보 get

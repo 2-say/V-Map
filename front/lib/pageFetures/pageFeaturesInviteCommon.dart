@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:front/firestore/firebaseController.dart';
 import 'package:front/pageFetures/pageFeaturesRecord.dart';
 import 'package:front/PageFrame/PageFrameRanding.dart';
@@ -144,6 +145,20 @@ class _PageFeatureInviteCommonState extends State<PageFeatureInviteCommon> {
                     ]),
                     Expanded(child: SizedBox()),
                     Text('초대코드 : ${widget.meetingInfo!['password']}', style: h1CM),
+                    IconButton(
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: widget.meetingInfo!['password']));
+                          final snackBar = SnackBar(
+                            content: const Text("초대코드 복사가 완료되었습니다.",
+                                style: TextStyle(fontFamily: 'apeb', color: Colors.black)),
+                            behavior: SnackBarBehavior.floating,
+                            margin: const EdgeInsets.all(50),
+                            duration: const Duration(seconds: 1),
+                            backgroundColor: crKeyColorB1F,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        },
+                        icon: const Icon(Icons.copy, color: Colors.orange))
                   ]),
                 ),
                 Container(
@@ -203,7 +218,7 @@ class _PageFeatureInviteCommonState extends State<PageFeatureInviteCommon> {
                                                   await launch(url.toString(), forceSafariVC: false);
                                                 }
                                               },
-                                              child: const Text('바로가기',
+                                              child: const Text('새창에서 열기',
                                                   style: TextStyle(
                                                       fontFamily: 'apeb', fontSize: 16, color: Colors.blueAccent)))
                                     ]);
@@ -229,14 +244,22 @@ class _PageFeatureInviteCommonState extends State<PageFeatureInviteCommon> {
                                         colors: [Colors.indigo, Colors.green])),
                                 child: TextButton(
                                     onPressed: () async {
-                                      Navigator.push(
+                                      final snackBar = SnackBar(
+                                        content: const Text("서버 상태에 따라 회의 진입이 지연중입니다.",
+                                            style: TextStyle(fontFamily: 'apeb', color: Colors.black)),
+                                        behavior: SnackBarBehavior.floating,
+                                        margin: const EdgeInsets.all(50),
+                                        duration: const Duration(seconds: 1),
+                                        backgroundColor: crKeyColorB1F,
+                                      );
+                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                      Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                               builder: (_) => PageFeatureRecord(
-                                                  meetingInfo: widget.meetingInfo,
-                                                  userInfo: widget.myUserInfo)));
+                                                  meetingInfo: widget.meetingInfo, userInfo: widget.myUserInfo)));
                                     },
-                                    child: const Text('Start Meeting!',
+                                    child: const Text('V-Map 회의 참가하기',
                                         style:
                                             TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold))),
                               ),
@@ -329,7 +352,8 @@ class WidgetCardRedirectionCode extends StatelessWidget {
                   await launch(url.toString(), forceSafariVC: false);
                 }
               },
-              child: const Text('바로가기', style: TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.blueAccent)))
+              child:
+                  const Text('새창에서 열기', style: TextStyle(fontFamily: 'apeb', fontSize: 16, color: Colors.blueAccent)))
         ]));
   }
 }

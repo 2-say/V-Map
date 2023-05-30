@@ -149,7 +149,12 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                         onPressed: () {
                           Clipboard.setData(ClipboardData(text: widget.meetingInfo!['password']));
                           final snackBar = SnackBar(
-                            content: Text("초대코드 복사가 완료되었습니다."),
+                            content: const Text("초대코드 복사가 완료되었습니다.",
+                                style: TextStyle(fontFamily: 'apeb', color: Colors.black)),
+                            behavior: SnackBarBehavior.floating,
+                            margin: const EdgeInsets.all(50),
+                            duration: const Duration(seconds: 1),
+                            backgroundColor: crKeyColorB1F,
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         },
@@ -213,7 +218,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                                                   await launch(url.toString(), forceSafariVC: false);
                                                 }
                                               },
-                                              child: const Text('바로가기',
+                                              child: const Text('새창에서 열기',
                                                   style: TextStyle(
                                                       fontFamily: 'apeb', fontSize: 16, color: Colors.blueAccent)))
                                     ]);
@@ -243,7 +248,12 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                                       print('check :zoomInfo-$zoomInfo');
                                       HttpOverrides.global = NoCheckCertificateHttpOverrides();
                                       final snackBar = SnackBar(
-                                        content: Text("서버 상태에 따라 회의 생성이 지연중입니다. 잠시만 기다려주세요."),
+                                        content: const Text("서버 상태에 따라 회의 진입이 지연중입니다.",
+                                            style: TextStyle(fontFamily: 'apeb', color: Colors.black)),
+                                        behavior: SnackBarBehavior.floating,
+                                        margin: const EdgeInsets.all(50),
+                                        duration: const Duration(seconds: 1),
+                                        backgroundColor: crKeyColorB1F,
                                       );
                                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                       FeaturesMeeting()
@@ -272,7 +282,7 @@ class _PageFeatureInviteState extends State<PageFeatureInvite> {
                                         });
                                       });
                                     },
-                                    child: const Text('Start Meeting!',
+                                    child: const Text('V-Map 회의 개설하기',
                                         style:
                                             TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold))),
                               ),

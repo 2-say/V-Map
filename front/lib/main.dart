@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'V-Map(test)',
+        title: 'V-Map ; Do Not Record Alone.',
         theme: ThemeData(
           scrollbarTheme: ScrollbarThemeData().copyWith(
             thumbColor: MaterialStateProperty.all(crKeyColorB1ScrollBar),

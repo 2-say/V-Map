@@ -99,7 +99,7 @@ class _PageFeatureMainState extends State<PageFeatureMain> {
                                 )));
                   },
                   child: Text(
-                    '초대하기',
+                    '참가하기',
                     style: TextStyle(fontFamily: 'apeb', color: ccKeyColorGreen),
                   ))
             ],

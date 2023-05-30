@@ -98,8 +98,31 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
         });
   }
 
+  Future<void> meetingChecker() async {
+    if (widget.userInfo!['userName'] != widget.meetingInfo!['clerk']['userName']) {
+      await for (var snapshot in FirebaseFirestore.instance
+          .collection('meetings')
+          .where('password', isEqualTo: widget.meetingInfo!['password'])
+          .snapshots()) {
+        if (snapshot.docs.first.data()['isOn'] == false) {
+          final snackBar = SnackBar(
+            content: const Text("회의가 서기에 의해 종료되었습니다.",
+                style: TextStyle(fontFamily: 'apeb', color: Colors.black)),
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(50),
+            duration: const Duration(seconds: 1),
+            backgroundColor: crKeyColorB1F,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          Navigator.pop(context);
+        }
+      }
+    }
+  }
+
   @override
   void initState() {
+    meetingChecker();
     // 스트리밍 객체를 어떤 문서에 연결할 것인지 위젯 빌드 전 할당
     streamConnectContents = FirebaseFirestore.instance
         .collection('meetings')
@@ -121,6 +144,7 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
   void dispose() {
     _textEditingController.removeListener(_onTextChanged);
     _textEditingController.dispose();
+    super.dispose();
   }
 
   void _startsign() {
@@ -195,45 +219,38 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
     // if (_isListening) {
     _speech.listen(
       onResult: (result) {
-        setState(() {
-          if (result.alternates.last.confidence >= 0.89) {
-            _text = result.alternates.last.recognizedWords;
-            _textList.add(_text);
-            var dt2 = DateTime.now();
-            if (_textList.length >= 2) {
-              List<String> previousElements = _textList[_textList.length - 2].split(' ');
-              List<String> lastElements = _textList.last.split(' ');
-
-              List<String> result1 = [];
-              for (int i = 0; i < lastElements.length; i++) {
-                String item = lastElements[i];
-                if (i >= previousElements.length || item != previousElements[i]) {
-                  result1.add(item);
-                }
+        if (result.alternates.last.confidence >= 0.89) {
+          _text = result.alternates.last.recognizedWords;
+          _textList.add(_text);
+          var dt2 = DateTime.now();
+          if (_textList.length >= 2) {
+            List<String> previousElements = _textList[_textList.length - 2].split(' ');
+            List<String> lastElements = _textList.last.split(' ');
+            List<String> result1 = [];
+            for (int i = 0; i < lastElements.length; i++) {
+              String item = lastElements[i];
+              if (i >= previousElements.length || item != previousElements[i]) {
+                result1.add(item);
               }
-              String result = result1.join(' ');
-
-              if (result.isNotEmpty) {
-                var dt2_end = DateTime.now();
-                featuresMeeting
-                    .patchNotion(dt2.toString(), widget.meetingInfo!['id'], widget.userInfo!['userName'], result)
-                    .then((_) {
-                  FirebaseController().updateMeetingContents(widget.meetingInfo!['password'],
-                      widget.userInfo!['userName'], dt2.toString(), dt2_end.toString(), result);
-                });
-              }
-            } else {
-              print(_textList.first);
-              var dt2_end = DateTime.now();
-              featuresMeeting
-                  .patchNotion(dt2.toString(), widget.meetingInfo!['id'], widget.userInfo!['userName'], _textList.first)
-                  .then((_) {
-                FirebaseController().updateMeetingContents(widget.meetingInfo!['password'],
-                    widget.userInfo!['userName'], dt2.toString(), dt2_end.toString(), _textList.first);
-              });
             }
+            String result = result1.join(' ');
+
+            if (result.isNotEmpty) {
+              var dt2_end = DateTime.now();
+              FirebaseController().updateMeetingContents(widget.meetingInfo!['password'], widget.userInfo!['userName'],
+                  dt2.toString(), dt2_end.toString(), result);
+              featuresMeeting.patchNotion(
+                  dt2.toString(), widget.meetingInfo!['id'], widget.userInfo!['userName'], result);
+            }
+          } else {
+            print(_textList.first);
+            var dt2_end = DateTime.now();
+            FirebaseController().updateMeetingContents(widget.meetingInfo!['password'], widget.userInfo!['userName'],
+                dt2.toString(), dt2_end.toString(), _textList.first);
+            featuresMeeting.patchNotion(
+                dt2.toString(), widget.meetingInfo!['id'], widget.userInfo!['userName'], _textList.first);
           }
-        });
+        }
       },
       cancelOnError: false,
       partialResults: true,
@@ -635,6 +652,16 @@ class _PageFeatureRecordState extends State<PageFeatureRecord> {
                           _stopsign();
                           stopListening();
                           if (widget.userInfo!['email'] == widget.meetingInfo!['clerk']['email']) {
+                            final snackBar = SnackBar(
+                              content: const Text("회의를 종료 했습니다.",
+                                  style: TextStyle(fontFamily: 'apeb', color: Colors.black)),
+                              behavior: SnackBarBehavior.floating,
+                              margin: const EdgeInsets.all(50),
+                              duration: const Duration(seconds: 1),
+                              backgroundColor: crKeyColorB1F,
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            FirebaseController().endMeeting(widget.meetingInfo!['password']);
                             FeaturesMeeting().endMeeting(widget.meetingInfo!['id']);
                             FeaturesMeeting()
                                 .agenda(widget.userInfo!['pageId'], widget.meetingInfo!['id'])
