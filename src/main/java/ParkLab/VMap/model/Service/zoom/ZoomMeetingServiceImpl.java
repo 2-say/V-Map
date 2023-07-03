@@ -106,7 +106,7 @@ public class ZoomMeetingServiceImpl {
 
         HttpPut request = new HttpPut(url);
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-        request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ik9RQVNYQ3NIVE0tOEc5SVVWZmROQ3ciLCJleHAiOjE2ODU4NzExMjEsImlhdCI6MTY4NTI2NjMyMn0.Yz6YQoCTF8-kaNgNzzzFygeS7701uHuQ2am033nO5Us");
+        request.addHeader(HttpHeaders.AUTHORIZATION, "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ik9RQVNYQ3NIVE0tOEc5SVVWZmROQ3ciLCJleHAiOjE3MTk5OTM2MDAsImlhdCI6MTY4ODM3MTI1MX0.OEtY6HlOjRKzLvT-nWoWNvGAsil6TjZeE0efWe_DM3c");
 
         JsonObject body = new JsonObject();
         body.addProperty("action", "end");
