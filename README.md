@@ -33,8 +33,6 @@ Koreatech Univ, Stt Meeting minutes  Application
 
 <img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/5bfb039a-984f-4148-87b2-24139c5b0c7d">
 
-<img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/2b6e2642-7f0a-4809-88ff-8ebee60333c5">
-
 <img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/2c08fa4f-bf8a-4845-8ef3-c96bca5da612">
 
 <img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/f914bbd4-c1cc-4c28-a4ec-48d36292f6a4">
