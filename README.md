@@ -22,28 +22,28 @@ Koreatech Univ, Stt Meeting minutes  Application
 
 ## 소개
 
-<img width="400" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/3a959c13-44f4-4804-804c-e02b983f5ba8">
+<img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/3a959c13-44f4-4804-804c-e02b983f5ba8">
 
-<img width="400" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/fc232571-5989-4d37-bcf3-31c7d2861ece">
-
-
-<img width="400" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/eb38c7d7-7422-4007-8e02-caf793538bbf">
-
-<img width="400" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/70a35295-669c-460f-a1e4-e8bfaa71931f">
-
-<img width="400" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/5bfb039a-984f-4148-87b2-24139c5b0c7d">
-
-<img width="400" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/2b6e2642-7f0a-4809-88ff-8ebee60333c5">
-
-<img width="400" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/2c08fa4f-bf8a-4845-8ef3-c96bca5da612">
-
-<img width="400" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/f914bbd4-c1cc-4c28-a4ec-48d36292f6a4">
+<img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/fc232571-5989-4d37-bcf3-31c7d2861ece">
 
 
-<img width="400" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/9deea45a-d5ab-4264-99f0-7a3772911ef3">
+<img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/eb38c7d7-7422-4007-8e02-caf793538bbf">
+
+<img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/70a35295-669c-460f-a1e4-e8bfaa71931f">
+
+<img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/5bfb039a-984f-4148-87b2-24139c5b0c7d">
+
+<img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/2b6e2642-7f0a-4809-88ff-8ebee60333c5">
+
+<img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/2c08fa4f-bf8a-4845-8ef3-c96bca5da612">
+
+<img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/f914bbd4-c1cc-4c28-a4ec-48d36292f6a4">
 
 
-<img width="400" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/309ff6d9-5b38-41cf-804b-7a075871419d">
+<img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/9deea45a-d5ab-4264-99f0-7a3772911ef3">
 
 
-<img width="400" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/1122f7a4-6d59-479b-a3a0-efea28cb2c16">
+<img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/309ff6d9-5b38-41cf-804b-7a075871419d">
+
+
+<img width="100%" alt="image" src="https://github.com/2-say/V-Map/assets/91319157/1122f7a4-6d59-479b-a3a0-efea28cb2c16">
