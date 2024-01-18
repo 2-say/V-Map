@@ -138,10 +138,22 @@ class _PageFeatureInviteCommonState extends State<PageFeatureInviteCommon> {
                   child: Row(children: <Widget>[
                     Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                       Text('${widget.meetingInfo!['meetingName']}', style: h1C),
-                      Text(
-                        '${widget.meetingInfo!['startTime']} · 참여자 ${widget.meetingInfo!['etc'].length}명',
-                        style: const TextStyle(fontFamily: 'apb', color: Colors.grey),
-                      )
+                      StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                          stream: streamConnectContents,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData && snapshot.data != null) {
+                              Map<String, dynamic>? docs = snapshot.data?.docs.first.data();
+                              return Text(
+                                '${widget.meetingInfo!['startTime']} · 참여자 ${docs!['etc'].length}명',
+                                style: const TextStyle(fontFamily: 'apb', color: Colors.grey),
+                              );
+                            } else if (snapshot.hasError) {
+                              return const Text('Error');
+                              // 기타 경우 ( 불러오는 중 )
+                            } else {
+                              return const CircularProgressIndicator();
+                            }
+                          })
                     ]),
                     Expanded(child: SizedBox()),
                     Text('초대코드 : ${widget.meetingInfo!['password']}', style: h1CM),
